@@ -8,12 +8,12 @@ services:
     volumes:
       - ./graphdb:/opt/graphdb/home
       - ./graphdb-import:/root/graphdb-import
-  dhpp-mhdbdb:
+  mhdbdb:
     build:
       context: ./
       dockerfile: Dockerfile
     ports:
       - '9000:9000'
-    container_name: dhpp-mhdbdb
+    container_name: mhdbdb
     volumes:
       - ./:/usr/src/app/app-ui
