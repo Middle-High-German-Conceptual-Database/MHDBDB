@@ -1,0 +1,33 @@
+PREFIX :<http://www.ontotext.com/connectors/lucene#>
+PREFIX inst:<http://www.ontotext.com/connectors/lucene/instance#>
+INSERT DATA {
+	inst:token-copy :createConnector '''
+{
+  "fields": [
+    {
+      "fieldName": "content",
+      "propertyChain": [
+        "https://mhdbdbd.plus.ac.at/xml-ontology#firstChild",
+        "https://mhdbdbd.plus.ac.at/xml-ontology#content"
+      ],
+      "indexed": true,
+      "stored": true,
+      "analyzed": true,
+      "multivalued": true,
+      "ignoreInvalidValues": false,
+      "facet": true
+    }
+  ],
+  "languages": [],
+  "types": [
+    "http://www.tei-c.org/ns/1.0#seg"
+  ],
+  "readonly": false,
+  "detectFields": false,
+  "importGraph": false,
+  "skipInitialIndexing": false,
+  "boostProperties": [],
+  "stripMarkup": false
+}
+''' .
+}

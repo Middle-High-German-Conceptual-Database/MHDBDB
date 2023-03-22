@@ -1,0 +1,51 @@
+<h1>Begriffssystem</h1>
+<div class="begriffs_blk flxrow">
+    <div class="begriffs-left">
+
+        <div class="begriffs-left_inner">            
+            <mat-tab-group class="tab-content" id="pills-tabContent" dynamicHeight>
+                <mat-tab label="Baum">
+                    <mat-tree class="tab-pane tab-links tab-content" [dataSource]="dataSource" [treeControl]="treeControl">
+                        <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+                            <li><button mat-icon-button disabled>
+                                    <fa-icon icon="caret-right">
+                                    </fa-icon>
+                                </button>
+                                <a (click)="selectTreeNode(node)">{{node.item.label}}</a>
+                            </li>
+                        </mat-tree-node>
+                        <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+                            <li><button mat-icon-button [attr.aria-label]="'toggle ' + node.item.label" matTreeNodeToggle>
+                                    <fa-icon icon="caret-right">
+                                    </fa-icon>
+                                </button>
+                                <a (click)="selectTreeNode(node)">{{node.item.label}}</a>
+                            </li>
+                            <mat-progress-bar *ngIf="node.isLoading" mode="indeterminate" class="example-tree-progress-bar">
+                            </mat-progress-bar>
+                        </mat-tree-node>
+                    </mat-tree>
+                </mat-tab>
+                <mat-tab label="Liste"> 
+                    <mat-form-field class="example-full-width" *ngIf="allConcepts">
+                        <mat-label>Filter nach Label</mat-label>
+                        <input matInput [formControl]="listSearch">
+                    </mat-form-field>
+                    <mat-list>
+                        <mat-list-item *ngFor="let item of  $listSearch|async" 
+                            [selected]="listSearchControl.value &&listSearchControl.value?.indexOf(item.label)>=0">
+                            <a (click)="selectConcept(item)">{{item.label}}</a>
+                        </mat-list-item >
+                    </mat-list>
+                </mat-tab>
+                
+            </mat-tab-group>                              
+        </div>
+    </div>
+
+    <div class="begriffs-right">
+        <div class="info_blk">
+            <dhpp-concept-view [instance]="concept"></dhpp-concept-view>            
+        </div>
+    </div>
+</div>

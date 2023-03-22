@@ -1,0 +1,66 @@
+<h2>Belegsuche</h2>
+
+<div class="container">
+    <ul>
+        <li *ngFor="let filter of filters">
+            <div class="row">
+                <div class="col" style="margin: 20px;">
+                    <mat-tab-group animationDuration="0ms" style="width: 100%;">
+                        <mat-tab label="Wort">
+                            <div class="werke-blk">
+                                <dhpp-form-token [routeString]="routeString"></dhpp-form-token>
+
+
+                                <dhpp-form-tokenContext [routeString]="routeString"></dhpp-form-tokenContext>
+
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="Begriff">
+                            <div class="row">
+                                <div class="col">
+                                    <dhpp-form-token-concepts [tokenFilter]="tokenFilter"></dhpp-form-token-concepts>
+                                </div>
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="Name">
+                            <div class="werke-blk">
+
+                            </div>
+                        </mat-tab>
+                    </mat-tab-group>
+                    <div class="row" style="padding-top: 35px; padding-bottom: 35px;">
+                        <div class="col-1" style="padding-left: 40px;">
+                            <button mat-mini-fab (click)="addFilter()"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <div class="col-11" style="padding-top: 10px;">
+                            <mat-radio-group aria-label="Verbindung zu nächsten Wortformen">
+                                <mat-radio-button value="true">Und</mat-radio-button>
+                                <mat-radio-button value="false">Oder</mat-radio-button>
+                                <mat-radio-button value="not">Nicht</mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <div class="row">
+        <div class="col">
+            <dhpp-form-footer [routeString]="routeString"></dhpp-form-footer>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="!isLoading; else loading"
+     class="search-results" infinite-scroll [infiniteScrollDistance]="2"
+     [infiniteScrollUpDistance]="1.5"
+     [infiniteScrollThrottle]="500" (scrolled)="onScrollDown()">
+    <div *ngFor="let instance of instances">
+        Instance
+    </div>
+    <span>Scrollen für mehr Resultate</span>
+    <mat-spinner *ngIf="isLoadingNext"></mat-spinner>
+</div>
+<ng-template #loading>
+    <mat-spinner></mat-spinner>
+</ng-template>

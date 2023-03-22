@@ -1,0 +1,22 @@
+<form *ngIf="form" [formGroup]="form" novalidate>
+    <div class="werke_row flxrow">
+         <div class="radio-btn">
+            <input class="state" type="checkbox" id="isPosActive" formControlName="isPosActive">
+            <label class="label" for="isPosActive">
+                <div class="indicator"></div>
+                <span class="text">{{ label }}</span>
+            </label>
+        </div>
+        <div [formGroup]="filterPosCheckboxes" class="werke_row_inner">
+            <div class="input-row">
+                <span class="form-check form-check-inline" *ngFor="let item of filterPosCheckboxes.value | keyvalue">
+                    <label>
+                        <mat-checkbox [formControlName]="item.key" [value]="item.value">{{ item.key }}
+                        </mat-checkbox>
+                    </label>
+                </span>
+            </div>
+        </div>
+        <button mat-button type="button" (click)="openHelp()"><i class="fas fa-question-circle"></i></button>
+    </div>
+</form>

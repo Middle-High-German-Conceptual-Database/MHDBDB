@@ -1,0 +1,42 @@
+<h1>Begriffssystem</h1>
+<div class="begriffs_blk flxrow">
+    <div class="begriffs-left">
+
+        <div class="begriffs-left_inner">
+            <ul class="nav nav-pills " id="pills-tab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Baum</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                    <div class="tab-links">
+                        <ul>
+                    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+                        <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+                            <li><button mat-icon-button (click)="selectTreeNode(node)">{{node.item.prefLabel.value}}</button></li>
+                        </mat-tree-node>
+                        <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+                            <li><button mat-icon-button (click)="selectTreeNode(node)"
+                                    [attr.aria-label]="'toggle ' + node.filename" matTreeNodeToggle>
+                                <fa-icon icon="{{treeControl.isExpanded(node) ? 'expand_more' : 'caret-right'}}"></fa-icon>
+                            </button>
+                            {{node.item.prefLabel.value}}</li>
+                            <mat-progress-bar *ngIf="node.isLoading"
+                                              mode="indeterminate"
+                                              class="example-tree-progress-bar"></mat-progress-bar>
+                        </mat-tree-node>
+                    </mat-tree>
+                    </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="begriffs-right">
+        <div class="info_blk">
+            <dhpp-concept-element [element]="concept"></dhpp-concept-element>
+        </div>
+    </div>
+</div>

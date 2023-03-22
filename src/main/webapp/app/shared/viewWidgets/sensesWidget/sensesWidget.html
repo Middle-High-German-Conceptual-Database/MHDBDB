@@ -1,0 +1,26 @@
+<expansion-panel-wrapper [asPanel]="asPanel" [title]="title" [openHelpSubject]="openHelpSubject">
+    <p *ngIf="isLoaded | async; else loading">
+        <mat-card *ngFor="let sense of senses;">
+            <mat-card-header>
+                <mat-card-title>Begriffsfeld {{ sense.index }}</mat-card-title>
+                <mat-card-subtitle>{{ sense.id }}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                <div>
+                    <strong>Begriffe</strong>
+                    <p *ngFor="let concept of sense.concepts;"> <a>{{ concept.label }}</a></p>
+                </div>
+                <div>
+                    <strong>Belegstellen</strong>
+                    <dhpp-widget-kwic [instance]="sense" [asPanel]="false" [limit]="3"></dhpp-widget-kwic>
+                </div>
+                <div>
+                    <strong>Wortartikel mit ähnlichen Begriffsfeldern</strong>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </p>
+    <ng-template #loading>
+        <mat-spinner></mat-spinner>
+    </ng-template>
+</expansion-panel-wrapper>

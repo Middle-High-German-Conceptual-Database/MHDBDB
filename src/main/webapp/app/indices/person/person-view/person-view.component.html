@@ -1,0 +1,21 @@
+<div *ngIf="isLoaded | async">
+    <div class="row" style="padding-bottom: 25px;">
+        <div class="col-12">
+            <button mat-mini-fab color="primary" aria-label="Example icon button with a home icon"
+                (click)="previousPage()">
+                <fa-icon icon="arrow-left"></fa-icon>
+            </button>
+        </div>
+    </div>
+
+    <dhpp-person-element [instance]="instance"></dhpp-person-element>
+
+    <div class="row" style="padding-top: 0.5rem;">
+        <div class="col-12">
+            <mat-accordion [multi]="true" #accordion="matAccordion" [togglePosition]="'before'">
+            </mat-accordion>
+
+        </div>
+
+    </div>
+</div>

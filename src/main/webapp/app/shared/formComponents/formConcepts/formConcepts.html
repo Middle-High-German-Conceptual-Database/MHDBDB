@@ -1,0 +1,33 @@
+<form *ngIf="form" [formGroup]="form" novalidate>
+    <div class="werke_row flxrow">
+         <div class="radio-btn">
+            <input class="state" type="checkbox" id="isConceptsActive" formControlName="isConceptsActive">
+            <label class="label" for="isConceptsActive">
+                <div class="indicator"></div>
+                <span class="text">{{ label }}</span>
+            </label>
+        </div>
+        <div [formGroup]="filterConcepts" class="werke_row_inner">
+            <div class="input-row">
+                <mat-form-field class="form-check form-check-inline"><input type="text" class="input-text"
+                        [formControl]="conceptCtrl" #conceptInput [matAutocomplete]="auto" [matChipInputFor]="chipList"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+                         matInput>
+                    <mat-chip-list #chipList aria-label="Concept selection">
+                        <mat-chip *ngFor="let concept of form.get('filterConcepts').value | keyvalue" [selectable]="true"
+                            [removable]="true" (removed)="removeConcept(concept.key)">
+                            {{concept.key}}
+                            <mat-icon matChipRemove *ngIf="removable"><i class="fas fa-times"></i></mat-icon>
+                        </mat-chip>
+                    </mat-chip-list>
+                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedConcept($event)">
+                        <mat-option *ngFor="let concept of filteredConcepts | async" [value]="concept">
+                            {{concept}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+            </div>
+        </div>
+        <button type="button" mat-button (click)="openHelp()"><i class="fas fa-question-circle"></i></button>
+    </div>
+</form>

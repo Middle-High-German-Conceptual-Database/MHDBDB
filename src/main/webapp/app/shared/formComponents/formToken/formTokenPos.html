@@ -1,0 +1,6 @@
+<form *ngIf="form" [formGroup]="form" class="input-row" class="werke_row_inner" novalidate>
+    <label class="form-check form-check-inline" *ngFor="let item of form.value | keyvalue">
+        <mat-checkbox [formControlName]="item.key" [value]="item.value">{{ item.key }}
+        </mat-checkbox>
+    </label>
+</form>

@@ -1,0 +1,146 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "dhppbase": {
+      "root": "",
+      "sourceRoot": "src/main/webapp",
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "skipTests": true,
+          "style": "scss"
+        },
+        "@schematics/angular:directive": {
+          "skipTests": true
+        },
+        "@schematics/angular:guard": {
+          "skipTests": true
+        },
+        "@schematics/angular:pipe": {
+          "skipTests": true
+        },
+        "@schematics/angular:service": {
+          "skipTests": true
+        }
+      },
+      "prefix": "dhpp",
+      "architect": {}
+    },
+    "dhppapp": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "projects/dhppapp",
+      "sourceRoot": "projects/dhppapp/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/dhppapp",
+            "index": "projects/dhppapp/src/index.html",
+            "main": "projects/dhppapp/src/main.ts",
+            "polyfills": "projects/dhppapp/src/polyfills.ts",
+            "tsConfig": "projects/dhppapp/tsconfig.app.json",
+            "assets": ["projects/dhppapp/src/favicon.ico", "projects/dhppapp/src/assets"],
+            "styles": ["projects/dhppapp/src/styles.css"],
+            "scripts": [],
+            "aot": true
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/dhppapp/src/environments/environment.ts",
+                  "with": "projects/dhppapp/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "dhppapp:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "dhppapp:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "dhppapp:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/dhppapp/src/test.ts",
+            "polyfills": "projects/dhppapp/src/polyfills.ts",
+            "tsConfig": "projects/dhppapp/tsconfig.spec.json",
+            "karmaConfig": "projects/dhppapp/karma.conf.js",
+            "assets": ["projects/dhppapp/src/favicon.ico", "projects/dhppapp/src/assets"],
+            "styles": ["projects/dhppapp/src/styles.css"],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["projects/dhppapp/tsconfig.app.json", "projects/dhppapp/tsconfig.spec.json", "projects/dhppapp/e2e/tsconfig.json"],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/dhppapp/e2e/protractor.conf.js",
+            "devServerTarget": "dhppapp:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "dhppapp:serve:production"
+            }
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "dhppbase",
+  "cli": {
+    "packageManager": "npm"
+  }
+}

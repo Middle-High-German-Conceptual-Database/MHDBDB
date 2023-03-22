@@ -1,0 +1,20 @@
+<div class="modal-header">
+    <button aria-label="Close" data-dismiss="modal" class="close" type="button" (click)="activeModal.dismiss('closed')"><span aria-hidden="true">x</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="row justify-content-center">
+        <div class="container">
+            <h1 class="display-6">Weiterleitung zu einer externen Webseite</h1>
+            <p>Sie verlassen in Kürze das Angebot von <b>dhPLUS</b>.
+                Die <b>Universität Salzburg</b> übernimmt keinerlei Gewährleistung darüber, welche Inhalte sich auf der aufgerufenen Webseite befinden
+                beziehungsweise ob das angeforderte Angebot noch besteht.
+                <p>
+                Sie werden in Kürze automatisch weitergeleitet.
+                Sollte die Weiterleitung nicht funktionieren, klicken Sie bitte <a (click)="goto(url)" target="_blank">hier</a>.
+            <p>
+            {{ timer }}
+            </p>
+        </div>
+    </div>
+</div>

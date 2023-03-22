@@ -1,0 +1,22 @@
+<form *ngIf="form" [formGroup]="form" novalidate>
+    <div [formGroup]="filterConcepts">
+        <mat-form-field class="form-check form-check-inline">
+            <mat-label>Begriff</mat-label>
+            <input type="text" class="input-text"
+                [formControl]="conceptCtrl" #conceptInput [matAutocomplete]="auto" [matChipInputFor]="chipList"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" matInput>
+            <mat-chip-list #chipList aria-label="Concept selection">
+                <mat-chip *ngFor="let concept of form.get('filterConcepts').value | keyvalue" [selectable]="true"
+                    [removable]="true" (removed)="removeConcept(concept.key)">
+                    {{concept.key}}
+                    <mat-icon matChipRemove *ngIf="removable"><i class="fas fa-times"></i></mat-icon>
+                </mat-chip>
+            </mat-chip-list>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedConcept($event)">
+                <mat-option *ngFor="let concept of filteredConcepts | async" [value]="concept">
+                    {{concept}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+    </div>
+</form>

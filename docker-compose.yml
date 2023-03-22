@@ -1,0 +1,19 @@
+version: '3'
+services:
+  graphdb:
+    image: khaller/graphdb-free:10.0.0
+    ports:
+      - '7200:7200'
+    container_name: graphdb
+    volumes:
+      - ./graphdb:/opt/graphdb/home
+      - ./graphdb-import:/root/graphdb-import
+  dhpp-mhdbdb:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - '9000:9000'
+    container_name: dhpp-mhdbdb
+    volumes:
+      - ./:/usr/src/app/app-ui

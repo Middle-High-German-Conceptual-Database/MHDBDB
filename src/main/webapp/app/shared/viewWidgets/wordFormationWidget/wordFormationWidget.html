@@ -1,0 +1,15 @@
+<expansion-panel-wrapper [asPanel]="asPanel" [title]="title" [openHelpSubject]="openHelpSubject">
+    <p *ngIf="isLoaded | async; else loading">        
+        <span *ngIf="total <= 0; else view">Keine Wortbildungsprodukte</span>
+        <span *ngFor="let word of words; last as isLast" #view>
+            <a [routerLink]="['/dictionary/view/', word.strippedId]">{{ word.label }} </a>
+            (<span *ngFor="let pos of word.pos; last as islastPos">
+                {{ pos.label }}<span *ngIf="!islastPos">,</span>
+            </span>)<span *ngIf="!isLast">,</span>
+        </span>
+    </p>    
+    <ng-template #loading>
+        <mat-spinner></mat-spinner>
+    </ng-template>
+</expansion-panel-wrapper>
+

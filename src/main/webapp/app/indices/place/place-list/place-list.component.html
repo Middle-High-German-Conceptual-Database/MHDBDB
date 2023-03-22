@@ -1,0 +1,19 @@
+<h2>Orte</h2>
+<div class="werke-blk">
+    <dhpp-form-header [routeString]="routeString"></dhpp-form-header>
+    <dhpp-form-textSearch [label]="labelTextSearch" [routeString]="routeString">
+    </dhpp-form-textSearch>
+    <dhpp-form-footer [routeString]="routeString"></dhpp-form-footer>
+</div>
+<div *ngIf="!isLoading; else loading" class="search-results" infinite-scroll [infiniteScrollDistance]="2" [infiniteScrollUpDistance]="1.5"
+    [infiniteScrollThrottle]="500" (scrolled)="onScrollDown()">
+    <div>{{ total }} Orte gefunden</div>
+    <div *ngFor="let place of instances">
+        <dhpp-place-element [instance]="place"></dhpp-place-element>
+    </div>
+    <span *ngIf="total > instances.length">Scrollen für mehr Resultate</span>
+    <mat-spinner *ngIf="isLoading"></mat-spinner>
+</div>
+<ng-template #loading>
+    <mat-spinner></mat-spinner>
+</ng-template>

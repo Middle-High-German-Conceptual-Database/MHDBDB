@@ -1,0 +1,41 @@
+<h2>Globale Suche</h2>
+<div class="werke-blk">
+    <dhpp-form-header
+    [routeString]="routeString"
+    ></dhpp-form-header>
+    <dhpp-form-textSearch 
+    [label]="labelTextSearch"     
+    [routeString]="routeString">
+    </dhpp-form-textSearch>
+    <dhpp-form-classCheckboxes
+    [label]="labelClassSearch"     
+    [routeString]="routeString"
+    ></dhpp-form-classCheckboxes>
+    <dhpp-form-footer [routeString]="routeString"></dhpp-form-footer>
+</div>
+<div class="search-results" infinite-scroll [infiniteScrollDistance]="2" [infiniteScrollUpDistance]="1.5"
+    [infiniteScrollThrottle]="500" (scrolled)="onScrollDown()">
+    <div>{{ total }} Entitäten gefunden</div>
+    <div *ngFor="let instance of instances" >        
+        <div *ngIf="instance.type == personType">
+            <dhpp-person-element [id]="instance.id"></dhpp-person-element>
+        </div>
+        <div *ngIf="instance.type == placeType">
+            <dhpp-place-element [id]="instance.id"></dhpp-place-element>
+        </div>
+        <div *ngIf="instance.type == workType">
+            <dhpp-work-element [id]="instance.id"></dhpp-work-element>
+        </div>
+        <div *ngIf="instance.type == wordType">
+            <dhpp-dictionary-element [id]="instance.id"></dhpp-dictionary-element>
+        </div>
+        <div *ngIf="instance.type == conceptualSystemType">
+            <dhpp-concept-element [id]="instance.id"></dhpp-concept-element>
+        </div>
+        <div *ngIf="instance.type == nameSystemType">
+            <dhpp-onomastics-element [id]="instance.id"></dhpp-onomastics-element>
+        </div>        
+    </div>
+    <span *ngIf="total > instances.length">Scrollen für mehr Resultate</span>
+    <mat-spinner *ngIf="isLoadingNext"></mat-spinner>
+</div>
