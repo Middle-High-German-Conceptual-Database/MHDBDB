@@ -167,19 +167,18 @@ export class SparqlQuery {
      * @memberof SparqlQuery
      */
     query(queryString: string): Promise<SparqlQueryResultI> {
-        let myHeaders = new Headers();
+        let headers = new Headers();
         let q = this._sparqlPrefixes + "\n" + queryString
         console.warn(q)
-        myHeaders.append("Accept", "application/json");
-        myHeaders.append("Content-Type", "application/sparql-query");
-        return fetch(SERVER_API_SPARQL_URL, {
+      headers.append("Accept", "application/json");
+      headers.append("Content-Type", "application/sparql-query");
+      headers.append("Authorization", "Basic " + btoa(  "mhdbdb:2ffgMEdTo#HD"));
+
+      return fetch(SERVER_API_SPARQL_URL, {
             method: 'POST',
             body: q,
             redirect: 'follow',
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/sparql-query"
-            }
+        headers
         })
             .then(function (response) {
                 return response.json();
