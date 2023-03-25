@@ -25,6 +25,7 @@ import { WorkListComponent } from "./work-list/work-list.component";
 import { WorkComponent } from './work.component';
 import { workRoutes } from "./work.route";
 import {MHDBDBFormModule} from "app/shared/formComponents/formModule";
+import {ElementComponentModule} from "app/shared/elementComponent/elementComponentModule";
 
 const ENTITY_STATES = [...workRoutes];
 
@@ -39,7 +40,7 @@ const ENTITY_STATES = [...workRoutes];
         WorkViewComponent,
         WorkListComponent
     ],
-    imports: [MHDBDBFormModule, MatCheckboxModule, MatDialogModule, MatInputModule, MatListModule, MatSnackBarModule, MatProgressSpinnerModule, CommonModule, FormsModule, AppXSharedModule, ReactiveFormsModule, TagInputModule, MatSlideToggleModule, MatExpansionModule, MatButtonModule, MatToolbarModule, MatIconModule, NgxSliderModule, FontAwesomeModule, RouterModule.forChild(ENTITY_STATES), MatFormFieldModule, MatChipsModule, MatAutocompleteModule],
+    imports: [MHDBDBFormModule, MatCheckboxModule, MatDialogModule, MatInputModule, MatListModule, MatSnackBarModule, MatProgressSpinnerModule, CommonModule, FormsModule, AppXSharedModule, ReactiveFormsModule, TagInputModule, MatSlideToggleModule, MatExpansionModule, MatButtonModule, MatToolbarModule, MatIconModule, NgxSliderModule, FontAwesomeModule, RouterModule.forChild(ENTITY_STATES), MatFormFieldModule, MatChipsModule, MatAutocompleteModule, ElementComponentModule],
     exports: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

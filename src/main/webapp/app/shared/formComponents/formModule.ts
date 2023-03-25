@@ -22,8 +22,14 @@ import { FormTextSearchComponent, FormTextSearchHelpComponent } from './formText
 import { FormTokenContextComponent, FormTokenContextHelpComponent } from './formTokenContext/formTokenContext'
 import { FormTokenComponent, FormTokenHelpComponent, FormTokenConceptsComponent, FormTokenPosComponent, FormTokenWordComponent, tokenFormService } from './formToken/formToken'
 import { FormClassCheckboxesComponent, FormClassCheckboxesHelpComponent } from './formClassCheckboxes/formClassCheckboxes'
+import {
+  FormWorkSearchComponent,
+  FormWorkSearchHelpComponent
+} from "app/shared/formComponents/formWorkSearch/formWorkSearch";
 @NgModule({
     entryComponents: [
+        FormWorkSearchComponent,
+        FormWorkSearchHelpComponent,
         FormTextSearchComponent,
         FormTextSearchHelpComponent,
         FormPosCheckboxesComponent,
@@ -42,6 +48,8 @@ import { FormClassCheckboxesComponent, FormClassCheckboxesHelpComponent } from '
     declarations: [
         FormTextSearchComponent,
         FormTextSearchHelpComponent,
+        FormWorkSearchComponent,
+        FormWorkSearchHelpComponent,
         FormPosCheckboxesComponent,
         FormPosCheckboxesHelpComponent,
         FormConceptsComponent,
@@ -80,6 +88,7 @@ import { FormClassCheckboxesComponent, FormClassCheckboxesHelpComponent } from '
         CUSTOM_ELEMENTS_SCHEMA
     ],
     exports: [
+        FormWorkSearchComponent,
         FormTextSearchComponent,
         FormPosCheckboxesComponent,
         FormConceptsComponent,

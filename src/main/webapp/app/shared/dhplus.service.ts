@@ -9,12 +9,15 @@ export class DhPlusService {
   constructor() { }
 
   query(queryString: string) {
+    let headers = new Headers();
+    headers.append("Accept", "application/json");
+    headers.append("Content-Type", "application/x-www-form-urlencoded");
+    headers.append("Authorization", "Basic " + btoa(  "mhdbdb:2ffgMEdTo#HD"));
+
     return fetch(this.resourceUrl, {
       method: 'POST',
       body: 'query=' + encodeURIComponent(queryString),
-      headers: {
-        'Content-type': 'application/x-www-form-urlencoded'
-      }
+      headers
     }).then(function (response) {
       if (response.ok) {
         return response.json();

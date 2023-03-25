@@ -9,12 +9,15 @@ export class DhPlusFnService {
   constructor() { }
 
   get(fn: string, args: any) {
+    let headers = new Headers();
+    headers.append("Accept", "application/json");
+    headers.append("Content-Type", "application/json");
+    headers.append("Authorization", "Basic " + btoa(  "mhdbdb:2ffgMEdTo#HD"));
+
     return fetch(this.resourceUrl + fn, {
       method: 'GET',
       body: this.buildBody(args),
-      headers: {
-        'Content-type': 'application/json'
-      }
+      headers
     }).then(function (response) {
       if (response.ok) {
         return response.json();
@@ -26,12 +29,15 @@ export class DhPlusFnService {
   }
 
   post(fn: string, args: any) {
+    let headers = new Headers();
+    headers.append("Accept", "application/json");
+    headers.append("Content-Type", "application/x-www-form-urlencoded");
+    headers.append("Authorization", "Basic " + btoa(  "mhdbdb:2ffgMEdTo#HD"));
+
     return fetch(this.resourceUrl + fn, {
       method: 'POST',
       body: this.buildBody(args),
-      headers: {
-        'Content-type': 'application/x-www-form-urlencoded'
-      }
+      headers
     }).then(function (response) {
       if (response.ok) {
         return response.json();
