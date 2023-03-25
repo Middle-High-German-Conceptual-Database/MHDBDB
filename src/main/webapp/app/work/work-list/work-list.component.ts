@@ -32,9 +32,4 @@ export class WorkListComponent extends BaseIndexListDirective<WorkQueryParameter
         super(router, route, locationService, http, service, history)
     }
 
-    ngOnInit() {
-      super.ngOnInit();
-
-      console.log(this.instances);
-    }
 }

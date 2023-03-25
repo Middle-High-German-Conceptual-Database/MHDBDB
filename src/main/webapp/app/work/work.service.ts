@@ -283,7 +283,9 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
                                 ?electronic dhpluso:instanceOf ?text ;
                                     a dhpluso:Electronic .
                                 ?id rdfs:label ?label .
-                                filter(langMatches( lang(?label), "${qp.lang}" ))`
+                                filter(langMatches( lang(?label), "${qp.lang}" ))
+                                FILTER regex(?label, "${qp.filter.label}", "i")
+                                `
 
     let labelQuery = ''
     labelQuery = instanceSelector;
