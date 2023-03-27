@@ -5,6 +5,8 @@ services:
     ports:
       - '7200:7200'
     container_name: graphdb
+    environment:
+      - GDB_HEAP_SIZE=12G
     volumes:
       - ./graphdb:/opt/graphdb/home
       - ./graphdb-import:/root/graphdb-import

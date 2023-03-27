@@ -254,6 +254,8 @@ export class DictionaryService extends MhdbdbIdLabelEntityService<DictionaryQuer
         countResults: boolean= false
     ): string {
 
+      console.log(qp);
+
         // Variables
         let filters = []
         let filterEntities = []

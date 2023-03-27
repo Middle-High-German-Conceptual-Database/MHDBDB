@@ -1,19 +1,19 @@
 <h2>Wortartikel </h2>
 <div class="werke-blk">
     <dhpp-form-header
-        [routeString]="routeString" 
+        [routeString]="routeString"
     ></dhpp-form-header>
-    <dhpp-form-textSearch 
-        [label]="labelTextSearch"         
-        [routeString]="routeString" 
-    ></dhpp-form-textSearch>
-    <dhpp-form-posCheckboxes 
-        [label]="labelPosSearch"         
+    <dhpp-form-LemmaSearch
+        [label]="labelTextSearch"
+        [routeString]="routeString"
+    ></dhpp-form-LemmaSearch>
+    <dhpp-form-posCheckboxes
+        [label]="labelPosSearch"
         [routeString]="routeString"
         >
     </dhpp-form-posCheckboxes>
-    <dhpp-form-concepts 
-    [label]="labelConceptSearch"     
+    <dhpp-form-concepts
+    [label]="labelConceptSearch"
     [routeString]="routeString">
     </dhpp-form-concepts>
     <dhpp-form-footer [routeString]="routeString"></dhpp-form-footer>
