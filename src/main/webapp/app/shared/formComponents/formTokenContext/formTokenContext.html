@@ -1,7 +1,12 @@
 <form *ngIf="form" [formGroup]="form" novalidate>
     <mat-card>
         <mat-card-header>
-            <mat-card-title>Kontext der Wortformen <button mat-button type="button" (click)="openHelp()"><i class="fas fa-question-circle"></i></button></mat-card-title>
+            <mat-card-title>
+                <div style="display: flex;">
+                    Kontext der Wortformen <button mat-button type="button" (click)="openHelp()"><i class="fas fa-question-circle"></i></button>
+                </div>
+            </mat-card-title>
+
         </mat-card-header>
         <mat-card-content>
             <div>
@@ -14,12 +19,12 @@
                 <mat-form-field appearance="fill">
                     <mat-label>Einheit</mat-label>
                     <mat-select [formControl]="form.get('contextUnit')">
-                        <mat-option *ngFor="let value of contextUnits" [value]="value.value">{{ value.de }}</mat-option>                           
+                        <mat-option *ngFor="let value of contextUnits" [value]="value.value">{{ value.de }}</mat-option>
                     </mat-select>
                 </mat-form-field>
                 <mat-slide-toggle [formControl]="form.get('directlyFollowing')">Reihenfolge beachten</mat-slide-toggle>
             </div>
         </mat-card-content>
     </mat-card>
-    
+
 </form>

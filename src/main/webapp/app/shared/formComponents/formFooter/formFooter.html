@@ -1,3 +1,24 @@
+<form *ngIf="form" [formGroup]="form" novalidate>
+
 <div class="werke_row flxrow">
-    <div class="werke_row_inner"><button mat-button type="submit" (click)="search()" (keydown.enter)="search()"><i class="fas fa-search"></i></button></div>
+    <div class="werke_row_inner">
+        <button mat-stroked-button color="link" type="submit" (click)="search()" (keydown.enter)="search()"><i
+            class="fas fa-search"></i> Suchen
+        </button>
+    </div>
+    <div class="werke_row_inner">
+        <button mat-stroked-button color="link" (click)="reset()"><i class="fas fa-undo-alt"></i> Zurücksetzen</button>
+    </div>
+    <div class="werke_row_inner" style="align-items: flex-end;">
+        <mat-form-field>
+            <mat-label>Suchverlauf</mat-label>
+            <mat-select [formControl]="historySelect">
+                <mat-option *ngFor="let entry of history" (click)="fromHistory(entry.id)">
+                    {{ ("00" + entry.hour).slice(-2) }}:{{ ("00" + entry.minute).slice(-2) }} "{{entry.label }}"
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
 </div>
+
+</form>

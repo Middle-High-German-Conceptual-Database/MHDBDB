@@ -88,7 +88,7 @@ export const classFilter: LabeledClassfilterI[] = [
         en: 'Work'
     }, {
         classFilter: 'Word' as unknown as classFilterT,
-        de: 'Wortartikel',
+        de: 'Lemmata',
         en: 'Dictionary Entry'
     }, {
         classFilter: 'conceptualSystem' as unknown as classFilterT,

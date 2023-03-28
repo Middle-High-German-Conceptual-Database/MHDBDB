@@ -561,7 +561,7 @@ p{ margin:0px; padding:0px; font-size:14px; line-height:normal;  color:#878888; 
   border-radius: 50%;
   height: 25px;
   width: 25px;
-  box-shadow: -8px -4px 8px 0px #ffffff, 8px 4px 12px 0px #d1d9e6;
+  box-shadow: -8px -4px 8px 0px #ebc011, 8px 4px 12px 0px #d1d9e6;
   overflow: hidden;
 }
 
@@ -602,7 +602,7 @@ p{ margin:0px; padding:0px; font-size:14px; line-height:normal;  color:#878888; 
 }
 
 .werke_row{ padding:13px 26px 13px 26px; }
-.werke_row_inner{ width:100%;}
+.werke_row_inner{ width:100%; display: flex;}
 .input-row{ padding:2px 0 0 0; width:100%; display:block;}
 .input-row .input-text{ display:block; width:100%; border:#BCBCBC solid 1PX; height:26px; line-height:26px; padding:0 15px; color:#b395d2; font-size:15px; }
 
@@ -680,3 +680,8 @@ html .range_blk .ui-button.ui-state-disabled:active{box-shadow:none !important; 
 .suche_blk_bottom.no-pad{ padding-top:0px; }
 
 .mobile-price{ display:none; }
+
+
+.mat-form-field-infix {
+  border: 0px;
+}

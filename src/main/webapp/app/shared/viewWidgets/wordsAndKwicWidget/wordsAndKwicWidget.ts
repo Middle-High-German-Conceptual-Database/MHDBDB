@@ -18,7 +18,7 @@ import { Concept } from './../../../concept/concept.class';
     styleUrls: ['./wordsAndKwicWidget.scss']
 })
 export class WordsAndKwicWidgetComponent extends ViewWidgetsDirective<DictionaryQueryParameterI, DictionaryFilterI, DictionaryOptionsI, Concept, DictionaryService> implements OnInit, OnChanges {
-    title: string;    
+    title: string;
     total: number
     words: WordClass[]
     includeNarrowerConcepts = false
@@ -34,15 +34,15 @@ export class WordsAndKwicWidgetComponent extends ViewWidgetsDirective<Dictionary
         public textService: TextService
     ) {
         super(service, help)
-        this.title= "Wortartikel"
+        this.title= "Lemmata"
     }
 
-    ngOnInit() {                
-        super.ngOnInit()     
+    ngOnInit() {
+        super.ngOnInit()
     }
 
     ngOnChanges() {
-        this.first()            
+        this.first()
     }
 
     first() {
@@ -60,31 +60,31 @@ export class WordsAndKwicWidgetComponent extends ViewWidgetsDirective<Dictionary
         }
     }
 
-    next() {        
+    next() {
         if (this.instance) {
             this.service.getWordsByConcepts(this.instance, this.includeNarrowerConcepts, this.limit, this.offset).then(
                 data => {
-                    this.words = data[0]                        
+                    this.words = data[0]
                 }
             )
         }
     }
-    
+
     openHelp() {
         const dialogRef = this.help.open(WordsAndKwicWidgetHelpComponent);
         dialogRef.afterClosed().subscribe(result => {
             console.log(`Dialog result: ${result}`);
         });
-    }   
+    }
 
-    toggleNarrower(event: MatSlideToggleChange) {        
+    toggleNarrower(event: MatSlideToggleChange) {
         this.includeNarrowerConcepts = event.checked;
         this.first()
     }
 
     pageEventTrigger(event: PageEvent) {
-        this.offset= event.pageIndex * this.limit        
-        this.next()        
+        this.offset= event.pageIndex * this.limit
+        this.next()
     }
 
 }

@@ -1,8 +1,8 @@
-<h1>Eigennamen</h1>
+<h1>Namenssystem</h1>
 <div class="begriffs_blk flxrow">
     <div class="begriffs-left">
 
-        <div class="begriffs-left_inner">            
+        <div class="begriffs-left_inner">
             <mat-tab-group class="tab-content" id="pills-tabContent" dynamicHeight>
                 <mat-tab label="Baum">
                     <mat-tree class="tab-pane tab-links tab-content" [dataSource]="dataSource" [treeControl]="treeControl">
@@ -27,14 +27,14 @@
                     </mat-tree>
                 </mat-tab>
                 <mat-tab label="Liste"> Liste nicht implementiert. </mat-tab>
-            </mat-tab-group>                              
+            </mat-tab-group>
         </div>
     </div>
 
     <div class="begriffs-right">
         <div class="info_blk">
             <dhpp-onomastics-view *ngIf="concept; else noConceptSelected" [instance]="concept"></dhpp-onomastics-view>
-            <ng-template #noConceptSelected>Bitte Namenskategorie wählen</ng-template>            
+            <ng-template #noConceptSelected>Bitte Namenskategorie wählen</ng-template>
         </div>
     </div>
 </div>

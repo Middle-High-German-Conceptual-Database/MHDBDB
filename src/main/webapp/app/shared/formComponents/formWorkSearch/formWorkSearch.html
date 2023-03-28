@@ -1,17 +1,15 @@
 <form *ngIf="form" [formGroup]="form" novalidate>
     <div class="werke_row flxrow">
+
         <div class="radio-btn">
-            <input class="state" type="checkbox" id="isLabelActive" formControlName="isLabelActive">
-            <label class="label" for="isLabelActive">
-                <div class="indicator"></div>
-                <span class="text">{{ label }}</span>
-            </label>
+            <mat-checkbox class="example-margin" formControlName="isLabelActive">{{ label }}</mat-checkbox>
         </div>
+
         <div class="werke_row_inner">
-            <div class="input-row">                
+            <div class="input-row">
                 <mat-form-field class="form-check form-check-inline">
-                    <input type="text" class="input-text" formControlName="label" matInput>                    
-                </mat-form-field>                
+                    <input type="text" class="input-text" formControlName="label" matInput>
+                </mat-form-field>
             </div>
         </div>
         <button mat-button type="button" (click)="openHelp()"><i class="fas fa-question-circle"></i></button>
