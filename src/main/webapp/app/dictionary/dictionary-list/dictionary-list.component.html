@@ -1,4 +1,4 @@
-<h2>Wortartikel </h2>
+<h2>Lemmata </h2>
 <div class="werke-blk">
     <dhpp-form-header
         [routeString]="routeString"
@@ -21,7 +21,7 @@
 
 <div *ngIf="!isLoading; else loading" class="search-results" infinite-scroll [infiniteScrollDistance]="2" [infiniteScrollUpDistance]="1.5"
     [infiniteScrollThrottle]="500" (scrolled)="onScrollDown()">
-    <div >{{ total }} Wortartikel gefunden</div>
+    <div >{{ total }} Lemmata gefunden</div>
     <div *ngFor="let listElement of instances">
         <dhpp-dictionary-element [instance]="listElement"></dhpp-dictionary-element>
     </div>
