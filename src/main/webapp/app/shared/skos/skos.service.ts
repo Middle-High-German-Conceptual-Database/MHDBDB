@@ -65,7 +65,7 @@ export abstract class SkosConceptService<P extends skosQueryParameterMap<F, O>, 
         if (this.rootConcept) {
             qp.filter.broader = this.rootConcept
         } else {
-            qp.filter.topConcepts = true
+           qp.filter.topConcepts = true
         }
         qp.limit = undefined
         const query = this._sparqlQuery(qp)
@@ -125,7 +125,7 @@ export abstract class SkosConceptService<P extends skosQueryParameterMap<F, O>, 
         }
 
         let topConcepts = ''
-        if ('topConcepts' in qp.filter && qp.filter.topConcepts) {
+        if ('topConcepts' in qp.filter && qp.filter.topConcepts && !('broader' in qp.filter && qp.filter.broader)) {
             topConcepts = `${qp.filter.scheme} skos:hasTopConcept ?id.`
         }
 

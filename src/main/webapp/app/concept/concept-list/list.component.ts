@@ -32,7 +32,7 @@ export class DynamicDatabase {
       skos:broader :concept_10000000 ;
       skos:inScheme :conceptualSystem ;
       skos:prefLabel "Himmel/Atmosphäre/Himmelskörper"@de , "Sky/Atmosphere/Celestial Bodies"@en .
-  
+
     SELECT  ?concept ?prefLabel
       WHERE {
           ?concept skos:broader mhdbdbi:concept_10000000 .
@@ -40,14 +40,14 @@ export class DynamicDatabase {
           ?concept a mhdbdbodict:LexicalConcept .
           ?concept skos:prefLabel ?prefLabel .
       }
-  
+
      */
 
     /*
       :conceptualSystem dct:title "Begriffssystem"@de , "Conceptual System"@en ;
         a skos:ConceptScheme , mhdbdbodict:ConceptSet ;
         skos:hasTopConcept :concept_10000000 , :concept_20000000 , :concept_30000000 , :concept_90000000 .
-  
+
         SELECT  ?concept ?prefLabel
       WHERE {
           mhdbdbi:conceptualSystem a skos:ConceptScheme .
@@ -262,7 +262,7 @@ export class ConceptListComponent implements OnInit {
         private database: DynamicDatabase,
     ) {
 
-        // this.treeControl = new CustomTreeControl<DynamicFlatNode>(this.getLevel, this.isExpandable); 
+        // this.treeControl = new CustomTreeControl<DynamicFlatNode>(this.getLevel, this.isExpandable);
         // this.dataSource = new DynamicDataSource(this.treeControl, database, this.conceptService);
 
         // conceptService.getRoot("de").then(data => {
@@ -309,6 +309,7 @@ export class ConceptListComponent implements OnInit {
 
     buildFilterQuery() {
 
+      console.log("list querty");
         let query = `SELECT DISTINCT ?subject ?writtenRep ?pos
     WHERE {`;
 
