@@ -71,7 +71,6 @@ export class ConceptService extends SkosConceptService<ConceptQueryParameterI, C
     }
 
     _sparqlQuery(qp: ConceptQueryParameterI): string {
-      console.log(qp);
         let results: string = super._sparqlQuery(qp as skosQueryParameterMap<ConceptFilterI, ConceptOptionsI>)
         return results
     }

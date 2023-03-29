@@ -315,7 +315,7 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
       q = instanceSelect;
     }
 
-    console.warn(q)
+   // console.warn(q)
     return q
   }
 }

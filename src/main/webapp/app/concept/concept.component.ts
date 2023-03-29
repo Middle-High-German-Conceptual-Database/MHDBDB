@@ -25,6 +25,9 @@ export class ConceptComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+
+
   }
 
   previousPage() {

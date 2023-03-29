@@ -67,7 +67,7 @@ export class FormConceptsComponent<qT extends QueryParameterI<f, o>, f extends F
         this.conceptCtrl.setValue(null);
     }
 
-    initHtmlForm(filterMap: f) {        
+    initHtmlForm(filterMap: f) {
         this.filterConcepts = new FormGroup({});
         this.form = new FormGroup({
             filterConcepts: this.filterConcepts,
@@ -98,7 +98,7 @@ export class FormConceptsComponent<qT extends QueryParameterI<f, o>, f extends F
         filterMap.concepts.forEach(
             conceptUri => {
                 const concept = this.conceptList.find(element => element.id == conceptUri)
-                if (concept) {                    
+                if (concept) {
                     this.concepts.addControl(concept.label.trim(), new FormControl(true))
                 } else {
                     console.error("concept not found: " + conceptUri)
@@ -129,6 +129,7 @@ export class FormConceptsComponent<qT extends QueryParameterI<f, o>, f extends F
         this.conceptService.getAllConcepts().then(
             data => {
                 this.conceptList = data
+              console.log(data);
                 super.ngOnInit()
             }
         )

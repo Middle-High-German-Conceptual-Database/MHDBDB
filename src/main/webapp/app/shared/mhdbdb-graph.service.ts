@@ -169,7 +169,7 @@ export class SparqlQuery {
     query(queryString: string): Promise<SparqlQueryResultI> {
         let headers = new Headers();
         let q = this._sparqlPrefixes + "\n" + queryString
-        console.warn(q)
+      //  console.warn(q)
       headers.append("Accept", "application/json");
       headers.append("Content-Type", "application/sparql-query");
       headers.append("Authorization", "Basic " + btoa(  "mhdbdb:2ffgMEdTo#HD"));
@@ -291,7 +291,7 @@ export abstract class MhdbdbGraphService<P extends QueryParameterI<F, O>, F exte
      * @memberof MhdbdbGraphService
      */
     protected _labelFilterRegEx(labelFilter: string): string {
-        labelFilter = this._regExpEscape(labelFilter)
+       // labelFilter = this._regExpEscape(labelFilter)
         let newlabelfilter = String(labelFilter).trim()
         const replacements = {
             '\\*': '.*',

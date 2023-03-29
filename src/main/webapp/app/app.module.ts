@@ -51,7 +51,7 @@ import {RouterModule} from "@angular/router";
     MHDBDBFormModule,
     MHDBDBViewWidgetsModule,
     MaterialModule,
-    RouterModule.forRoot(routes, {useHash: false}),
+    RouterModule.forRoot(routes, {useHash: true, onSameUrlNavigation: 'reload'}),
     TreeModule.forRoot()
   ],
   exports: [

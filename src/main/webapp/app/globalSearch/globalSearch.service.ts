@@ -72,7 +72,7 @@ export class GlobalSearchService extends MhdbdbIdLabelEntityService<GlobalSearch
                     dhpluso:hasExpression ?text .
                 ?text a dhpluso:Text .
                 ?electronic dhpluso:instanceOf ?text ;
-                            a dhpluso:Electronic .                                
+                            a dhpluso:Electronic .
                 ?id rdfs:label ?label .
                 Bind('Work' as ?type)
                 filter(langMatches( lang(?label), "${qp.lang}" ))
@@ -82,7 +82,7 @@ export class GlobalSearchService extends MhdbdbIdLabelEntityService<GlobalSearch
         const selectorWord = `
             {
                 ?id a dhpluso:Word .
-                ?id dhpluso:canonicalForm/dhpluso:writtenRep ?label . 
+                ?id dhpluso:canonicalForm/dhpluso:writtenRep ?label .
                 Bind('Word' as ?type)
             }
         `
@@ -91,7 +91,7 @@ export class GlobalSearchService extends MhdbdbIdLabelEntityService<GlobalSearch
             {
                 ?id a skos:Concept .
                 ?id skos:inScheme mhdbdbi:conceptualSystem .
-                
+
                 ?id skos:prefLabel ?label .
                 Bind('conceptualSystem' as ?type)
                 filter(langMatches( lang(?label), "${qp.lang}" ))
@@ -167,14 +167,14 @@ export class GlobalSearchService extends MhdbdbIdLabelEntityService<GlobalSearch
         }
 
         let instanceSelect = `
-            ${selectors.join(' UNION ')}            
+            ${selectors.join(' UNION ')}
             ${filters.join("\n")}
         `
 
         let q = ''
         if (countResults) {
             q = `
-                SELECT DISTINCT (count(?id) as ?count) 
+                SELECT DISTINCT (count(?id) as ?count)
                 ${this._sparqlNamedGraph(NAMEDGRAPHS.get('default'))}
                 ${this._sparqlNamedGraph(NAMEDGRAPHS.get('dict'))}
                 ${this._sparqlNamedGraph(NAMEDGRAPHS.get('vocab'))}
@@ -183,7 +183,7 @@ export class GlobalSearchService extends MhdbdbIdLabelEntityService<GlobalSearch
                         ${instanceSelect}
                     }
                 }
-                
+
             `
         } else {
             q = `
@@ -195,14 +195,14 @@ export class GlobalSearchService extends MhdbdbIdLabelEntityService<GlobalSearch
                 ${this._sparqlNamedGraph(NAMEDGRAPHS.get('dict'))}
                 ${this._sparqlNamedGraph(NAMEDGRAPHS.get('vocab'))}
                 WHERE {
-                    ${instanceSelect}                    
-                } 
+                    ${instanceSelect}
+                }
                 GROUP BY ?id ?type
                 ${this._sparqlOrder(qp.order, qp.desc)}
-                ${this._sparqlLimitOffset(qp.limit, qp.offset)}                   
+                ${this._sparqlLimitOffset(qp.limit, qp.offset)}
         `
         }
-        console.warn(q)
+      //  console.warn(q)
         return q
     }
 
