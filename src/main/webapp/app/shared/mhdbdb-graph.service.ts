@@ -169,7 +169,7 @@ export class SparqlQuery {
     query(queryString: string): Promise<SparqlQueryResultI> {
         let headers = new Headers();
         let q = this._sparqlPrefixes + "\n" + queryString
-      //  console.warn(q)
+        console.warn(q)
       headers.append("Accept", "application/json");
       headers.append("Content-Type", "application/sparql-query");
       headers.append("Authorization", "Basic " + btoa(  "mhdbdb:2ffgMEdTo#HD"));

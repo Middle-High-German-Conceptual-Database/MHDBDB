@@ -1,0 +1,59 @@
+<expansion-panel-wrapper [asPanel]="asPanel" [title]="title" [openHelpSubject]="openHelpSubject">
+    <div class="inner_info">
+        <h2>Werkdaten</h2>
+        <span *ngIf="isLoaded | async; else loading">
+
+        <h3>AutorIn</h3>
+            <span>{{ metadata.authorLabel }}</span>
+            <span *ngIf="metadata.authorSameAs.length <= 0"><em>Keine externen Daten gefunden</em></span>
+            <div>
+                <h4>Linked Open Data</h4>
+                <ul style="margin-left: 25px;">
+                    <li *ngFor="let sameAs of metadata.authorSameAs;">
+                        <a href="{{sameAs}}" target="_blank">{{sameAs}}</a>
+                    </li>
+                </ul>
+            </div>
+    </span>
+    </div>
+
+    <div class="inner_info">
+        <h2>Verknüpfte Instanzen</h2>
+        <span *ngIf="isLoaded | async; else loading">
+        <span *ngIf="metadata.instances.length <= 0"><em>Keine externen Daten gefunden</em></span>
+        <ul style="margin-left: 25px;">
+            <li *ngFor="let instance of metadata.instances;">
+                <a href="{{instance}}" target="_blank">{{instance}}</a>
+            </li>
+        </ul>
+    </span>
+    </div>
+
+    <!--<div class="inner_info">
+        <h2>Bibliografische Metadaten</h2>
+        <span *ngIf="isLoaded | async; else loading">
+        <span *ngIf="metadata.sameAs.length <= 0"><em>Keine externen Daten gefunden</em></span>
+        <ul style="margin-left: 25px;">
+            <li *ngFor="let sameAs of metadata.sameAs;">
+                <a href="{{sameAs}}" target="_blank">{{sameAs}}</a>
+            </li>
+        </ul>
+    </span>
+    </div>-->
+
+    <div class="inner_info">
+        <h2>Linked Open Data</h2>
+        <span *ngIf="isLoaded | async; else loading">
+        <span *ngIf="metadata.sameAs.length <= 0"><em>Keine externen Daten gefunden</em></span>
+        <ul style="margin-left: 25px;">
+            <li *ngFor="let sameAs of metadata.sameAs;">
+                <a href="{{sameAs}}" target="_blank">{{sameAs}}</a>
+            </li>
+        </ul>
+    </span>
+    </div>
+
+    <ng-template #loading>
+        <mat-spinner></mat-spinner>
+    </ng-template>
+</expansion-panel-wrapper>

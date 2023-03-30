@@ -1,0 +1,20 @@
+<expansion-panel-wrapper [asPanel]="asPanel" [title]="title" [openHelpSubject]="openHelpSubject">
+    <span *ngIf="isLoaded | async; else loading">
+        <span *ngIf="total <= 0"><em>Wort nicht im Korpus</em></span>
+        <ul #view>
+            <li *ngFor="let kwic of kwics;">
+                ...
+                {{joinTokens(kwic.left)}}
+                <mark>{{ kwic.center.content }}</mark>
+                {{joinTokens(kwic.right)}}
+                ...
+            </li>
+        </ul>
+        <button mat-mini-fab *ngIf="total > 0 && offset + limit < total" id="occurencesButton" type="button" mat-button (click)="moreOccurrences()">
+            <i class="fas fa-plus" color="accent"></i>
+        </button>
+    </span>
+    <ng-template #loading>
+        <mat-spinner></mat-spinner>
+    </ng-template>
+</expansion-panel-wrapper>

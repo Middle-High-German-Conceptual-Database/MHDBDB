@@ -4,7 +4,8 @@ import {AppComponent} from "app/app.component";
 import {AppHomeComponent} from "app/home/home.component";
 
 export const routes: Routes = [
-  {path: '', component: AppComponent},
+  {path: '', component: AppHomeComponent},
+  {path: 'home', component: AppHomeComponent},
   {
     path: 'reference',
     loadChildren: () => import('./reference/reference.module').then(m => m.ReferenceModule),

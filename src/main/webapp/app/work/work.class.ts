@@ -26,3 +26,34 @@ export class WorkClass extends MhdbdbIdLabelEntity {
        // this.dateOfCreation = new DatePrecision(date, precision)
     }
 }
+
+
+export class WorkMetadataClass extends WorkClass implements AuthorsI, DateOfCreationI{
+
+//implements AuthorsI, DateOfCreationI {
+
+  public authors: Person[];
+
+  public sameAs: any[];
+
+  public instances: any[];
+  public dateOfCreation: DatePrecision
+
+  public authorLabel: string;
+  public authorSameAs: any[];
+
+  constructor(
+    public id: string,
+    public label: string,
+
+    authors: Person[],
+
+    sameAs: any[],
+    authorSameAs: any[],
+
+  ) {
+    super(id, label)
+    this.sameAs = sameAs
+    this.authors = authors
+  }
+}

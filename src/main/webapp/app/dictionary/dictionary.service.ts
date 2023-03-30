@@ -359,7 +359,7 @@ export class DictionaryService extends MhdbdbIdLabelEntityService<DictionaryQuer
                     }
                 }
             `}
-          //  console.warn(q)
+          console.warn(q)
         return q
     }
 

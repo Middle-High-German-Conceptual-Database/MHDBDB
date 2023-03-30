@@ -202,7 +202,7 @@ export class GlobalSearchService extends MhdbdbIdLabelEntityService<GlobalSearch
                 ${this._sparqlLimitOffset(qp.limit, qp.offset)}
         `
         }
-      //  console.warn(q)
+      console.warn(q)
         return q
     }
 
