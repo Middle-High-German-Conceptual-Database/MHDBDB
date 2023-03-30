@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MhdbdbIdEntity, IdLabelI } from '../../baseIndexComponent/baseindexcomponent.class';
@@ -8,6 +8,7 @@ import { Kwic, Token } from '../../../text/text.class';
 import { TextService } from '../../../text/text.service';
 import { ViewWidgetsDirective } from '../viewWidgetsDirective';
 import {WorkFilterI, WorkOptionsI, WorkQueryParameterI, WorkService} from "app/work/work.service";
+import {WorkMetadataClass} from "app/work/work.class";
 
 @Component({
     selector: 'dhpp-widget-work',
@@ -16,7 +17,7 @@ import {WorkFilterI, WorkOptionsI, WorkQueryParameterI, WorkService} from "app/w
 })
 export class WorkWidgetComponent extends ViewWidgetsDirective<WorkQueryParameterI, WorkFilterI, WorkOptionsI, MhdbdbIdEntity, WorkService> implements OnInit {
     total: number
-    metadata: any;
+    metadata: WorkMetadataClass;
     public title: string = "Werk"
     punctuationRegexp = new RegExp('^[^\w\s]$')
 
@@ -32,10 +33,12 @@ export class WorkWidgetComponent extends ViewWidgetsDirective<WorkQueryParameter
     }
 
     ngOnInit(): void {
-        super.ngOnInit()
+        super.ngOnInit();
         if (this.instance) {
-            this.loadMetadata()
+          this.route.params.subscribe(params => {
+            this.loadMetadata(params['id']);
             this.isLoaded = Promise.resolve(true)
+          });
         }
     }
 
@@ -54,9 +57,9 @@ export class WorkWidgetComponent extends ViewWidgetsDirective<WorkQueryParameter
         return stringList.join('')
     }
 
-    public loadMetadata() {
+    public loadMetadata(id: string) {
 
-        this.service.getWorkMetadata(this.instance.id)
+        this.service.getWorkMetadata(id)
             .then(data => {
                 this.isLoaded = Promise.resolve(true);
                 this.metadata = data[0][0];
@@ -67,10 +70,6 @@ export class WorkWidgetComponent extends ViewWidgetsDirective<WorkQueryParameter
             })
     }
 
-    public moreOccurrences() {
-        this.offset = this.offset + this.limit
-        this.loadMetadata()
-    }
 
 }
 

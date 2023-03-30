@@ -17,8 +17,6 @@ import {WordClass} from "app/dictionary/dictionary.class";
 import {DatePrecision} from "app/shared/baseIndexComponent/baseindexcomponent.class";
 
 export interface WorkQueryParameterI extends QueryParameterI<WorkFilterI, WorkOptionsI> {
-  filter: WorkFilterI,
-  option: WorkOptionsI
 }
 
 export interface WorkFilterI extends FilterIdI, FilterLabelI {
@@ -60,10 +58,10 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
     this._languageService.getCurrent().then(v => this._defaultQp.lang = v)
   }
 
-  getWorkMetadata(workId: string): Promise<[(WorkMetadataClass[]), number]> {
+  async getWorkMetadata(workId: string): Promise<[(WorkMetadataClass[]), number]> {
     const query = `
     select distinct ?id ?label ?sameAs ?dateOfCreation ?authorId ?authorSameAs ?authorLabel ?instance where {
-            ${this._sparqlGenerateBinding(workId)}
+            Bind(mhdbdbi:${workId} AS ?id) .
             ?id rdfs:label ?label .
             ?id owl:sameAs ?sameAs .
             ?id dcterms:created ?dateOfCreation .
@@ -289,7 +287,6 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
     let results: WorkMetadataClass[] = super._jsonToObject(bindings) as WorkMetadataClass[]
     bindings.forEach(
       row => {
-        console.log(row);
         let element = results.find(element => element.id.toString() === row.id.value)
 
         if ('sameAs' in row && element && !element.sameAs) {

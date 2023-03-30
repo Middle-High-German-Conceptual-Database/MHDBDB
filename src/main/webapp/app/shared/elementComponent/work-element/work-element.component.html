@@ -1,7 +1,7 @@
 <div class="suche_blk_bottom no-pad" *ngIf="isLoaded">
     <div class="suche-row flxrow">
         <div class="name flxrow">
-            <a [routerLink]="['/work/view', instance.strippedId]" [state]="{ instance: instance }">
+            <a [routerLink]="['/work/view', instance.strippedId]" [state]="{ instance: instance, temp: instance }">
                 <i class="fas fa-book"></i>
                 <span class="fil-text">{{ instance.label }}</span>
              </a>

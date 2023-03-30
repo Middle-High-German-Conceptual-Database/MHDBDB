@@ -37,7 +37,7 @@ export class WorkMetadataClass extends WorkClass implements AuthorsI, DateOfCrea
   public sameAs: any[];
 
   public instances: any[];
-  public dateOfCreation: DatePrecision
+  public dateOfCreation: DatePrecision;
 
   public authorLabel: string;
   public authorSameAs: any[];
@@ -55,5 +55,6 @@ export class WorkMetadataClass extends WorkClass implements AuthorsI, DateOfCrea
     super(id, label)
     this.sameAs = sameAs
     this.authors = authors
+    this.authorSameAs = authorSameAs
   }
 }
