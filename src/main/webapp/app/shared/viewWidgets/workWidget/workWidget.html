@@ -1,6 +1,10 @@
 <expansion-panel-wrapper [asPanel]="asPanel" [title]="title" [openHelpSubject]="openHelpSubject">
     <div class="inner_info">
+
+        <h1>{{ metadata.label }}</h1>
+
         <h2>Werkdaten</h2>
+
         <span *ngIf="isLoaded | async; else loading">
 
         <h3>AutorIn</h3>

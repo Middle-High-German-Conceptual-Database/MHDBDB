@@ -2,17 +2,21 @@
 
 <div class="container">
     <ul>
-        <li *ngFor="let filter of filters">
+        <li *ngFor="let filter of filters; index as i">
             <div class="row">
                 <div class="col" style="margin: 20px;">
                     <mat-tab-group animationDuration="0ms" style="width: 100%;">
                         <mat-tab label="Wort">
                             <div class="werke-blk">
                                 <dhpp-form-token [routeString]="routeString"></dhpp-form-token>
+
+                                <dhpp-form-author [routeString]="routeString" [label]="labelAuthorSearch"></dhpp-form-author>
+
                                 <dhpp-form-tokenContext [routeString]="routeString"></dhpp-form-tokenContext>
+
                             </div>
                         </mat-tab>
-                        <mat-tab label="Begriff">
+                       <!-- <mat-tab label="Begriff">
                             <div class="werke-blk">
                                     <dhpp-form-token-concepts [tokenFilter]="tokenFilter"></dhpp-form-token-concepts>
                             </div>
@@ -21,18 +25,21 @@
                             <div class="werke-blk">
 
                             </div>
-                        </mat-tab>
+                        </mat-tab>-->
                     </mat-tab-group>
                     <div class="row" style="padding-top: 35px; padding-bottom: 35px;">
                         <div class="col-1" style="padding-left: 40px;">
-                            <button mat-mini-fab (click)="addFilter()"><i class="fas fa-plus"></i></button>
+                            <button mat-mini-fab [disabled]="i < filters.length - 1" (click)="addFilter()"><i class="fas fa-plus"></i></button>
                         </div>
-                        <div class="col-11" style="padding-top: 10px;">
+                        <div class="col-10" style="padding-top: 10px;">
                             <mat-radio-group aria-label="Verbindung zu nächsten Wortformen">
                                 <mat-radio-button value="true">Und</mat-radio-button>
                                 <mat-radio-button value="false">Oder</mat-radio-button>
                                 <mat-radio-button value="not">Nicht</mat-radio-button>
                             </mat-radio-group>
+                        </div>
+                        <div class="col-1" style="padding-left: 40px;">
+                            <button mat-mini-fab [disabled]="i == 0" (click)="removeFilter(i)"><i class="fas fa-minus"></i></button>
                         </div>
                     </div>
                 </div>

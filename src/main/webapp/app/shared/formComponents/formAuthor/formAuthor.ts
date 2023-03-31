@@ -4,15 +4,27 @@ import { MatDialog } from '@angular/material/dialog';
 import { HistoryService } from '../../historyService';
 import { FilterLabelI, OptionsI, QueryParameterI } from '../../mhdbdb-graph.service';
 import { FormDirective } from '../formDirective';
+import {Options} from "@angular-slider/ngx-slider";
 
 @Component({
-    selector: 'dhpp-form-textSearch',
-    templateUrl: './formTextSearch.html',
-    styleUrls: ['./formTextSearch.scss']
+    selector: 'dhpp-form-author',
+    templateUrl: './formAuthor.html',
+    styleUrls: ['./formAuthor.scss']
 })
-export class FormTextSearchComponent<qT extends QueryParameterI<f, o>, f extends FilterLabelI, o extends OptionsI, instanceClass> extends FormDirective<qT,f,o,instanceClass> implements OnInit, OnDestroy {
+export class FormAuthorComponent<qT extends QueryParameterI<f, o>, f extends FilterLabelI, o extends OptionsI, instanceClass> extends FormDirective<qT,f,o,instanceClass> implements OnInit, OnDestroy {
 
-    constructor(
+  labelAuthorTimeSearch = 'Lebensdaten AutorIn';
+
+  minValue: number = 900;
+  maxValue: number = 1200;
+  options: Options = {
+    floor: 700,
+    ceil: 1600,
+    step: 100,
+    showTicks: true
+  };
+
+  constructor(
         public historyService: HistoryService<qT, f, o, instanceClass>,
         public help: MatDialog
     ) {
@@ -23,7 +35,6 @@ export class FormTextSearchComponent<qT extends QueryParameterI<f, o>, f extends
         this.form = new FormGroup({
             label: new FormControl(filterMap.label),
             isLabelActive: new FormControl(filterMap.isLabelActive),
-
         });
     }
 
@@ -55,7 +66,7 @@ export class FormTextSearchComponent<qT extends QueryParameterI<f, o>, f extends
     }
 
     openHelp() {
-        const dialogRef = this.help.open(FormTextSearchHelpComponent);
+        const dialogRef = this.help.open(FormAuthorHelpComponent);
         dialogRef.afterClosed().subscribe(result => {
             console.log(`Dialog result: ${result}`);
         });
@@ -71,7 +82,7 @@ export class FormTextSearchComponent<qT extends QueryParameterI<f, o>, f extends
 }
 
 @Component({
-    selector: 'dhpp-form-textSearch-help',
-    templateUrl: './formTextSearchHelp.html',
+    selector: 'dhpp-form-author-help',
+    templateUrl: './formAuthorHelp.html',
 })
-export class FormTextSearchHelpComponent { }
+export class FormAuthorHelpComponent { }

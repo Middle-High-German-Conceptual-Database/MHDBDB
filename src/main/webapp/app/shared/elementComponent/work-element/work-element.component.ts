@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import {Component, Input, OnInit} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BaseIndexElementDirective } from '../../baseIndexComponent/element/element.component';
-import { WorkClass } from '../../../work/work.class';
+import {WorkClass, WorkMetadataClass} from '../../../work/work.class';
 import { WorkFilterI, WorkOptionsI, WorkQueryParameterI, WorkService } from '../../../work/work.service';
 
 @Component({
@@ -15,7 +15,7 @@ export class WorkElementComponent extends BaseIndexElementDirective<WorkClass, W
 
   @Input() public instance: any;
 
-    constructor(
+  constructor(
         public router: Router,
         public route: ActivatedRoute,
         public locationService: Location,
@@ -27,17 +27,6 @@ export class WorkElementComponent extends BaseIndexElementDirective<WorkClass, W
 
   ngOnInit(): void {
     super.ngOnInit();
-  }
-
-  public loadMetadata(id: string) {
-
-    this.service.getWorkMetadata(id)
-      .then(data => {
-      //  this.metadata = data[0][0];
-      })
-      .catch(error => {
-        // console.warn(error)
-      })
   }
 
 }

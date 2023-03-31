@@ -37,6 +37,8 @@ import {
   FormLemmaSearchComponent,
   FormLemmaSearchHelpComponent
 } from "app/shared/formComponents/formLemmaSearch/formLemmaSearch";
+import {FormAuthorComponent, FormAuthorHelpComponent} from "app/shared/formComponents/formAuthor/formAuthor";
+import {NgxSliderModule} from "@angular-slider/ngx-slider";
 
 @NgModule({
   entryComponents: [
@@ -58,6 +60,8 @@ import {
     FormClassCheckboxesHelpComponent,
     FormHeaderComponent,
     FormFooterComponent,
+    FormAuthorComponent,
+    FormAuthorHelpComponent
   ],
   declarations: [
     FormLemmaSearchComponent,
@@ -81,6 +85,8 @@ import {
     FormTokenContextHelpComponent,
     FormClassCheckboxesComponent,
     FormClassCheckboxesHelpComponent,
+    FormAuthorComponent,
+    FormAuthorHelpComponent
   ],
   imports: [
     AppXSharedModule,
@@ -98,7 +104,8 @@ import {
     MatInputModule,
     MatRadioModule,
     MatSelectModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    NgxSliderModule
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
@@ -114,7 +121,8 @@ import {
     FormTokenComponent,
     FormTokenContextComponent,
     FormClassCheckboxesComponent,
-    FormTokenConceptsComponent
+    FormTokenConceptsComponent,
+    FormAuthorComponent
   ]
 })
 export class MHDBDBFormModule {

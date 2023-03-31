@@ -21,6 +21,7 @@ export class TextListComponent extends BaseIndexListDirective<TextPassageQueryPa
   labelPosSearch = 'Wortart';
   labelConceptSearch = 'Begriffe';
 
+  labelAuthorSearch = 'AutorIn';
   tokenFilter?: TokenFilterI;
 
   constructor(
@@ -42,7 +43,14 @@ export class TextListComponent extends BaseIndexListDirective<TextPassageQueryPa
   public addFilter() {
     this.filters.push({ id: 2, name: 'zweiter filter' });
   }
-    public first() {
+
+  public removeFilter(i: number) {
+    this.filters.splice(i, 1);
+  }
+
+
+
+  public first() {
         if (!this.isLoading) {
             this.isLoading = true;
             this.qp.offset = 0
