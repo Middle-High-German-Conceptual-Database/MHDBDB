@@ -15,6 +15,9 @@ export class WordClass extends MhdbdbIdLabelEntity implements PosI, SensesI, Sub
     public subTerms: WordClass[]
     public compounds: WordClass[]
     public forms: string[]
+
+    public texts: PoS[]
+
     constructor(
         id: string,
         lemma: string,
@@ -22,7 +25,8 @@ export class WordClass extends MhdbdbIdLabelEntity implements PosI, SensesI, Sub
         senses : SenseClass[] = [],
         subTerms: WordClass[] = [],
         compounds: WordClass[] = [],
-        forms: string[] = []
+        forms: string[] = [],
+        texts: PoS[] = []
     ) {
         super(id, lemma)
         this.lemma= lemma
@@ -31,6 +35,7 @@ export class WordClass extends MhdbdbIdLabelEntity implements PosI, SensesI, Sub
         this.subTerms= subTerms
         this.compounds = compounds
         this.forms= forms
+        this.texts=texts
     }
 }
 

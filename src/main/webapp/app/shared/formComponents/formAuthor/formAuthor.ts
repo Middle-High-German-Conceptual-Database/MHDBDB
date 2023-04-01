@@ -34,7 +34,7 @@ export class FormAuthorComponent<qT extends QueryParameterI<f, o>, f extends Fil
     initHtmlForm(filterMap: f) {
         this.form = new FormGroup({
             label: new FormControl(filterMap.label),
-            isLabelActive: new FormControl(filterMap.isLabelActive),
+          isLabelActive: new FormControl(filterMap.isLabelActive),
         });
     }
 

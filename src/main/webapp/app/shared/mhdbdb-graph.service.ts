@@ -505,8 +505,9 @@ export abstract class MhdbdbGraphService<P extends QueryParameterI<F, O>, F exte
      * @memberof MhdbdbGraphService
      */
     public getInstances(qp: P): Promise<E[]> {
+
         const query = this._sparqlQuery(qp, false)
-      console.log(query);
+
         return new Promise<E[]>((resolve, reject) => {
             this._sq.query(query).then(
                 data => {

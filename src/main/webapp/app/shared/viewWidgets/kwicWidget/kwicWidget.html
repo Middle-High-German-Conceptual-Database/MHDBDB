@@ -1,6 +1,6 @@
 <expansion-panel-wrapper [asPanel]="asPanel" [title]="title" [openHelpSubject]="openHelpSubject">
     <span *ngIf="isLoaded | async; else loading">
-        <span *ngIf="total <= 0"><em>Wort nicht im Korpus</em></span>
+<!--        <span *ngIf="total <= 0"><em>Wort nicht im Korpus</em></span>-->
         <ul #view>
             <li *ngFor="let kwic of kwics;">
                 ...

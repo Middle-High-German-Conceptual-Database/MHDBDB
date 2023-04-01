@@ -1,11 +1,12 @@
 <div class="suche_blk_bottom no-pad" *ngIf="isLoaded">
     <div class="suche-row flxrow">
         <div class="name flxrow">
-            <a [routerLink]="['/work/view', getWorkId()]" [state]="{ instance: instance }">
+            <a [routerLink]="['/work/view', instance.strippedId]" [state]="{ instance: instance }">
                 <i class="fas fa-book"></i>
                 <span class="fil-text">{{ instance.label }}</span>
              </a>
         </div>
+
         <div class="right-icon">
             <a href="#">
                 <i class="fas fa-archive"></i>
@@ -21,4 +22,14 @@
             </a>
         </div>
     </div>
+
+    <div class="suche-row flxrow">
+        <div class="name flxrow" style="margin-left: 25px;">
+            <h3>Wörter</h3>
+            <div *ngFor="let sense of instance.words;">
+                <dhpp-widget-kwic [instance]="sense" [asPanel]="false" [limit]="3"></dhpp-widget-kwic>
+            </div>
+        </div>
+    </div>
+
 </div>

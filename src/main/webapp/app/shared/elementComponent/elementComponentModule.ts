@@ -27,6 +27,7 @@ import { DictionaryElementComponent } from './dictionary-element/dictionary-elem
 import { ConceptElementComponent } from './concept-element/concept-element.component'
 import { OnomasticsElementComponent } from './onomastics-element/onomastics-element.component';
 import {TextElementComponent} from "app/shared/elementComponent/text-element/text-element.component";
+import {MHDBDBViewWidgetsModule} from "app/shared/viewWidgets/viewWidgetsModule";
 
 @NgModule({
     entryComponents: [
@@ -69,7 +70,8 @@ import {TextElementComponent} from "app/shared/elementComponent/text-element/tex
         MatProgressSpinnerModule,
         MatPaginatorModule,
         MatTableModule,
-        MatSortModule
+        MatSortModule,
+        MHDBDBViewWidgetsModule
     ],
     schemas: [
         CUSTOM_ELEMENTS_SCHEMA
