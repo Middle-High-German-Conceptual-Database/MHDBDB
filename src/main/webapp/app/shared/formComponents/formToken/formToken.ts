@@ -4,7 +4,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
-import { distinctUntilChanged, map, startWith, takeUntil } from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, map, startWith, takeUntil} from 'rxjs/operators';
 import { Concept } from '../../../concept/concept.class';
 import { ConceptService } from '../../../concept/concept.service';
 import { TextPassage } from '../../../text/text.class';
@@ -172,10 +172,12 @@ export class FormTokenWordComponent {
             label: new FormControl(this.tokenFilter.label),
             searchLabelinLemma: new FormControl(this.tokenFilter.searchLabelinLemma),
         });
+
         this.form
             .valueChanges
-            .pipe(
-                distinctUntilChanged()
+          .pipe(
+            debounceTime(350),
+            distinctUntilChanged()
             )
             .subscribe(
                 value => {
