@@ -7,7 +7,7 @@
                 <mat-tab label="Baum">
                     <mat-tree class="tab-pane tab-links tab-content" [dataSource]="dataSource" [treeControl]="treeControl">
                         <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
-                            <li><button mat-icon-button disabled>
+                            <li><button style="width: 25px; height: 25px; " disabled>
                                     <fa-icon icon="caret-right">
                                     </fa-icon>
                                 </button>
@@ -15,7 +15,7 @@
                             </li>
                         </mat-tree-node>
                         <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
-                            <li><button mat-icon-button [attr.aria-label]="'toggle ' + node.item.label" matTreeNodeToggle>
+                            <li><button style="width: 25px; height: 25px; " [attr.aria-label]="'toggle ' + node.item.label" matTreeNodeToggle>
                                     <fa-icon icon="caret-right">
                                     </fa-icon>
                                 </button>
