@@ -54,13 +54,10 @@
 </div>
 
 <div *ngIf="!isLoading; else loading"
-     class="search-results" infinite-scroll [infiniteScrollDistance]="2"
-     [infiniteScrollUpDistance]="1.5"
-     [infiniteScrollThrottle]="500" (scrolled)="onScrollDown()">
+     class="search-results" >
     <div *ngFor="let instance of instances">
-        Instance
+        <dhpp-text-element [instance]="instance"></dhpp-text-element>
     </div>
-    <span>Scrollen für mehr Resultate</span>
     <mat-spinner *ngIf="isLoadingNext"></mat-spinner>
 </div>
 <ng-template #loading>

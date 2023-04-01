@@ -28,6 +28,7 @@ import {MatTabsModule} from "@angular/material/tabs";
 import {MatRadioModule} from "@angular/material/radio";
 import {MHDBDBViewWidgetsModule} from "app/shared/viewWidgets/viewWidgetsModule";
 import {MHDBDBFormModule} from "app/shared/formComponents/formModule";
+import {ElementComponentModule} from "app/shared/elementComponent/elementComponentModule";
 
 const ENTITY_STATES = [...textRoutes];
 
@@ -40,7 +41,7 @@ const ENTITY_STATES = [...textRoutes];
         TextComponent,
         TextListComponent
     ],
-    imports: [MHDBDBViewWidgetsModule, MHDBDBFormModule, MatCardModule, MHDBDBFormModule, CommonModule, AppXSharedModule, FormsModule, ReactiveFormsModule, TagInputModule, FontAwesomeModule, NgxSliderModule, MatSnackBarModule, MatDialogModule, MatFormFieldModule, MatCheckboxModule, MatFormFieldModule, MatChipsModule, MatAutocompleteModule, MatListModule, MatInputModule, MatSlideToggleModule, MatExpansionModule, MatButtonModule, MatToolbarModule, MatIconModule, MatProgressSpinnerModule, RouterModule.forChild(ENTITY_STATES), MatTabsModule, MatRadioModule],
+    imports: [MHDBDBViewWidgetsModule, MHDBDBFormModule, MatCardModule, MHDBDBFormModule, CommonModule, AppXSharedModule, FormsModule, ReactiveFormsModule, TagInputModule, FontAwesomeModule, NgxSliderModule, MatSnackBarModule, MatDialogModule, MatFormFieldModule, MatCheckboxModule, MatFormFieldModule, MatChipsModule, MatAutocompleteModule, MatListModule, MatInputModule, MatSlideToggleModule, MatExpansionModule, MatButtonModule, MatToolbarModule, MatIconModule, MatProgressSpinnerModule, RouterModule.forChild(ENTITY_STATES), MatTabsModule, MatRadioModule, ElementComponentModule],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     exports: []
 })

@@ -273,6 +273,7 @@ export class TextPassageService extends MhdbdbGraphService<TextPassageQueryParam
             limit ${qp.limit}
             `
         }
+
         return q
     }
 

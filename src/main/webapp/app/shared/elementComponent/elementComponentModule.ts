@@ -26,6 +26,7 @@ import { WorkElementComponent } from './work-element/work-element.component'
 import { DictionaryElementComponent } from './dictionary-element/dictionary-element.component'
 import { ConceptElementComponent } from './concept-element/concept-element.component'
 import { OnomasticsElementComponent } from './onomastics-element/onomastics-element.component';
+import {TextElementComponent} from "app/shared/elementComponent/text-element/text-element.component";
 
 @NgModule({
     entryComponents: [
@@ -34,15 +35,17 @@ import { OnomasticsElementComponent } from './onomastics-element/onomastics-elem
         WorkElementComponent,
         DictionaryElementComponent,
         ConceptElementComponent,
-        OnomasticsElementComponent
+        OnomasticsElementComponent,
+        TextElementComponent
     ],
     declarations: [
-        PersonElementComponent,       
+        PersonElementComponent,
         PlaceElementComponent,
         WorkElementComponent,
         DictionaryElementComponent,
         ConceptElementComponent,
-        OnomasticsElementComponent
+        OnomasticsElementComponent,
+      TextElementComponent
     ],
     imports: [
         RouterModule,
@@ -77,7 +80,8 @@ import { OnomasticsElementComponent } from './onomastics-element/onomastics-elem
         WorkElementComponent,
         DictionaryElementComponent,
         ConceptElementComponent,
-        OnomasticsElementComponent
+        OnomasticsElementComponent,
+      TextElementComponent
     ]
 })
 export class ElementComponentModule { }

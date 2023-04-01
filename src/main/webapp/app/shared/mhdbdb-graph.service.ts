@@ -63,7 +63,7 @@ export interface FilterSkosI extends FilterI {
     topConcepts?: boolean;
 }
 
-export type classFilterT = ['Person' | 'Place' | 'Work' | 'Word' | 'conceptualSystem' | 'nameSystem'];
+export type classFilterT = ['Person' | 'Place' | 'Work' | 'Word' | 'Text' | 'conceptualSystem' | 'nameSystem'];
 
 export interface LabeledClassfilterI {
     classFilter: classFilterT,
@@ -86,7 +86,13 @@ export const classFilter: LabeledClassfilterI[] = [
         classFilter: 'Work' as unknown as classFilterT,
         de: 'Werk',
         en: 'Work'
-    }, {
+    },
+  {
+    classFilter: 'Text' as unknown as classFilterT,
+    de: 'Werk',
+    en: 'Work'
+  },
+  {
         classFilter: 'Word' as unknown as classFilterT,
         de: 'Lemmata',
         en: 'Dictionary Entry'
@@ -500,6 +506,7 @@ export abstract class MhdbdbGraphService<P extends QueryParameterI<F, O>, F exte
      */
     public getInstances(qp: P): Promise<E[]> {
         const query = this._sparqlQuery(qp, false)
+      console.log(query);
         return new Promise<E[]>((resolve, reject) => {
             this._sq.query(query).then(
                 data => {
