@@ -176,7 +176,7 @@ export class FormTokenWordComponent {
         this.form
             .valueChanges
           .pipe(
-            debounceTime(350),
+            debounceTime(500),
             distinctUntilChanged()
             )
             .subscribe(
