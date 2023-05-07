@@ -9,11 +9,7 @@
                         <mat-tab label="Wort">
                             <div class="werke-blk">
                                 <dhpp-form-token [routeString]="routeString"></dhpp-form-token>
-
-                                <dhpp-form-author [routeString]="routeString" [label]="labelAuthorSearch"></dhpp-form-author>
-
                                 <dhpp-form-tokenContext [routeString]="routeString"></dhpp-form-tokenContext>
-
                             </div>
                         </mat-tab>
                        <!-- <mat-tab label="Begriff">
@@ -46,6 +42,14 @@
             </div>
         </li>
     </ul>
+
+    <div class="row">
+        <div class="col">
+            <dhpp-form-filter  [label]="labelTextSearch"
+                               [routeString]="routeString"></dhpp-form-filter>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col">
                 <div class="werke_row flxrow">

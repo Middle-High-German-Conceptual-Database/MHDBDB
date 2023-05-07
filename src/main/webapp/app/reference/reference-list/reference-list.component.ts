@@ -30,6 +30,7 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
   labelTextSearch = 'Lemma';
   labelPosSearch = 'Wortart';
   labelConceptSearch = 'Begriffe';
+  labelSeriesSearch = 'Textreihe (Gattung)';
 
   labelAuthorSearch = 'AutorIn';
   tokenFilter?: TokenFilterI;

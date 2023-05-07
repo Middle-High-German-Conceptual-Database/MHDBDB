@@ -31,6 +31,11 @@ export interface FilterLabelI extends FilterI {
     isLabelActive?: boolean
 }
 
+export interface FilterSeriesLabelI extends FilterI {
+  label?: string
+  isSeriesActive?: boolean
+}
+
 export interface FilterPosI extends FilterI {
     pos?: string[]
     isPosActive?: boolean
@@ -39,6 +44,11 @@ export interface FilterPosI extends FilterI {
 export interface FilterConceptsI extends FilterI {
     concepts?: string[]
     isConceptsActive?: boolean
+}
+
+export interface FilterSeriesI extends FilterI {
+  series?: string[]
+  isSeriesActive?: boolean
 }
 
 export interface FilterAuthorI extends FilterI {
@@ -70,6 +80,12 @@ export interface LabeledClassfilterI {
     de: string,
     en: string,
 }
+
+export interface LabeledSeriesfilterI {
+  de: string,
+  en: string,
+}
+
 
 export const classFilter: LabeledClassfilterI[] = [
     {
@@ -108,9 +124,18 @@ export const classFilter: LabeledClassfilterI[] = [
 
 ]
 
+export interface FilterClassExtendedI extends FilterClassI, FilterSeriesI, FilterLabelI, FilterConceptsI {
+
+}
+
 export interface FilterClassI extends FilterI {
     classFilter?: classFilterT[],
-    isClassFilterActive: boolean
+    isClassFilterActive: boolean,
+}
+
+export interface FilterSeriesI extends FilterI {
+  seriesFilter?: any[],
+  isSeriesFilterActive: boolean
 }
 
 export interface FilterIdLabelI extends FilterIdI, FilterLabelI { }

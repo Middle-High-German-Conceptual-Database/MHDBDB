@@ -39,6 +39,9 @@ import {
 } from "app/shared/formComponents/formLemmaSearch/formLemmaSearch";
 import {FormAuthorComponent, FormAuthorHelpComponent} from "app/shared/formComponents/formAuthor/formAuthor";
 import {NgxSliderModule} from "@angular-slider/ngx-slider";
+import {FormFilterComponent, FormFilterHelpComponent} from "app/shared/formComponents/formFilter/formFilter";
+import {MatTreeModule} from '@angular/material/tree';
+import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 
 @NgModule({
   entryComponents: [
@@ -61,7 +64,9 @@ import {NgxSliderModule} from "@angular-slider/ngx-slider";
     FormHeaderComponent,
     FormFooterComponent,
     FormAuthorComponent,
-    FormAuthorHelpComponent
+    FormAuthorHelpComponent,
+    FormFilterComponent,
+    FormFilterHelpComponent
   ],
   declarations: [
     FormLemmaSearchComponent,
@@ -86,7 +91,9 @@ import {NgxSliderModule} from "@angular-slider/ngx-slider";
     FormClassCheckboxesComponent,
     FormClassCheckboxesHelpComponent,
     FormAuthorComponent,
-    FormAuthorHelpComponent
+    FormAuthorHelpComponent,
+    FormFilterComponent,
+    FormFilterHelpComponent
   ],
   imports: [
     AppXSharedModule,
@@ -105,7 +112,9 @@ import {NgxSliderModule} from "@angular-slider/ngx-slider";
     MatRadioModule,
     MatSelectModule,
     MatSlideToggleModule,
-    NgxSliderModule
+    NgxSliderModule,
+    MatTreeModule,
+    FontAwesomeModule
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
@@ -122,7 +131,8 @@ import {NgxSliderModule} from "@angular-slider/ngx-slider";
     FormTokenContextComponent,
     FormClassCheckboxesComponent,
     FormTokenConceptsComponent,
-    FormAuthorComponent
+    FormAuthorComponent,
+    FormFilterComponent
   ]
 })
 export class MHDBDBFormModule {

@@ -2,13 +2,23 @@
 import { Injectable } from '@angular/core';
 import { NAMEDGRAPHS } from 'app/app.constants';
 import { LanguageService } from 'app/shared/language.service';
-import { classFilter, classFilterT, FilterClassI, FilterIdI, FilterLabelI, MhdbdbIdLabelEntityService, OptionsI, QueryParameterI } from "../shared/mhdbdb-graph.service";
+import {
+  classFilter,
+  classFilterT,
+  FilterClassI,
+  FilterIdI,
+  FilterLabelI,
+  FilterSeriesI, FilterSeriesLabelI,
+  MhdbdbIdLabelEntityService,
+  OptionsI,
+  QueryParameterI
+} from "../shared/mhdbdb-graph.service";
 import { Utils } from '../shared/utils';
 import { GlobalSearchEntityClass } from './globalSearch.class';
 
 export interface GlobalSearchQueryParameterI extends QueryParameterI<GlobalSearchFilterI, GlobalSearchOptionsI> { }
 
-export interface GlobalSearchFilterI extends FilterIdI, FilterLabelI, FilterClassI { }
+export interface GlobalSearchFilterI extends FilterIdI, FilterSeriesI, FilterLabelI, FilterClassI { }
 
 export interface GlobalSearchOptionsI extends OptionsI { }
 
@@ -24,7 +34,9 @@ export const defaultGlobalSearchQP: GlobalSearchQueryParameterI =
         label: '',
         isLabelActive: true,
         classFilter: classFilter.map(x => x.classFilter),
-        isClassFilterActive: true
+        isClassFilterActive: true,
+        seriesFilter: [],
+        isSeriesFilterActive: true
     },
     option: {
         useLucene: false

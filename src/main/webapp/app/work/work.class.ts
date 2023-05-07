@@ -28,6 +28,28 @@ export class WorkClass extends MhdbdbIdLabelEntity {
 }
 
 
+export class SeriesClass extends MhdbdbIdLabelEntity {
+
+
+//implements AuthorsI, DateOfCreationI {
+  // public authors: Person[];
+  // public dateOfCreation: DatePrecision
+
+  constructor(
+    public id: string,
+    public label: string,
+    // authors: Person[],
+    // date: Date,
+    // precision: Date,
+
+  ) {
+    super(id, label)
+    // this.authors = authors
+    // this.dateOfCreation = new DatePrecision(date, precision)
+  }
+}
+
+
 export class WorkMetadataClass extends WorkClass implements AuthorsI, DateOfCreationI{
 
 //implements AuthorsI, DateOfCreationI {

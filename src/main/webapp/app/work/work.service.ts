@@ -10,7 +10,7 @@ import {
   OptionsI,
   QueryParameterI, SparqlBindingI
 } from "../shared/mhdbdb-graph.service";
-import {WorkClass, WorkMetadataClass} from "./work.class";
+import {WorkClass, WorkMetadataClass, SeriesClass} from "./work.class";
 import {ElectronicText} from "app/text/text.class";
 import {Concept} from "app/concept/concept.class";
 import {WordClass} from "app/dictionary/dictionary.class";
@@ -88,7 +88,81 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
     })
   }
 
+  async getWorkList(): Promise<[(WorkClass[]), number]> {
+    const query = `
+    select distinct ?id ?label ?sameAs ?instance where {
+            ?id rdfs:label ?label .
+            ?id owl:sameAs ?sameAs .
+            ?id dhpluso:hasExpression/dhpluso:hasInstance ?instance .
+            filter(langMatches( lang(?label), "de" ))
+            }
+        `
+    return new Promise<[(WorkClass[]), number]>(resolve => {
+      this._sq.query(query).then(
+        data => {
+          let total: number = 0
+          if (
+            data.results.bindings &&
+            data.results.bindings.length >= 1
+          ) {
+            resolve([this._jsonToObjectMeta(data.results.bindings), data.results.bindings.length])
+          } else {
+            resolve([[],0])
+          }
+        })
+    })
+  }
 
+
+  async getSeriesParentList(): Promise<[(SeriesClass[]), number]> {
+    const query = `
+    select distinct ?id ?label where {
+            ?id skos:topConceptOf <https://dhplus.sbg.ac.at/mhdbdb/instance/textreihentypologie> .
+            ?id rdf:type skos:Concept .
+            ?id skos:prefLabel ?label .
+            filter(langMatches( lang(?label), "de" ))
+            }
+        `
+    return new Promise<[(SeriesClass[]), number]>(resolve => {
+      this._sq.query(query).then(
+        data => {
+          let total: number = 0
+          if (
+            data.results.bindings &&
+            data.results.bindings.length >= 1
+          ) {
+            resolve([this._jsonToObject(data.results.bindings), data.results.bindings.length])
+          } else {
+            resolve([[],0])
+          }
+        })
+    })
+  }
+
+  async getSeriesList(parent: string): Promise<[(SeriesClass[]), number]> {
+    const query = `
+    select distinct ?id ?label where {
+            ?id skos:broader <${parent}> .
+            ?id rdf:type skos:Concept .
+            ?id skos:prefLabel ?label .
+            filter(langMatches( lang(?label), "de" ))
+            }
+        `
+    return new Promise<[(SeriesClass[]), number]>(resolve => {
+      this._sq.query(query).then(
+        data => {
+          let total: number = 0
+          if (
+            data.results.bindings &&
+            data.results.bindings.length >= 1
+          ) {
+            resolve([this._jsonToObject(data.results.bindings), data.results.bindings.length])
+          } else {
+            resolve([[],0])
+          }
+        })
+    })
+  }
 
   /*
       _sparqlQuery(
