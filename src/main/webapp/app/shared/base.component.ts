@@ -1,14 +1,14 @@
 import { Subscription } from 'rxjs';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
-import { Account, AccountService, EventManager, LoginModalService } from './base.imports';
+import { Account, AccountService, EventManager } from './base.imports';
 
 export class BaseComponent {
   account: Account;
   authSubscription: Subscription;
   modalRef: NgbModalRef;
 
-  constructor(public accountService: AccountService, public loginModalService: LoginModalService, public eventService: EventManager) {}
+  constructor(public accountService: AccountService, public eventService: EventManager) {}
 
   registerAuthenticationSuccess() {
     /* this.authSubscription = this.eventManager.subscribe('authenticationSuccess', () => {
@@ -22,7 +22,4 @@ export class BaseComponent {
     return this.accountService.isAuthenticated();
   }
 
-  login() {
-    this.modalRef = this.loginModalService.open();
-  }
 }

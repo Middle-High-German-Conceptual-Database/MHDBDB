@@ -1,5 +1,4 @@
 export * from '../core/user/account.model';
-export * from '../core/login/login-modal.service';
 export * from '../core/auth/account.service';
 export * from '../shared/base.component';
 export * from './navbar.service';

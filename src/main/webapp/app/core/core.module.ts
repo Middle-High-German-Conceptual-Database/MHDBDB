@@ -7,16 +7,13 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import { CookieModule } from 'ngx-cookie';
 import { TranslateModule, TranslateLoader, MissingTranslationHandler } from '@ngx-translate/core';
 import { NgxWebstorageModule } from 'ngx-webstorage';
-import { NgJhipsterModule, translatePartialLoader, missingTranslationHandler, JhiConfigService, JhiLanguageService } from 'ng-jhipster';
 import locale from '@angular/common/locales/en';
 
 import * as moment from 'moment';
 import { NgbDateAdapter, NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateMomentAdapter } from 'app/shared/util/datepicker-adapter';
 
-import { AuthExpiredInterceptor } from 'app/blocks/interceptor/auth-expired.interceptor';
 import { ErrorHandlerInterceptor } from 'app/blocks/interceptor/errorhandler.interceptor';
-import { NotificationInterceptor } from 'app/blocks/interceptor/notification.interceptor';
 
 import { fontAwesomeIcons } from './icons/font-awesome-icons';
 import { LanguageService } from 'app/shared/base.imports';
@@ -26,25 +23,6 @@ import { LanguageService } from 'app/shared/base.imports';
     HttpClientModule,
     CookieModule.forRoot(),
     NgxWebstorageModule.forRoot({ prefix: 'dhpp', separator: '-' }),
-    NgJhipsterModule.forRoot({
-      // set below to true to make alerts look like toast
-      alertAsToast: false,
-      alertTimeout: 5000,
-      i18nEnabled: true,
-      defaultI18nLang: 'en'
-    }),
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: translatePartialLoader,
-        deps: [HttpClient]
-      },
-      missingTranslationHandler: {
-        provide: MissingTranslationHandler,
-        useFactory: missingTranslationHandler,
-        deps: [JhiConfigService]
-      }
-    })
   ],
   providers: [
     Title,
@@ -56,19 +34,9 @@ import { LanguageService } from 'app/shared/base.imports';
     DatePipe,
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: AuthExpiredInterceptor,
-      multi: true
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
       useClass: ErrorHandlerInterceptor,
       multi: true
     },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: NotificationInterceptor,
-      multi: true
-    }
   ]
 })
 export class DhppbaseCoreModule {

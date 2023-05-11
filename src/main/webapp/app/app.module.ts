@@ -7,9 +7,6 @@ import {DhppbaseSharedModule} from 'app/shared/shared.module';
 import {DhppbaseCoreModule} from 'app/core/core.module';
 import {routes} from './app.routes';
 import {DhppbaseEntityModule} from './entities/entity.module';
-import {NavbarComponent} from './layouts/navbar/navbar.component';
-import {PageRibbonComponent} from './layouts/profiles/page-ribbon.component';
-import {ActiveMenuDirective} from './layouts/navbar/active-menu.directive';
 import {ErrorComponent} from './layouts/error/error.component';
 import {ReactiveFormsModule, FormsModule} from '@angular/forms';
 
@@ -61,10 +58,7 @@ import {CustomReactComponentWrapperComponent} from "app/components/CustomReactCo
   declarations: [
     AppComponent,
     AppHomeComponent,
-    NavbarComponent,
     ErrorComponent,
-    PageRibbonComponent,
-    ActiveMenuDirective,
     DhppNavbarComponent,
     DhppFooterComponent,
     DhppHeaderComponent,
