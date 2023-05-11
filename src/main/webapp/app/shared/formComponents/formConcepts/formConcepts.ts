@@ -129,7 +129,6 @@ export class FormConceptsComponent<qT extends QueryParameterI<f, o>, f extends F
         this.conceptService.getAllConcepts().then(
             data => {
                 this.conceptList = data
-              console.log(data);
                 super.ngOnInit()
             }
         )

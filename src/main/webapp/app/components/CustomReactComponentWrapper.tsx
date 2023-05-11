@@ -70,11 +70,24 @@ export class CustomReactComponentWrapperComponent implements OnChanges, OnDestro
     }
   }
 
-  public findAndUpdate(items, id, checked, newValues) {
+  public findAndUpdate1(items, id, checkedValue) {
+    const newItems = items.map((item) => {
+      if (item.child && item.child.length > 0) {
+        // Recursive call should be inside the condition where the item has children
+        return {...item, child: this.findAndUpdate1(item.child, id, checkedValue)};
+      } else {
+        return {...item, checked: checkedValue};
+      }
+    });
+
+    return newItems;
+  };
+
+   public findAndUpdate(items, id, checked, newValues) {
     const newItems = items.map((item) => {
       if (item.id === id) {
         if (item.child && item.child.length > 0) {
-          return {...item};
+          return {...item, child: this.findAndUpdate1(item.child, id, checked)};
         } else {
           return {...item, checked: checked, child: newValues};
         }
@@ -88,6 +101,7 @@ export class CustomReactComponentWrapperComponent implements OnChanges, OnDestro
 
     return newItems;
   };
+
 
   public update(values, id, checked) {
     this.items = values;

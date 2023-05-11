@@ -82,7 +82,7 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
         "lang": "de",
         "namedGraphs": "https://dh.plus.ac.at/mhdbdb/namedGraph/mhdbdbMeta",
         "filter": {
-          "label": this.qp.filter.tokenFilters[0].label,
+          "label": this.qp && this.qp.filter && this.qp.filter.tokenFilters[0].label || '',
           "isLabelActive": true,
           "pos": [],
           "isPosActive": true,

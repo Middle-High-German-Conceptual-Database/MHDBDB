@@ -85,7 +85,7 @@ export const TreeViewComponent: FunctionComponent<IMyComponentProps> = (props: I
 
   return (
     <Box sx={{ overflow: 'auto', height: '300px'}}>
-      {props.items.map((item: any, index: number) => {
+      {props.items && props.items.map((item: any, index: number) => {
         return (
           <Root checked={item.checked} id={item.id} label={item.label} items={item}/>
         )

@@ -103,10 +103,17 @@ module.exports = (options) => ({
         to: 'favicon.ico'
       },
       {
+        from: './src/main/webapp/favicon-16x16.png',
+        to: 'favicon-16x16.png'
+      },
+      {
+        from: './src/main/webapp/favicon-32x32.png',
+        to: 'favicon-32x32.png'
+      },
+      {
         from: './src/main/webapp/manifest.webapp',
         to: 'manifest.webapp'
       },
-      // jhipster-needle-add-assets-to-webpack - JHipster will add/remove third-party resources in this array
       {
         from: './src/main/webapp/robots.txt',
         to: 'robots.txt'
@@ -122,7 +129,6 @@ module.exports = (options) => ({
             pattern: "./src/main/webapp/i18n/de/*.json",
             fileName: "./i18n/de.json"
           }
-          // jhipster-needle-i18n-language-webpack - JHipster will add/remove languages in this array
         ]
       }
     }),
