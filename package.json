@@ -30,7 +30,6 @@
     "@mui/icons-material": "^5.11.16",
     "@mui/lab": "^5.0.0-alpha.129",
     "@mui/material": "^5.13.0",
-    "@ng-bootstrap/ng-bootstrap": "5.1.1",
     "@ngx-translate/core": "11.0.1",
     "@ngx-translate/http-loader": "4.0.0",
     "@types/rdflib": "^0.20.1",

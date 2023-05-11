@@ -6,10 +6,6 @@ import { CookieModule } from 'ngx-cookie';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 import locale from '@angular/common/locales/en';
 
-import * as moment from 'moment';
-import { NgbDateAdapter, NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
-import { NgbDateMomentAdapter } from 'app/shared/util/datepicker-adapter';
-
 import { ErrorHandlerInterceptor } from 'app/blocks/interceptor/errorhandler.interceptor';
 
 import { LanguageService } from 'app/shared/base.imports';
@@ -26,7 +22,6 @@ import { LanguageService } from 'app/shared/base.imports';
       provide: LOCALE_ID,
       useValue: 'en'
     },
-    { provide: NgbDateAdapter, useClass: NgbDateMomentAdapter },
     DatePipe,
     {
       provide: HTTP_INTERCEPTORS,
@@ -36,9 +31,8 @@ import { LanguageService } from 'app/shared/base.imports';
   ]
 })
 export class DhppbaseCoreModule {
-  constructor(dpConfig: NgbDatepickerConfig, languageService: LanguageService) {
+  constructor(languageService: LanguageService) {
     registerLocaleData(locale);
-    dpConfig.minDate = { year: moment().year() - 100, month: 1, day: 1 };
     languageService.init();
   }
 }
