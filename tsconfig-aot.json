@@ -25,6 +25,11 @@
     "genDir": "build/resources/main/aot",
     "skipMetadataEmit": true,
     "fullTemplateTypeCheck": true,
-    "preserveWhitespaces": true
-  }
+    "preserveWhitespaces": true,
+    "enableIvy": true,
+    "allowEmptyCodegenFiles": true,
+    "strictTemplates": true
+  },
+  "include": ["src/main/webapp/app"],
+  "exclude": ["node_modules"]
 }

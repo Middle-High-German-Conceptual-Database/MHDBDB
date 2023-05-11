@@ -429,7 +429,7 @@ p{ margin:0px; padding:0px; font-size:14px; line-height:normal;  color:#878888; 
 .home-banner{ padding:23px 0 16px; background-position:center center; background-size:cover; background-repeat:no-repeat;  }
 .banner-row{ margin:0 -14px; }
 .banner-row .banner-left{ flex-direction:column ; width:485px; min-width:485px; padding:0 14px; }
-.banner-box{ min-height:264px; background:#FFF;  }
+.banner-box{ min-height:264px; background: rgba(255, 255, 255, 0.8);  }
 .banner-box h2{ line-height:1; padding:22px; font-size:24PX; color:#878888;}
 .banner-box + .banner-box{ min-height:202px; margin:28px 0 0 0;}
 .banner-row  .banner-right{ padding:0 14px; display:block; width:100%;}
