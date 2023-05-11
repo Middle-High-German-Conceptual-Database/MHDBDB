@@ -1,5 +1,4 @@
 export * from '../core/user/account.model';
-export * from '../core/auth/account.service';
 export * from '../shared/base.component';
 export * from './navbar.service';
 export * from '../shared/toggle-navbar/toggle-navbar.component';

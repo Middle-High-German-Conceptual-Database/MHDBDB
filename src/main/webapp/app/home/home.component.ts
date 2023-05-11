@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
 // The base module exports all classes that are necessary.
-import { Account, AccountService, EventManager, NavbarService } from '../../../../../src/main/webapp/app/shared/base.imports';
+import { Account, EventManager, NavbarService } from '../../../../../src/main/webapp/app/shared/base.imports';
 // Every Component should inherit from the BaseComponent
 import { BaseComponent } from '../../../../../src/main/webapp/app/shared/base.imports';
 
@@ -24,7 +24,7 @@ export class AppHomeComponent implements OnInit, OnDestroy {
 
   items: ["Eintrag 1", "Eintrag 2", "Eintrag 3"];
 
-  constructor(public accountService: AccountService,
+  constructor(
     public navbarService: NavbarService,
     public eventService: EventManager
     ) {

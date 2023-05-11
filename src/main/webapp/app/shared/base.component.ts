@@ -1,12 +1,12 @@
 import { Subscription } from 'rxjs';
 
-import { Account, AccountService, EventManager } from './base.imports';
+import { Account, EventManager } from './base.imports';
 
 export class BaseComponent {
   account: Account;
   authSubscription: Subscription;
 
-  constructor(public accountService: AccountService, public eventService: EventManager) {}
+  constructor(public eventService: EventManager) {}
 
   registerAuthenticationSuccess() {
     /* this.authSubscription = this.eventManager.subscribe('authenticationSuccess', () => {
@@ -17,7 +17,7 @@ export class BaseComponent {
   }
 
   isAuthenticated() {
-    return this.accountService.isAuthenticated();
+    // return this.accountService.isAuthenticated();
   }
 
 }

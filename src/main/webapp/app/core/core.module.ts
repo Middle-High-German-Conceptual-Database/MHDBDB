@@ -3,7 +3,6 @@ import { DatePipe, registerLocaleData } from '@angular/common';
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { Title } from '@angular/platform-browser';
 import { CookieModule } from 'ngx-cookie';
-import { NgxWebstorageModule } from 'ngx-webstorage';
 import locale from '@angular/common/locales/en';
 
 import { ErrorHandlerInterceptor } from 'app/blocks/interceptor/errorhandler.interceptor';
@@ -14,7 +13,6 @@ import { LanguageService } from 'app/shared/base.imports';
   imports: [
     HttpClientModule,
     CookieModule.forRoot(),
-    NgxWebstorageModule.forRoot({ prefix: 'dhpp', separator: '-' }),
   ],
   providers: [
     Title,
