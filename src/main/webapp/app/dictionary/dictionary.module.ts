@@ -19,7 +19,6 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TagInputModule } from 'ngx-chips';
 import { AppXSharedModule } from "../app-shared.module";
 import { DictionaryListComponent } from './dictionary-list/dictionary-list.component';
@@ -36,7 +35,7 @@ const ENTITY_STATES = [...dictionaryRoutes];
 @NgModule({
     declarations: [DictionaryComponent, DictionaryListComponent, DictionaryEditComponent, DictionaryViewComponent],
     entryComponents: [DictionaryComponent],
-    imports: [MHDBDBFormModule, MHDBDBViewWidgetsModule, MatCardModule, MatGridListModule, CommonModule, AppXSharedModule, FormsModule, ReactiveFormsModule, TagInputModule, FontAwesomeModule, NgxSliderModule, MatSnackBarModule, MatDialogModule, MatFormFieldModule, MatCheckboxModule, MatFormFieldModule, MatChipsModule, MatAutocompleteModule, MatListModule, MatInputModule, MatSlideToggleModule, MatExpansionModule, MatButtonModule, MatToolbarModule, MatIconModule, MatProgressSpinnerModule, RouterModule.forChild(ENTITY_STATES), ElementComponentModule],
+    imports: [MHDBDBFormModule, MHDBDBViewWidgetsModule, MatCardModule, MatGridListModule, CommonModule, AppXSharedModule, FormsModule, ReactiveFormsModule, TagInputModule, NgxSliderModule, MatSnackBarModule, MatDialogModule, MatFormFieldModule, MatCheckboxModule, MatFormFieldModule, MatChipsModule, MatAutocompleteModule, MatListModule, MatInputModule, MatSlideToggleModule, MatExpansionModule, MatButtonModule, MatToolbarModule, MatIconModule, MatProgressSpinnerModule, RouterModule.forChild(ENTITY_STATES), ElementComponentModule],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class DictionaryModule { }

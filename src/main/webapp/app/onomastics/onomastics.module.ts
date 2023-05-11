@@ -15,7 +15,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTreeModule } from "@angular/material/tree";
 import { RouterModule } from '@angular/router';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TagInputModule } from 'ngx-chips';
 import { AppXSharedModule } from "../app-shared.module";
 import { OnomasticsComponent } from './onomastics.component';
@@ -38,7 +37,7 @@ const ENTITY_STATES = [...onomasticsRoutes];
         OnomasticsViewComponent,
         OnomasticsTreeComponent
     ],
-    imports: [CommonModule, FormsModule, AppXSharedModule, ReactiveFormsModule, TagInputModule, MatInputModule, MatListModule, MatTabsModule, MatSlideToggleModule, MatExpansionModule, MatButtonModule, MatToolbarModule, MatProgressBarModule, MatIconModule, FontAwesomeModule, RouterModule.forChild(ENTITY_STATES), MatFormFieldModule, MatChipsModule, MatAutocompleteModule, MatTreeModule, ElementComponentModule],
+    imports: [CommonModule, FormsModule, AppXSharedModule, ReactiveFormsModule, TagInputModule, MatInputModule, MatListModule, MatTabsModule, MatSlideToggleModule, MatExpansionModule, MatButtonModule, MatToolbarModule, MatProgressBarModule, MatIconModule, RouterModule.forChild(ENTITY_STATES), MatFormFieldModule, MatChipsModule, MatAutocompleteModule, MatTreeModule, ElementComponentModule],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class OnomasticsModule { }

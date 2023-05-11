@@ -1,7 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TagInputModule } from 'ngx-chips';
 // Material Components
@@ -25,7 +24,7 @@ const ENTITY_STATES = [...projectRoutes];
 @NgModule({
   declarations: [ProjectComponent],
   entryComponents: [ProjectComponent],
-  imports: [CommonModule, FormsModule, AppXSharedModule, ReactiveFormsModule, TagInputModule, MatSlideToggleModule, MatExpansionModule, MatButtonModule, MatToolbarModule, MatIconModule, NgxSliderModule, FontAwesomeModule, RouterModule.forChild(ENTITY_STATES), MatFormFieldModule, MatChipsModule, MatAutocompleteModule],
+  imports: [CommonModule, FormsModule, AppXSharedModule, ReactiveFormsModule, TagInputModule, MatSlideToggleModule, MatExpansionModule, MatButtonModule, MatToolbarModule, MatIconModule, NgxSliderModule, RouterModule.forChild(ENTITY_STATES), MatFormFieldModule, MatChipsModule, MatAutocompleteModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ProjectModule { }

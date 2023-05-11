@@ -12,7 +12,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TagInputModule } from 'ngx-chips';
 import { AppXSharedModule } from "../app-shared.module";
 import { GlobalSearchListComponent } from './globalSearch-list/globalSearch-list.component';
@@ -46,7 +45,6 @@ const ENTITY_STATES = [...globalSearchRoutes];
         MatToolbarModule,
         MatIconModule,
         NgxSliderModule,
-        FontAwesomeModule,
         RouterModule.forChild(ENTITY_STATES),
         MatFormFieldModule,
         MatChipsModule,

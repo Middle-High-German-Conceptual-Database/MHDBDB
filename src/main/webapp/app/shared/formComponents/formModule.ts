@@ -41,7 +41,6 @@ import {FormAuthorComponent, FormAuthorHelpComponent} from "app/shared/formCompo
 import {NgxSliderModule} from "@angular-slider/ngx-slider";
 import {FormFilterComponent, FormFilterHelpComponent} from "app/shared/formComponents/formFilter/formFilter";
 import {MatTreeModule} from '@angular/material/tree';
-import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {CustomReactComponentWrapperComponent} from "app/components/CustomReactComponentWrapper";
 import {ReactWrapperComponent} from "app/components/ReactWrapperComponent";
 
@@ -120,7 +119,6 @@ import {ReactWrapperComponent} from "app/components/ReactWrapperComponent";
     MatSlideToggleModule,
     NgxSliderModule,
     MatTreeModule,
-    FontAwesomeModule
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

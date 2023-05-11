@@ -19,7 +19,6 @@ import {DhppHeaderComponent} from "app/shared/header/header.component";
 import {ScrollToTopComponent} from "app/shared/scrolltotop/scroll-to-top.component";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
-import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {AppXSharedModule} from "app/app-shared.module";
 import {MatTabsModule} from "@angular/material/tabs";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
@@ -42,7 +41,6 @@ import {CustomReactComponentWrapperComponent} from "app/components/CustomReactCo
     ReactiveFormsModule,
     FormsModule,
     NgbModule,
-    FontAwesomeModule,
     AppXSharedModule,
     MatTabsModule,
     MatProgressSpinnerModule,

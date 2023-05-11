@@ -11,7 +11,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TagInputModule } from 'ngx-chips';
 import { AppXSharedModule } from "../../app-shared.module";
 import { PlaceListComponent } from "./place-list/place-list.component";
@@ -27,7 +26,7 @@ const ENTITY_STATES = [...placeRoutes];
 @NgModule({
     declarations: [PlaceComponent, PlaceViewComponent, PlaceListComponent],
     entryComponents: [PlaceComponent, PlaceViewComponent, PlaceListComponent],
-    imports: [MHDBDBFormModule,MatProgressSpinnerModule, CommonModule, FormsModule, AppXSharedModule, ReactiveFormsModule, TagInputModule, MatSlideToggleModule, MatExpansionModule, MatButtonModule, MatToolbarModule, MatIconModule, FontAwesomeModule, RouterModule.forChild(ENTITY_STATES), MatFormFieldModule, MatChipsModule, MatAutocompleteModule, ElementComponentModule],
+    imports: [MHDBDBFormModule,MatProgressSpinnerModule, CommonModule, FormsModule, AppXSharedModule, ReactiveFormsModule, TagInputModule, MatSlideToggleModule, MatExpansionModule, MatButtonModule, MatToolbarModule, MatIconModule, RouterModule.forChild(ENTITY_STATES), MatFormFieldModule, MatChipsModule, MatAutocompleteModule, ElementComponentModule],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class PlaceModule { }

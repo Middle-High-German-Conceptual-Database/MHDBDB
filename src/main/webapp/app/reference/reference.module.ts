@@ -17,7 +17,6 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TagInputModule } from 'ngx-chips';
 import { AppXSharedModule } from "../app-shared.module";
 import { TextListComponent } from "./reference-list/reference-list.component";
@@ -41,7 +40,7 @@ const ENTITY_STATES = [...textRoutes];
         TextComponent,
         TextListComponent
     ],
-    imports: [MHDBDBViewWidgetsModule, MHDBDBFormModule, MatCardModule, MHDBDBFormModule, CommonModule, AppXSharedModule, FormsModule, ReactiveFormsModule, TagInputModule, FontAwesomeModule, NgxSliderModule, MatSnackBarModule, MatDialogModule, MatFormFieldModule, MatCheckboxModule, MatFormFieldModule, MatChipsModule, MatAutocompleteModule, MatListModule, MatInputModule, MatSlideToggleModule, MatExpansionModule, MatButtonModule, MatToolbarModule, MatIconModule, MatProgressSpinnerModule, RouterModule.forChild(ENTITY_STATES), MatTabsModule, MatRadioModule, ElementComponentModule],
+    imports: [MHDBDBViewWidgetsModule, MHDBDBFormModule, MatCardModule, MHDBDBFormModule, CommonModule, AppXSharedModule, FormsModule, ReactiveFormsModule, TagInputModule, NgxSliderModule, MatSnackBarModule, MatDialogModule, MatFormFieldModule, MatCheckboxModule, MatFormFieldModule, MatChipsModule, MatAutocompleteModule, MatListModule, MatInputModule, MatSlideToggleModule, MatExpansionModule, MatButtonModule, MatToolbarModule, MatIconModule, MatProgressSpinnerModule, RouterModule.forChild(ENTITY_STATES), MatTabsModule, MatRadioModule, ElementComponentModule],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     exports: []
 })

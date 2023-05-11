@@ -17,7 +17,6 @@ import { MatTreeModule } from "@angular/material/tree";
 import { MatSelectModule } from '@angular/material/select';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { RouterModule } from '@angular/router';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TagInputModule } from 'ngx-chips';
 import { AppXSharedModule } from "../app-shared.module";
 import { ConceptComponent } from './concept.component';
@@ -44,7 +43,7 @@ const ENTITY_STATES = [...conceptRoutes];
         ConceptListComponent,
         ConceptTreeComponent
     ],
-    imports: [MHDBDBViewWidgetsModule, CommonModule, FormsModule, AppXSharedModule, ReactiveFormsModule, TagInputModule, MatInputModule, MatListModule, MatTabsModule, MatSlideToggleModule, MatExpansionModule, MatButtonModule, MatToolbarModule, MatProgressBarModule, MatIconModule, FontAwesomeModule, RouterModule.forChild(ENTITY_STATES), MatFormFieldModule, MatChipsModule, MatAutocompleteModule, MatTreeModule, MatSelectModule, ScrollingModule, ElementComponentModule],
+    imports: [MHDBDBViewWidgetsModule, CommonModule, FormsModule, AppXSharedModule, ReactiveFormsModule, TagInputModule, MatInputModule, MatListModule, MatTabsModule, MatSlideToggleModule, MatExpansionModule, MatButtonModule, MatToolbarModule, MatProgressBarModule, MatIconModule, RouterModule.forChild(ENTITY_STATES), MatFormFieldModule, MatChipsModule, MatAutocompleteModule, MatTreeModule, MatSelectModule, ScrollingModule, ElementComponentModule],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ConceptModule { }
