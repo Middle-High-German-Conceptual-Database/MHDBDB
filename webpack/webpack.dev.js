@@ -101,7 +101,7 @@ module.exports = (options) => webpackMerge(commonConfig({
         exclude: /node_modules/
       },
       {
-        test: /\.ts$/,
+        test: /\.([cm]?ts|tsx)$/,
         use: [
           'angular2-template-loader',
           {

@@ -11,7 +11,7 @@ const utils = require('./utils.js');
 
 module.exports = (options) => ({
   resolve: {
-    extensions: ['.ts', '.js'],
+    extensions: ['.ts', '.tsx', '.js'],
     modules: ['node_modules'],
     mainFields: ['es5', 'browser', 'module', 'main'],
     alias: utils.mapTypescriptAliasToWebpackAlias()

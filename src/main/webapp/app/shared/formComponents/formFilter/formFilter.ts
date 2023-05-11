@@ -162,6 +162,8 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
   filterConcepts
   filterSeries
 
+  public counter = 21;
+
   workList: WorkClass[] = [];
   seriesList: SeriesClass[] = [];
   seriesChildList: SeriesClass[] = [];
@@ -229,6 +231,11 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
   private _filterConcept(value: string): string[] {
     const filterValue = value.toLowerCase();
     return this.conceptLabels.filter(concept => concept.toLowerCase().indexOf(filterValue) === 0);
+  }
+
+
+  public handleOnClick(stateCounter: number) {
+    this.counter++;
   }
 
   get concepts() {

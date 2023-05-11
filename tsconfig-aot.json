@@ -18,7 +18,8 @@
       "app/*": ["src/main/webapp/app/*"]
     },
     "importHelpers": true,
-    "allowJs": true
+    "allowJs": true,
+    "jsx": "react"
   },
   "angularCompilerOptions": {
     "genDir": "build/resources/main/aot",

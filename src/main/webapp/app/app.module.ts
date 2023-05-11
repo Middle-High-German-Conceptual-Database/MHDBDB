@@ -30,6 +30,7 @@ import {MHDBDBFormModule} from "app/shared/formComponents/formModule";
 import {MHDBDBViewWidgetsModule} from "app/shared/viewWidgets/viewWidgetsModule";
 import {MaterialModule} from "app/shared/MaterialModule";
 import {RouterModule} from "@angular/router";
+import {CustomReactComponentWrapperComponent} from "app/components/CustomReactComponentWrapper";
 
 @NgModule({
   imports: [
@@ -67,7 +68,8 @@ import {RouterModule} from "@angular/router";
     DhppNavbarComponent,
     DhppFooterComponent,
     DhppHeaderComponent,
-    ScrollToTopComponent,],
+    ScrollToTopComponent,
+  ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: []

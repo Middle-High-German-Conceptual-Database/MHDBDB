@@ -42,6 +42,8 @@ import {NgxSliderModule} from "@angular-slider/ngx-slider";
 import {FormFilterComponent, FormFilterHelpComponent} from "app/shared/formComponents/formFilter/formFilter";
 import {MatTreeModule} from '@angular/material/tree';
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
+import {CustomReactComponentWrapperComponent} from "app/components/CustomReactComponentWrapper";
+import {ReactWrapperComponent} from "app/components/ReactWrapperComponent";
 
 @NgModule({
   entryComponents: [
@@ -66,7 +68,9 @@ import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
     FormAuthorComponent,
     FormAuthorHelpComponent,
     FormFilterComponent,
-    FormFilterHelpComponent
+    FormFilterHelpComponent,
+    CustomReactComponentWrapperComponent,
+    ReactWrapperComponent
   ],
   declarations: [
     FormLemmaSearchComponent,
@@ -93,7 +97,9 @@ import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
     FormAuthorComponent,
     FormAuthorHelpComponent,
     FormFilterComponent,
-    FormFilterHelpComponent
+    FormFilterHelpComponent,
+    CustomReactComponentWrapperComponent,
+    ReactWrapperComponent
   ],
   imports: [
     AppXSharedModule,
@@ -132,7 +138,9 @@ import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
     FormClassCheckboxesComponent,
     FormTokenConceptsComponent,
     FormAuthorComponent,
-    FormFilterComponent
+    FormFilterComponent,
+    CustomReactComponentWrapperComponent,
+    ReactWrapperComponent
   ]
 })
 export class MHDBDBFormModule {
