@@ -20,6 +20,7 @@ import {TextIdPipe} from "./textid.pipe";
 import {NiceInstanceNamePipe} from "./niceinstancename.pipe";
 
 
+
 @NgModule({
   declarations: [
     ToggleNavbarComponent,
