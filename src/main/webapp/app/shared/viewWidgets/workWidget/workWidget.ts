@@ -9,6 +9,8 @@ import { TextService } from '../../../text/text.service';
 import { ViewWidgetsDirective } from '../viewWidgetsDirective';
 import {WorkFilterI, WorkOptionsI, WorkQueryParameterI, WorkService} from "app/work/work.service";
 import {WorkMetadataClass} from "app/work/work.class";
+import { faPrint } from '@fortawesome/free-solid-svg-icons';
+import { faLink } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'dhpp-widget-work',
@@ -16,7 +18,12 @@ import {WorkMetadataClass} from "app/work/work.class";
     styleUrls: ['./workWidget.scss']
 })
 export class WorkWidgetComponent extends ViewWidgetsDirective<WorkQueryParameterI, WorkFilterI, WorkOptionsI, MhdbdbIdEntity, WorkService> implements OnInit {
-    total: number
+
+
+  faPrint = faPrint;
+  faLink = faLink;
+
+  total: number
     metadata: WorkMetadataClass;
     public title: string = "Werk"
     punctuationRegexp = new RegExp('^[^\w\s]$')

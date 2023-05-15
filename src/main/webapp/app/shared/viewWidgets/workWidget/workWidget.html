@@ -1,61 +1,101 @@
 <expansion-panel-wrapper [asPanel]="asPanel" [title]="title" [openHelpSubject]="openHelpSubject">
-    <div class="inner_info">
 
-        <h1>{{ metadata.label }}</h1>
+    <div class="row">
+        <div class="col">
+            <h1>{{ metadata.label }}</h1>
+        </div>
+    </div>
 
-        <h2>Werkdaten</h2>
+    <div class="container">
 
-        <span *ngIf="isLoaded | async; else loading">
-
-        <h3>AutorIn</h3>
-            <span>{{ metadata.authorLabel }}</span>
-            <span *ngIf="metadata.authorSameAs.length <= 0"><em>Keine externen Daten gefunden</em></span>
-            <div>
-                <h4>Linked Open Data</h4>
-                <ul style="margin-left: 25px;">
+        <div class="row">
+            <div class="col-3">
+                Werktitel
+            </div>
+            <div class="col-9">
+                {{ metadata.label }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                Autor*in
+            </div>
+            <div class="col-9">
+                <ul>
                     <li *ngFor="let sameAs of metadata.authorSameAs;">
-                        <a href="{{sameAs}}" target="_blank">{{sameAs}}</a>
+                        <a href="{{sameAs}}" target="_blank">{{ metadata.authorLabel }} ({{ sameAs | niceInstanceName }}
+                            )</a>
                     </li>
                 </ul>
             </div>
-    </span>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                Lebensdaten Autor*in
+            </div>
+            <div class="col-9">
+                um 1200
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                LOD
+            </div>
+            <div class="col-9">
+                <ul>
+                    <li *ngFor="let sameAs of metadata.sameAs;">
+                        <a href="{{sameAs}}" target="_blank">{{sameAs | niceInstanceName }}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                Textreihe(n) (Gattung)
+            </div>
+            <div class="col-9">
+                {{ metadata.genreForm }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                Übergeordnete Textreihe(n)
+            </div>
+            <div class="col-9">
+                {{ metadata.genreFormMainParent }}
+            </div>
+        </div>
     </div>
 
-    <div class="inner_info">
-        <h2>Verknüpfte Instanzen</h2>
-        <span *ngIf="isLoaded | async; else loading">
-        <span *ngIf="metadata.instances.length <= 0"><em>Keine externen Daten gefunden</em></span>
-        <ul style="margin-left: 25px;">
-            <li *ngFor="let instance of metadata.instances;">
-                <a href="{{instance}}" target="_blank">{{instance}}</a>
-            </li>
-        </ul>
-    </span>
+    <div class="row" style="padding-top: 25px">
+        <div class="col">
+            <h2>MHDBDB E-Texte</h2>
+        </div>
     </div>
 
-   <!-- <div class="inner_info">
-        <h2>Bibliografische Metadaten</h2>
-        <span *ngIf="isLoaded | async; else loading">
-        <span *ngIf="metadata.sameAs.length <= 0"><em>Keine externen Daten gefunden</em></span>
-        <ul style="margin-left: 25px;">
-            <li *ngFor="let sameAs of metadata.sameAs;">
-                <a href="{{sameAs}}" target="_blank">{{sameAs}}</a>
-            </li>
-        </ul>
-    </span>
-    </div>-->
-
-    <div class="inner_info">
-        <h2>Linked Open Data</h2>
-        <span *ngIf="isLoaded | async; else loading">
-        <span *ngIf="metadata.sameAs.length <= 0"><em>Keine externen Daten gefunden</em></span>
-        <ul style="margin-left: 25px;">
-            <li *ngFor="let sameAs of metadata.sameAs;">
-                <a href="{{sameAs}}" target="_blank">{{sameAs}}</a>
-            </li>
-        </ul>
-    </span>
+    <div class="container">
+        <div class="row" *ngFor="let instance of metadata.instances | slice:0:1;">
+            <div class="col-3">
+                <a href="{{instance}}" target="_blank">{{ metadata.label }}</a>
+            </div>
+            <div class="col-2">
+                <a href=""><fa-icon [icon]="faPrint"></fa-icon></a>
+                <a href=""><fa-icon [icon]="faLink"></fa-icon></a>
+            </div>
+        </div>
     </div>
+
+    <!-- <div class="inner_info">
+         <h2>Bibliografische Metadaten</h2>
+         <span *ngIf="isLoaded | async; else loading">
+         <span *ngIf="metadata.sameAs.length <= 0"><em>Keine externen Daten gefunden</em></span>
+         <ul style="margin-left: 25px;">
+             <li *ngFor="let sameAs of metadata.sameAs;">
+                 <a href="{{sameAs}}" target="_blank">{{sameAs}}</a>
+             </li>
+         </ul>
+     </span>
+     </div>-->
 
     <ng-template #loading>
         <mat-spinner></mat-spinner>

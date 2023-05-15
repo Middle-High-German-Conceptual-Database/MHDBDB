@@ -1,9 +1,8 @@
 <div *ngIf="isLoaded | async">
     <div class="row" style="padding-bottom: 25px;">
         <div class="col-12">
-            <button mat-mini-fab color="primary" aria-label="Example icon button with a home icon"
-                (click)="previousPage()">
-                <fa-icon icon="arrow-left"></fa-icon>
+            <button mat-mini-fab color="primary" (click)="previousPage()" aria-label="Zurück">
+                &larr;
             </button>
         </div>
     </div>

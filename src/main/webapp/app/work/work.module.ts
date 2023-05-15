@@ -40,7 +40,7 @@ const ENTITY_STATES = [...workRoutes];
         WorkViewComponent,
         WorkListComponent
     ],
-    imports: [MHDBDBFormModule, MatCheckboxModule, MatDialogModule, MatInputModule, MatListModule, MatSnackBarModule, MatProgressSpinnerModule, CommonModule, FormsModule, AppXSharedModule, ReactiveFormsModule, TagInputModule, MatSlideToggleModule, MatExpansionModule, MatButtonModule, MatToolbarModule, MatIconModule, NgxSliderModule, RouterModule.forChild(ENTITY_STATES), MatFormFieldModule, MatChipsModule, MatAutocompleteModule, ElementComponentModule, MHDBDBViewWidgetsModule],
+    imports: [MHDBDBFormModule, MatCheckboxModule, MatDialogModule, MatInputModule, MatIconModule, MatListModule, MatSnackBarModule, MatProgressSpinnerModule, CommonModule, FormsModule, AppXSharedModule, ReactiveFormsModule, TagInputModule, MatSlideToggleModule, MatExpansionModule, MatButtonModule, MatToolbarModule, MatIconModule, NgxSliderModule, RouterModule.forChild(ENTITY_STATES), MatFormFieldModule, MatChipsModule, MatAutocompleteModule, ElementComponentModule, MHDBDBViewWidgetsModule],
     exports: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

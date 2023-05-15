@@ -41,6 +41,7 @@ import {
 } from "app/shared/viewWidgets/workInstancesWidget/workInstancesWidget";
 import {WorkLodWidgetComponent, WorkLodWidgetHelpComponent} from "app/shared/viewWidgets/workLodWidget/workLodWidget";
 import {WorkBibWidgetComponent, WorkBibWidgetHelpComponent} from "app/shared/viewWidgets/workBibWidget/workBibWidget";
+import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 
 @NgModule({
   entryComponents: [
@@ -93,30 +94,31 @@ import {WorkBibWidgetComponent, WorkBibWidgetHelpComponent} from "app/shared/vie
     WorkBibWidgetComponent,
     WorkBibWidgetHelpComponent
   ],
-  imports: [
-    RouterModule,
-    AppXSharedModule,
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatAutocompleteModule,
-    MatButtonModule,
-    MatCheckboxModule,
-    MatChipsModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatInputModule,
-    MatSelectModule,
-    MatExpansionModule,
-    MatGridListModule,
-    MatCardModule,
-    MatSlideToggleModule,
-    MatProgressSpinnerModule,
-    MatPaginatorModule,
-    MatTableModule,
-    MatSortModule
-  ],
+    imports: [
+        RouterModule,
+        AppXSharedModule,
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatAutocompleteModule,
+        MatButtonModule,
+        MatCheckboxModule,
+        MatChipsModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        MatSelectModule,
+        MatExpansionModule,
+        MatGridListModule,
+        MatCardModule,
+        MatSlideToggleModule,
+        MatProgressSpinnerModule,
+        MatPaginatorModule,
+        MatTableModule,
+        MatSortModule,
+        FontAwesomeModule
+    ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
   ],

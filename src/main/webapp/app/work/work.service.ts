@@ -60,7 +60,7 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
 
   async getWorkMetadata(workId: string): Promise<[(WorkMetadataClass[]), number]> {
     const query = `
-    select distinct ?id ?label ?sameAs ?dateOfCreation ?authorId ?authorSameAs ?authorLabel ?instance where {
+    select distinct ?id ?label ?sameAs ?dateOfCreation ?authorId ?authorSameAs ?authorLabel ?instance ?genreForm ?genreFormMainParent where {
             Bind(mhdbdbi:${workId} AS ?id) .
             ?id rdfs:label ?label .
             ?id owl:sameAs ?sameAs .
@@ -69,6 +69,10 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
             ?id dhpluso:contribution/dhpluso:agent/rdfs:label ?authorLabel .
             ?id dhpluso:contribution/dhpluso:agent/owl:sameAs ?authorSameAs .
             ?id dhpluso:hasExpression/dhpluso:hasInstance ?instance .
+
+            OPTIONAL { ?id dhpluso:genreForm/skos:prefLabel ?genreForm . }
+            OPTIONAL { ?id dhpluso:genreFormMainparent/skos:prefLabel ?genreFormMainParent . }
+
             filter(langMatches( lang(?label), "de" ))
             }
         `
@@ -398,6 +402,15 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
         if ('authorSameAs' in row && element && !element.authorSameAs) {
           element.authorSameAs = row.authorSameAs.value;
         }
+
+        if ('genreForm' in row && element && !element.genreForm) {
+          element.genreForm = row.genreForm.value;
+        }
+
+        if ('genreFormMainParent' in row && element && !element.genreFormMainParent) {
+          element.genreFormMainParent = row.genreFormMainParent.value;
+        }
+
 
        /* if (element && !element.authors) {
           const authorElem = new Person(

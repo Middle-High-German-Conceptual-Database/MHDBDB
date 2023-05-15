@@ -26,6 +26,7 @@ import {MHDBDBViewWidgetsModule} from "app/shared/viewWidgets/viewWidgetsModule"
 import {MaterialModule} from "app/shared/MaterialModule";
 import {RouterModule} from "@angular/router";
 import {CustomReactComponentWrapperComponent} from "app/components/CustomReactComponentWrapper";
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   imports: [
@@ -45,6 +46,7 @@ import {CustomReactComponentWrapperComponent} from "app/components/CustomReactCo
     MHDBDBFormModule,
     MHDBDBViewWidgetsModule,
     MaterialModule,
+    FontAwesomeModule,
     RouterModule.forRoot(routes, {useHash: true, onSameUrlNavigation: 'reload'}),
     TreeModule.forRoot()
   ],
