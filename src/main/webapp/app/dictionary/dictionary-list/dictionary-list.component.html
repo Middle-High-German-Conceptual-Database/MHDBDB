@@ -1,36 +1,48 @@
 <h2>Lemmata </h2>
-<div class="werke-blk">
-    <dhpp-form-header
-        [routeString]="routeString"
-    ></dhpp-form-header>
-    <dhpp-form-LemmaSearch
-        [label]="labelTextSearch"
-        [routeString]="routeString"
-    ></dhpp-form-LemmaSearch>
-    <dhpp-form-posCheckboxes
-        [label]="labelPosSearch"
-        [routeString]="routeString"
-        >
-    </dhpp-form-posCheckboxes>
-    <dhpp-form-concepts
-    [label]="labelConceptSearch"
-    [routeString]="routeString">
-    </dhpp-form-concepts>
-    <dhpp-form-footer [routeString]="routeString"></dhpp-form-footer>
-</div>
 
-<div *ngIf="!isLoading; else loading" class="search-results" infinite-scroll [infiniteScrollDistance]="2" [infiniteScrollUpDistance]="1.5"
-    [infiniteScrollThrottle]="500" (scrolled)="onScrollDown()">
-    <div >{{ total }} Lemmata gefunden</div>
-    <div *ngFor="let listElement of instances">
-        <dhpp-dictionary-element [instance]="listElement"></dhpp-dictionary-element>
+<div class="container">
+    <div class="row" style="border: 1px solid #ffd740; margin-top: 15px;">
+        <div class="col">
+            <dhpp-form-header
+                [routeString]="routeString"
+            ></dhpp-form-header>
+            <dhpp-form-LemmaSearch
+                [label]="labelTextSearch"
+                [routeString]="routeString"
+            ></dhpp-form-LemmaSearch>
+            <dhpp-form-posCheckboxes
+                [label]="labelPosSearch"
+                [routeString]="routeString"
+            >
+            </dhpp-form-posCheckboxes>
+            <dhpp-form-concepts
+                [label]="labelConceptSearch"
+                [routeString]="routeString">
+            </dhpp-form-concepts>
+        </div>
     </div>
-    <span *ngIf="total > instances.length">Scrollen für mehr Resultate</span>
-    <mat-spinner *ngIf="isLoadingNext"></mat-spinner>
+
+    <div class="row">
+        <div class="col">
+            <dhpp-form-footer [routeString]="routeString"></dhpp-form-footer>
+        </div>
+    </div>
+
+    <div *ngIf="!isLoading; else loading" class="search-results" infinite-scroll [infiniteScrollDistance]="2"
+         [infiniteScrollUpDistance]="1.5"
+         [infiniteScrollThrottle]="500" (scrolled)="onScrollDown()">
+        <div>{{ total }} Lemmata gefunden</div>
+        <div *ngFor="let listElement of instances">
+            <dhpp-dictionary-element [instance]="listElement"></dhpp-dictionary-element>
+        </div>
+        <span *ngIf="total > instances.length">Scrollen für mehr Resultate</span>
+        <mat-spinner *ngIf="isLoadingNext"></mat-spinner>
+    </div>
+    <ng-template #loading>
+        <mat-spinner></mat-spinner>
+    </ng-template>
+
 </div>
-<ng-template #loading>
-    <mat-spinner></mat-spinner>
-</ng-template>
 
 
-<span></span>
+

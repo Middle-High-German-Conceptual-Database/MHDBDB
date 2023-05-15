@@ -51,6 +51,11 @@ export interface FilterSeriesI extends FilterI {
   isSeriesActive?: boolean
 }
 
+export interface FilterWorksI extends FilterI {
+  works?: string[]
+  isWorksActive?: boolean
+}
+
 export interface FilterAuthorI extends FilterI {
     authors?: string[]
     isAuthorsActive?: boolean
@@ -124,7 +129,7 @@ export const classFilter: LabeledClassfilterI[] = [
 
 ]
 
-export interface FilterClassExtendedI extends FilterClassI, FilterSeriesI, FilterLabelI, FilterConceptsI {
+export interface FilterClassExtendedI extends FilterClassI, FilterSeriesI, FilterWorksI, FilterLabelI, FilterConceptsI {
 
 }
 

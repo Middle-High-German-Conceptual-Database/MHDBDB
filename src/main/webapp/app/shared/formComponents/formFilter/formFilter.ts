@@ -35,6 +35,7 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
 
   filterConcepts
   filterSeries
+  filterWorks
 
   workList: WorkClass[] = [];
   seriesList: SeriesClass[] = [];
@@ -64,6 +65,8 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
   addOnBlur = true;
   visible = true;
 
+  workCtrl = new FormControl();
+
   // autocomplete concepts
   conceptCtrl = new FormControl();
   filteredConcepts: Observable<string[]>;
@@ -78,9 +81,11 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
   ) {
     super(historyService, help);
 
+    // Autocomplete for concepts field
     this.filteredConcepts = this.conceptCtrl.valueChanges.pipe(
       startWith(null),
       map((concept: string | null) => concept ? this._filterConcept(concept) : this.conceptLabels.slice()));
+
 
   }
 
@@ -93,9 +98,13 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
     return <FormGroup>this.form.get('filterConcepts')
   }
 
-  /*get series() {
+  get series() {
     return <FormGroup>this.form.get('filterSeries')
-  }*/
+  }
+
+  get works() {
+    return <FormGroup>this.form.get('filterWorks')
+  }
 
   removeConcept(conceptLabel: string): void {
     this.concepts.removeControl(conceptLabel);
@@ -110,14 +119,24 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
 
   initHtmlForm(filterMap: f) {
 
+    this.filterWorks = new FormGroup({});
+
     this.form = new FormGroup({
       label: new FormControl(filterMap.label),
       isLabelActive: new FormControl(filterMap.isLabelActive),
       isSeriesFilterActive: new FormControl(filterMap.isSeriesFilterActive),
       isConceptsActive: new FormControl(filterMap.isConceptsActive),
-      works: new FormControl(''),
+      isWorksActive: new FormControl(filterMap.isWorksActive),
+      filterWorks: this.filterWorks,
       series: new FormControl(''),
     });
+
+    this.workList.forEach((work) => {
+      this.conceptLabels.push(work.label)
+      if (filterMap.concepts.includes(work.id)) {
+        this.concepts.addControl(work.label.trim(), new FormControl(true))
+      }
+    })
 
     this.filterSeriesCheckboxes = new FormGroup({});
     this.seriesList.forEach(
@@ -129,14 +148,6 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
         }
       }
     )
-
-    this.workList.forEach((concept) => {
-      this.conceptLabels.push(concept.label)
-      if (filterMap.concepts.includes(concept.id)) {
-        this.concepts.addControl(concept.label.trim(), new FormControl(true))
-      }
-    })
-
 
   }
 
@@ -178,6 +189,12 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
       })
     }
 
+    if (this.form.get('isWorksActive').value != filterMap.isWorksActive) {
+      this.form.patchValue({
+        isWorksActive: filterMap.isWorksActive,
+      })
+    }
+
     this.workList.forEach(
       concept => {
         this.concepts.removeControl(concept.label);
@@ -199,14 +216,13 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
 
   onValueChanges(value) {
 
-    let changed: boolean = false
+    console.log(value);
+
     if (this.qp.filter.isLabelActive != value.isLabelActive) {
       this.qp.filter.isLabelActive = value.isLabelActive
-      changed = true
     }
     if (this.qp.filter.label != value.label) {
       this.qp.filter.label = value.label
-      changed = true
     }
 
     this.qp.filter.isSeriesActive = value.isSeriesActive
@@ -216,14 +232,21 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
       this.qp.filter.series.push(e.id)
     }
 
-    this.qp.filter.isConceptsActive = value.isConceptsActive
+    /* this.qp.filter.isConceptsActive = value.isConceptsActive
     this.qp.filter.concepts = []
     for (let v in value.filterConcepts) {
       const e = this.workList.find(element => element.label === v)
       this.qp.filter.concepts.push(e.id)
+    } */
+
+    this.qp.filter.isWorksActive = value.isWorksActive
+    this.qp.filter.works = []
+    for (let v in value.filterWorks) {
+      const e = this.workList.find(element => element.label === v)
+      this.qp.filter.works.push(e.id)
     }
 
-    return changed
+    return true
   }
 
   onSeriesChange(event: MatCheckboxChange, series: SeriesClass) {
