@@ -54,7 +54,9 @@
                 Textreihe(n) (Gattung)
             </div>
             <div class="col-9">
-                {{ metadata.genreForm }}
+                <span *ngFor="let sameAs of metadata.genreForm; let isLast=last">
+                    <a href="{{sameAs}}" target="_blank">{{sameAs }}</a>{{isLast ? '' : ','}}
+                </span>
             </div>
         </div>
         <div class="row">
@@ -62,7 +64,9 @@
                 Übergeordnete Textreihe(n)
             </div>
             <div class="col-9">
-                {{ metadata.genreFormMainParent }}
+               <span *ngFor="let sameAs of metadata.genreForm; let isLast=last">
+                   <a href="{{sameAs}}" target="_blank">{{sameAs }}</a>{{isLast ? '' : ','}}
+                </span>
             </div>
         </div>
     </div>
@@ -79,8 +83,12 @@
                 <a href="{{instance}}" target="_blank">{{ metadata.label }}</a>
             </div>
             <div class="col-2">
-                <a href=""><fa-icon [icon]="faPrint"></fa-icon></a>
-                <a href=""><fa-icon [icon]="faLink"></fa-icon></a>
+                <a href="">
+                    <fa-icon [icon]="faPrint"></fa-icon>
+                </a>
+                <a href="">
+                    <fa-icon [icon]="faLink"></fa-icon>
+                </a>
             </div>
         </div>
     </div>

@@ -64,11 +64,11 @@ export class WorkMetadataClass extends WorkClass implements AuthorsI, DateOfCrea
   public authorLabel: string;
   public authorSameAs: any[];
 
-  public genreForm: string;
-  public genreFormInstance: string;
+  public genreForm: string[];
+  public genreFormInstance: string[];
 
-  public genreFormMainParent: string;
-  public genreFormMainParentInstance: string;
+  public genreFormMainParent: string[];
+  public genreFormMainParentInstance: string[];
 
 
   constructor(

@@ -73,6 +73,8 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
             OPTIONAL { ?id dhpluso:genreForm/skos:prefLabel ?genreForm . }
             OPTIONAL { ?id dhpluso:genreFormMainparent/skos:prefLabel ?genreFormMainParent . }
 
+            filter(langMatches( lang(?genreForm), "de" ))
+            filter(langMatches( lang(?genreFormMainParent), "de" ))
             filter(langMatches( lang(?label), "de" ))
             }
         `
@@ -404,13 +406,20 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
         }
 
         if ('genreForm' in row && element && !element.genreForm) {
-          element.genreForm = row.genreForm.value;
+          let broaderList: string[] = []
+          broaderList.push(row.genreForm.value)
+          element.genreForm = broaderList
+        } else if ('genreForm' in row && element && !element.genreForm.includes(row.genreForm.value)) {
+          element.genreForm.push(row.genreForm.value)
         }
 
         if ('genreFormMainParent' in row && element && !element.genreFormMainParent) {
-          element.genreFormMainParent = row.genreFormMainParent.value;
+          let broaderList: string[] = []
+          broaderList.push(row.genreFormMainParent.value)
+          element.genreFormMainParent = broaderList
+        } else if ('genreFormMainParent' in row && element && !element.genreFormMainParent.includes(row.genreFormMainParent.value)) {
+          element.genreFormMainParent.push(row.genreFormMainParent.value)
         }
-
 
        /* if (element && !element.authors) {
           const authorElem = new Person(
