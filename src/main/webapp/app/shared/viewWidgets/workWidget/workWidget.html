@@ -64,7 +64,7 @@
                 Übergeordnete Textreihe(n)
             </div>
             <div class="col-9">
-               <span *ngFor="let sameAs of metadata.genreForm; let isLast=last">
+               <span *ngFor="let sameAs of metadata.genreFormMainParent; let isLast=last">
                    <a href="{{sameAs}}" target="_blank">{{sameAs }}</a>{{isLast ? '' : ','}}
                 </span>
             </div>
