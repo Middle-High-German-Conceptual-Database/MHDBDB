@@ -11,7 +11,7 @@ const utils = require('./utils.js');
 
 module.exports = (options) => ({
   resolve: {
-    extensions: ['.ts', '.tsx', '.js'],
+    extensions: ['.ts', '.tsx', '.js', '.mjs'],
     modules: ['node_modules'],
     mainFields: ['es5', 'browser', 'module', 'main'],
     alias: utils.mapTypescriptAliasToWebpackAlias()
@@ -62,6 +62,11 @@ module.exports = (options) => ({
           system: true
         }
       },
+      {
+        test: /\.mjs$/,
+        include: /node_modules/,
+        type: 'javascript/auto'
+      }
     ]
   },
   plugins: [

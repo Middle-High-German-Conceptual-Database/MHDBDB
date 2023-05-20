@@ -1,32 +1,29 @@
-import {NgModule, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
-import {HashLocationStrategy, LocationStrategy} from '@angular/common';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 
 import './vendor';
-import {DhppbaseSharedModule} from 'app/shared/shared.module';
-import {DhppbaseCoreModule} from 'app/core/core.module';
-import {routes} from './app.routes';
-import {DhppbaseEntityModule} from './entities/entity.module';
-import {ErrorComponent} from './layouts/error/error.component';
-import {ReactiveFormsModule, FormsModule} from '@angular/forms';
+import { DhppbaseSharedModule } from 'app/shared/shared.module';
+import { DhppbaseCoreModule } from 'app/core/core.module';
+import { routes } from './app.routes';
+import { DhppbaseEntityModule } from './entities/entity.module';
+import { ErrorComponent } from './layouts/error/error.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
-import {TreeModule} from 'angular-tree-component';
-import {AppComponent} from "app/app.component";
-import {AppHomeComponent} from "app/home/home.component";
-import {DhppNavbarComponent} from "app/shared/navbar/navbar.component";
-import {DhppFooterComponent} from "app/shared/footer/footer.component";
-import {DhppHeaderComponent} from "app/shared/header/header.component";
-import {ScrollToTopComponent} from "app/shared/scrolltotop/scroll-to-top.component";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {AppXSharedModule} from "app/app-shared.module";
-import {MatTabsModule} from "@angular/material/tabs";
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import {MHDBDBFormModule} from "app/shared/formComponents/formModule";
-import {MHDBDBViewWidgetsModule} from "app/shared/viewWidgets/viewWidgetsModule";
-import {MaterialModule} from "app/shared/MaterialModule";
-import {RouterModule} from "@angular/router";
-import {CustomReactComponentWrapperComponent} from "app/components/CustomReactComponentWrapper";
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TreeModule } from 'angular-tree-component';
+import { AppComponent } from 'app/app.component';
+import { AppHomeComponent } from 'app/home/home.component';
+import { DhppNavbarComponent } from 'app/shared/navbar/navbar.component';
+import { DhppFooterComponent } from 'app/shared/footer/footer.component';
+import { DhppHeaderComponent } from 'app/shared/header/header.component';
+import { ScrollToTopComponent } from 'app/shared/scrolltotop/scroll-to-top.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AppXSharedModule } from 'app/app-shared.module';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MHDBDBFormModule } from 'app/shared/formComponents/formModule';
+import { MHDBDBViewWidgetsModule } from 'app/shared/viewWidgets/viewWidgetsModule';
+import { MaterialModule } from 'app/shared/MaterialModule';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
@@ -46,13 +43,10 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     MHDBDBFormModule,
     MHDBDBViewWidgetsModule,
     MaterialModule,
-    FontAwesomeModule,
-    RouterModule.forRoot(routes, {useHash: true, onSameUrlNavigation: 'reload'}),
-    TreeModule.forRoot()
+    RouterModule.forRoot(routes, { useHash: true, onSameUrlNavigation: 'reload' }),
+    TreeModule
   ],
-  exports: [
-    MaterialModule
-  ],
+  exports: [MaterialModule],
   declarations: [
     AppComponent,
     AppHomeComponent,
@@ -60,13 +54,10 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     DhppNavbarComponent,
     DhppFooterComponent,
     DhppHeaderComponent,
-    ScrollToTopComponent,
+    ScrollToTopComponent
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: []
 })
-export class DhppbaseAppModule {
-}
-
-
+export class DhppbaseAppModule {}
