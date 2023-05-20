@@ -1,41 +1,36 @@
-import {Injectable} from '@angular/core';
-import {LanguageService, NAMEDGRAPHS} from 'app/shared/base.imports';
+import { Injectable } from '@angular/core';
+import { LanguageService, NAMEDGRAPHS } from 'app/shared/base.imports';
 import {
   FilterConceptsI,
   FilterIdLabelI,
-  FilterPosI, FilterWorksI,
+  FilterPosI,
+  FilterWorksI,
   MhdbdbIdLabelEntityService,
   OptionsI,
   QueryParameterI
 } from '../shared/mhdbdb-graph.service';
-import {AnnotationClass} from './annotation.class';
-import {Kwic, ElectronicText, Token} from './reference.class';
-import {WorkFilterI, WorkOptionsI} from "app/work/work.service";
-import {ContextRangeT, TokenFilterI} from "app/reference/referencePassage.service";
-import {DictionaryQueryParameterI} from "app/dictionary/dictionary.service";
+import { AnnotationClass } from './annotation.class';
+import { Kwic, ElectronicText, Token } from './reference.class';
+import { WorkFilterI, WorkOptionsI } from 'app/work/work.service';
+import { ContextRangeT, TokenFilterI } from 'app/reference/referencePassage.service';
+import { DictionaryQueryParameterI } from 'app/dictionary/dictionary.service';
 
-export interface TextQueryParameterI extends QueryParameterI<TextFilterI, TextOptionsI> {
-
-}
-
+export interface TextQueryParameterI extends QueryParameterI<TextFilterI, TextOptionsI> {}
 
 export interface TextFilterI extends FilterIdLabelI, FilterWorksI, FilterPosI, FilterConceptsI {
-  context: ContextRangeT,
-  isWorkIdActive: boolean
-  directlyFollowing: boolean,
-
-  workId: string
-  isElectronicIdActive: boolean
-  electronicId: string
-  tokenFilters?: TokenFilterI[],
+  context: ContextRangeT;
+  isWorkIdActive: boolean;
+  directlyFollowing: boolean;
+  workId: string;
+  isElectronicIdActive: boolean;
+  electronicId: string;
+  tokenFilters?: TokenFilterI[];
 }
 
-export interface TextOptionI extends OptionsI {
-
-}
+export interface TextOptionI extends OptionsI {}
 
 export interface TextOptionsI extends OptionsI {
-  useLucene: boolean
+  useLucene: boolean;
 }
 
 export const defaultTokenFilter: TokenFilterI = {
@@ -44,48 +39,45 @@ export const defaultTokenFilter: TokenFilterI = {
   pos: [],
   concepts: [],
   connectorAnd: true
-}
+};
 
-export const defaultTextQP: TextQueryParameterI =
-  {
-    order: 'label',
-    desc: false,
-    limit: 10,
-    offset: 0,
-    lang: undefined,
-    namedGraphs: NAMEDGRAPHS.get('text'),
-    filter: {
-      isIdActive: true,
-      id: undefined,
-      context: 1,
-      directlyFollowing: true,
-      isLabelActive: true,
-      label: undefined,
-      isWorkIdActive: true,
-      workId: undefined,
-      isElectronicIdActive: true,
-      electronicId: undefined,
-      tokenFilters: [defaultTokenFilter],
-      isPosActive: true,
-      pos: [],
-      works: [],
-      concepts: [],
-      isConceptsActive: true,
-    },
-    option: {
-      useLucene: false
-    }
+export const defaultTextQP: TextQueryParameterI = {
+  order: 'label',
+  desc: false,
+  limit: 10,
+  offset: 0,
+  lang: undefined,
+  namedGraphs: NAMEDGRAPHS.get('text'),
+  filter: {
+    isIdActive: true,
+    id: undefined,
+    context: 1,
+    directlyFollowing: true,
+    isLabelActive: true,
+    label: undefined,
+    isWorkIdActive: true,
+    workId: undefined,
+    isElectronicIdActive: true,
+    electronicId: undefined,
+    tokenFilters: [defaultTokenFilter],
+    isPosActive: true,
+    pos: [],
+    works: [],
+    concepts: [],
+    isConceptsActive: true
+  },
+  option: {
+    useLucene: false
   }
+};
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI, TextFilterI, TextOptionsI, ElectronicText> {
-  protected _defaultQp: TextQueryParameterI = defaultTextQP
+  protected _defaultQp: TextQueryParameterI = defaultTextQP;
 
-  constructor(
-    protected _languageService: LanguageService,
-  ) {
-    super(_languageService)
-    this._languageService.getCurrent().then(v => this._defaultQp.lang = v)
+  constructor(protected _languageService: LanguageService) {
+    super(_languageService);
+    this._languageService.getCurrent().then(v => (this._defaultQp.lang = v));
   }
 
   /*_sparqlQuery(
@@ -358,14 +350,12 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
     return q
   }*/
 
-
   protected _sparqlQuery(qp: TextQueryParameterI, countResults: boolean): string {
-
     console.log('TextService._sparqlQuery', qp);
 
     function posFilter(i: number, pos: string[]): string {
       let posUris = pos.map(p => `<${p}>`);
-      let posFilter = ''
+      let posFilter = '';
       if (pos.length > 0) {
         posFilter = `
                 ?posAnnotation${i}
@@ -373,14 +363,14 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                     oa:hasTarget ?token${i} ;
                 .
                 FILTER ( ?pos${i} IN (${posUris.join()}) )
-                `
+                `;
       }
-      return posFilter
+      return posFilter;
     }
 
     function conceptFilter(i: number, concepts: string[]): string {
       let conceptUris = concepts.map(c => `<${c}>`);
-      let conceptFilter = ''
+      let conceptFilter = '';
       if (concepts.length > 0) {
         conceptFilter = `
                 ?conceptAnnotation${i}
@@ -389,25 +379,29 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                 .
                 ?concept${i} skos:narrowerTransitive?/^dhpluso:isLexicalizedSenseOf/dhpluso:isSenseOf ?word${i}
                 FILTER ( ?concept${i} IN (${conceptUris.join()}) )
-                `
+                `;
       }
-      return conceptFilter
+      return conceptFilter;
     }
 
-    let token0 = ''
+    let token0 = '';
     if (qp.filter.tokenFilters[0].label != '') {
       if (qp.filter.tokenFilters[0].searchLabelinLemma) {
         token0 = `
                 {
                     {
-                        ?word a dhpluso:Word .
-                        ?word dhpluso:canonicalForm/dhpluso:writtenRep ?label .
-                        filter(regex(str(?label), "${this._labelFilterGenerator(qp.filter.tokenFilters[0].label, false)}", "i"))
+                      ?wordLemma dhpluso:canonicalForm/dhpluso:writtenRep ?wordLabel .
+                      ?wordId dhpluso:canonicalForm ?lemma .
+                      ?annotationId oa:hasBody ?wordId .
+                      ?annotationId oa:hasTarget ?textId .
+                      ?textId mhdbdbxml:partOf/dhpluso:hasElectronicInstance ?id .
+                      ?id rdf:type dhpluso:Text .
+                      filter(regex(str(?wordLabel), "${this._labelFilterGenerator(qp.filter.tokenFilters[0].label, false)}", "i"))
                     }
                     ${posFilter(0, qp.filter.tokenFilters[0].pos)}
                     ${conceptFilter(0, qp.filter.tokenFilters[0].concepts)}
                 }
-                `
+                `;
       } else {
         token0 = `
                     {
@@ -419,7 +413,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                         ${posFilter(0, qp.filter.tokenFilters[0].pos)}
                         ${conceptFilter(0, qp.filter.tokenFilters[0].concepts)}
                     }
-                `
+                `;
       }
     } else {
       token0 = `
@@ -431,7 +425,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                 ${posFilter(0, qp.filter.tokenFilters[0].pos)}
                 ${conceptFilter(0, qp.filter.tokenFilters[0].concepts)}
             }
-            `
+            `;
     }
 
     const lines = `
@@ -439,7 +433,9 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                 ?token0 mhdbdbxml:parent ?lines .
                 ?lines a tei:l .
             }
-            ${qp.filter.context > 1 ? `
+            ${
+              qp.filter.context > 1
+                ? `
                 UNION
                 {
                     select ?lines  {
@@ -460,13 +456,15 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                     }
                     Limit ${qp.filter.context - 1}
                 }
-            ` : ""}
-        `
+            `
+                : ''
+            }
+        `;
 
-    let tokenSelects: string[] = []
-    let tokens: string[] = []
+    let tokenSelects: string[] = [];
+    let tokens: string[] = [];
     qp.filter.tokenFilters.forEach((tokenFilter, i) => {
-      tokenSelects.push(`?token${i}`)
+      tokenSelects.push(`?token${i}`);
       if (i > 0) {
         if (tokenFilter.searchLabelinLemma) {
           tokens.push(
@@ -488,7 +486,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                             ${qp.filter.directlyFollowing === true ? `filter (?n${i} > ?n${i - 1})` : ''}
                         }
                         `
-          )
+          );
         } else {
           tokens.push(
             `
@@ -502,41 +500,35 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                             ${qp.filter.directlyFollowing === true ? `filter (?n${i} > ?n${i - 1})` : ''}
                         }
                         `
-          )
+          );
         }
-
       }
-    })
+    });
 
-    let qt = ''
+    let qt = '';
     if (countResults) {
       qt = `
                 SELECT (count(*) as ?count) where {
                     ${token0}
-                    ${lines}
-                    ${tokens.join('\r\n')}
                 }
-            `
+            `;
     } else {
       qt = `
-            select distinct ${tokenSelects.join(' ')} ?id
+            SELECT DISTINCT ?wordLemma ?wordLabel ?wordId ?annotationId ?textId ?id
             where {
                 ${token0}
-                ${lines}
-                ${tokens.join('\r\n')}
-                ?token0 mhdbdbxml:partOf ?id .
 
             }
             # order by ?text
             offset ${qp.offset}
             limit ${qp.limit}
-            `
+            `;
     }
 
-    let bindings: string[] = []
-    let filters: string[] = []
+    let bindings: string[] = [];
+    let filters: string[] = [];
 
-    let labelQuery = ''
+    let labelQuery = '';
     if (qp.filter.isLabelActive && qp.filter.label) {
       if (qp.option.useLucene) {
         // Todo: Add Lucene Index to graphdb
@@ -544,20 +536,31 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                         ?search a luc-index:electronic ;
                         luc:query "title:${this._labelFilterGenerator(qp.filter.label, qp.option.useLucene)}" ;
                         luc:entities ?id .
-                        `
+                        `;
       } else {
-        filters.push(`filter(regex(str(?label), "${this._labelFilterGenerator(qp.filter.label, qp.option.useLucene)}", "i"))`)
+        filters.push(`filter(regex(str(?label), "${this._labelFilterGenerator(qp.filter.label, qp.option.useLucene)}", "i"))`);
       }
     }
 
+    if (qp.filter.isWorksActive && qp.filter.works) {
+      let tempFilters = [];
+      qp.filter.works.forEach((work, i) => {
+        bindings.push(`Bind (<${work}> as ?work${i})`);
+        tempFilters.push(`?workId = ?work${i}`);
+      });
+
+      let orFilter = tempFilters.join(' || ');
+      filters.push(`filter(${orFilter})`);
+    }
+
     if (qp.filter.isIdActive && qp.filter.id) {
-      bindings.push(`Bind (<${qp.filter.id}> as ?id)`)
+      bindings.push(`Bind (<${qp.filter.id}> as ?id)`);
     }
     if (qp.filter.isElectronicIdActive && qp.filter.electronicId) {
-      bindings.push(`Bind (<${qp.filter.electronicId}> as ?electronicId)`)
+      bindings.push(`Bind (<${qp.filter.electronicId}> as ?electronicId)`);
     }
     if (qp.filter.isWorkIdActive && qp.filter.workId) {
-      bindings.push(`Bind (<${qp.filter.workId}> as ?workId)`)
+      bindings.push(`Bind (<${qp.filter.workId}> as ?workId)`);
     }
 
     let instanceSelect = `
@@ -568,9 +571,9 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
             ?electronicId dhpluso:instanceOf/dhpluso:expressionOf ?workId .
 
             ${filters.join('\r\n')}
-        `
+        `;
 
-    let q: string = ''
+    let q: string = '';
     if (countResults) {
       q = `
                 SELECT (count(*) as ?count)
@@ -580,50 +583,42 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                     }
                 }
 
-            `
+            `;
     } else {
       q = `
                 SELECT DISTINCT ?id ?label ?rootId ?electronicId ?workId
                 WHERE {
                     {
+                    ${qt}
+
                         SELECT DISTINCT ?id ?label ?rootId ?electronicId ?workId
                         WHERE {
                             ${instanceSelect}
+
                             ?electronicId rdfs:label ?label .
                             filter(langmatches(lang(?label),'${qp.lang}'))
-                            FILTER regex(?label, "Der Ackermann aus Böhmen", "i")
                         }
                         ${this._sparqlOrder(qp.order, qp.desc)}
                         ${this._sparqlLimitOffset(qp.limit, qp.offset)}
                     }
                 }
-                `
+                `;
     }
-    return q
+    return q;
   }
 
   protected _jsonToObject(bindings): ElectronicText[] {
-    let instances: ElectronicText[] = []
-    bindings.forEach(
-      row => {
-        instances.push(
-          new ElectronicText(
-            row.id.value,
-            row.label.value,
-            row.rootId.value,
-            row.electronicId.value,
-            row.workId.value,
-          )
-        )
-      }
-    )
-    return instances
+    let instances: ElectronicText[] = [];
+    bindings.forEach(row => {
+      instances.push(new ElectronicText(row.id.value, row.label.value, row.rootId.value, row.electronicId.value, row.workId.value));
+    });
+    return instances;
   }
 
   public getText(textId: string): Promise<ElectronicText> {
-    let qp = this.defaultQp
-    qp.filter.id = textId
-    return this.getInstance(qp)
+    let qp = this.defaultQp;
+    qp.filter.id = textId;
+    return this.getInstance(qp);
   }
 
   ////////
@@ -698,65 +693,47 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                 }
             }
             Order by ?n
-            limit ${(radius * 2) + 1}
-        `
+            limit ${radius * 2 + 1}
+        `;
   }
 
   private jsonToObjectKwic(bindings): Kwic {
-    let left: Token[] = []
-    let center: Token = undefined
-    let right: Token[] = []
-    bindings.forEach(
-      row => {
-        try {
-          if (row.position.value == 'center' && 'seg' in row) {
-            center = new Token(
-              row.seg.value,
-              row.n.value,
-              row.content.value,
-            )
-          } else if (row.position.value == 'left' && 'seg' in row) {
-            left.push(
-              new Token(
-                row.seg.value,
-                row.n.value,
-                row.content.value,
-              )
-            )
-          } else if (row.position.value == 'right' && 'seg' in row) {
-            right.push(
-              new Token(
-                row.seg.value,
-                row.n.value,
-                row.content.value,
-              )
-            )
-          }
-        } catch (error) {
-          console.error('jsonToObjectKwic: Error ', error);
-          console.error(row)
+    let left: Token[] = [];
+    let center: Token = undefined;
+    let right: Token[] = [];
+    bindings.forEach(row => {
+      try {
+        if (row.position.value == 'center' && 'seg' in row) {
+          center = new Token(row.seg.value, row.n.value, row.content.value);
+        } else if (row.position.value == 'left' && 'seg' in row) {
+          left.push(new Token(row.seg.value, row.n.value, row.content.value));
+        } else if (row.position.value == 'right' && 'seg' in row) {
+          right.push(new Token(row.seg.value, row.n.value, row.content.value));
         }
+      } catch (error) {
+        console.error('jsonToObjectKwic: Error ', error);
+        console.error(row);
       }
-    )
+    });
     if (center) {
-      return new Kwic(left, center, right)
+      return new Kwic(left, center, right);
     } else {
-      return undefined
+      return undefined;
     }
   }
 
   public getKwic(centerUri: string, radius: number = 5): Promise<Kwic> {
-    const query = this.sparqlKwic(centerUri, radius)
+    const query = this.sparqlKwic(centerUri, radius);
     return new Promise<Kwic>((resolve, reject) => {
       this._sq.query(query).then(
         data => {
-          resolve(this.jsonToObjectKwic(data['results']['bindings']))
+          resolve(this.jsonToObjectKwic(data['results']['bindings']));
         },
         error => {
-          reject(error)
+          reject(error);
         }
-      )
-    })
+      );
+    });
   }
 
   ///////////////
@@ -764,11 +741,11 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
   ///////////////
 
   private annotationsSparqlQuery(limit: number, offset: number, bodyId?: string, targetId?: string, targetClass?: string): string {
-    let body = (bodyId === undefined) ? "?body" : `<${bodyId}>`
-    let target = (targetId === undefined) ? "?target" : `<${targetId}>`
-    let bodyBind = (bodyId === undefined) ? "" : `BIND(<${bodyId}> AS ?body)`
-    let targetBind = (targetId === undefined) ? "" : `BIND(<${targetId}> AS ?target)`
-    const targetClassFilter = (targetClass === undefined) ? "" : `?target a ${targetClass} .`
+    let body = bodyId === undefined ? '?body' : `<${bodyId}>`;
+    let target = targetId === undefined ? '?target' : `<${targetId}>`;
+    let bodyBind = bodyId === undefined ? '' : `BIND(<${bodyId}> AS ?body)`;
+    let targetBind = targetId === undefined ? '' : `BIND(<${targetId}> AS ?target)`;
+    const targetClassFilter = targetClass === undefined ? '' : `?target a ${targetClass} .`;
     const query = `
             SELECT DISTINCT ?annotation ?body ?target ?count WHERE {
                 {
@@ -788,60 +765,50 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
             }
             OFFSET ${offset}
             LIMIT ${limit}
-        `
-    return query
+        `;
+    return query;
   }
 
   private jsonToObjectAnnotation(bindings): AnnotationClass[] {
-    let annotations: AnnotationClass[] = []
-    bindings.forEach(
-      row => {
-        try {
-          annotations.push(
-            new AnnotationClass(
-              row.annotation.value,
-              row.body.value,
-              row.target.value
-            )
-          )
-        } catch (error) {
-          console.error('jsonToObjectAnnotation: Error ', error);
-          console.error(row)
-        }
+    let annotations: AnnotationClass[] = [];
+    bindings.forEach(row => {
+      try {
+        annotations.push(new AnnotationClass(row.annotation.value, row.body.value, row.target.value));
+      } catch (error) {
+        console.error('jsonToObjectAnnotation: Error ', error);
+        console.error(row);
       }
-    )
-    return annotations
-
+    });
+    return annotations;
   }
 
-  getAnnotations(limit: number, offset: number, bodyId?: string, targetId?: string, targetClass?: string): Promise<[AnnotationClass[], number]> {
-    const query = this.annotationsSparqlQuery(limit, offset, bodyId, targetId, targetClass)
+  getAnnotations(
+    limit: number,
+    offset: number,
+    bodyId?: string,
+    targetId?: string,
+    targetClass?: string
+  ): Promise<[AnnotationClass[], number]> {
+    const query = this.annotationsSparqlQuery(limit, offset, bodyId, targetId, targetClass);
     return new Promise<[AnnotationClass[], number]>((resolve, reject) => {
       this._sq.query(query).then(
         data => {
-          let total: number = 0
-          if (
-            data.results.bindings &&
-            data.results.bindings.length >= 1
-          ) {
-            total = data.results.bindings[0].count.value
+          let total: number = 0;
+          if (data.results.bindings && data.results.bindings.length >= 1) {
+            total = data.results.bindings[0].count.value;
             if (total && total <= 0) {
-              resolve([[], 0])
+              resolve([[], 0]);
             } else {
-              resolve([this.jsonToObjectAnnotation(data.results.bindings), total])
+              resolve([this.jsonToObjectAnnotation(data.results.bindings), total]);
             }
           } else {
-            resolve([[], 0])
+            resolve([[], 0]);
           }
-
-
         },
         error => {
-          reject(error)
+          reject(error);
         }
-      )
-    })
+      );
+    });
   }
-
-
 }

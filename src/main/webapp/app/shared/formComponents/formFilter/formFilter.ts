@@ -90,7 +90,7 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
   }
 
   get works() {
-    return <FormGroup>this.form.get('filterWorks');
+    return <FormControl>this.form.get('works');
   }
 
   removeConcept(conceptLabel: string): void {
@@ -105,24 +105,23 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
   }
 
   initHtmlForm(filterMap: f) {
-    this.filterWorks = new FormGroup({});
-
     this.form = new FormGroup({
       label: new FormControl(filterMap.label),
       isLabelActive: new FormControl(filterMap.isLabelActive),
       isSeriesFilterActive: new FormControl(filterMap.isSeriesFilterActive),
       isConceptsActive: new FormControl(filterMap.isConceptsActive),
       isWorksActive: new FormControl(filterMap.isWorksActive),
-      filterWorks: this.filterWorks,
+      works: new FormControl(''),
       series: new FormControl('')
     });
 
-    this.workList.forEach(work => {
+    /*  this.workList.forEach(work => {
       this.conceptLabels.push(work.label);
       if (filterMap.concepts.includes(work.id)) {
-        this.concepts.addControl(work.label.trim(), new FormControl(true));
+        this.filterWorks.addControl(work.label.trim(), new FormControl(true));
       }
     });
+*/
 
     this.filterSeriesCheckboxes = new FormGroup({});
     this.seriesList.forEach(item => {
@@ -173,9 +172,9 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
       });
     }
 
-    this.workList.forEach(concept => {
+    /* this.workList.forEach(concept => {
       this.concepts.removeControl(concept.label);
-    });
+    }); */
 
     /* filterMap.concepts.forEach(
       conceptUri => {
@@ -190,8 +189,16 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
     ) */
   }
 
+  handleOnClick(event) {
+    console.log(event);
+  }
+
   onValueChanges(value) {
     console.log(value);
+
+    if (this.qp.filter.isSeriesFilterActive != value.isSeriesFilterActive) {
+      this.qp.filter.isSeriesFilterActive = value.isSeriesFilterActive;
+    }
 
     if (this.qp.filter.isLabelActive != value.isLabelActive) {
       this.qp.filter.isLabelActive = value.isLabelActive;
@@ -200,7 +207,6 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
       this.qp.filter.label = value.label;
     }
 
-    this.qp.filter.isSeriesActive = value.isSeriesActive;
     this.qp.filter.series = [];
     for (let v in value.filterSeries) {
       const e = this.seriesList.find(element => element.label === v);
@@ -214,12 +220,20 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
       this.qp.filter.concepts.push(e.id)
     } */
 
-    this.qp.filter.isWorksActive = value.isWorksActive;
-    this.qp.filter.works = [];
-    for (let v in value.filterWorks) {
-      const e = this.workList.find(element => element.label === v);
-      this.qp.filter.works.push(e.id);
+    if (this.qp.filter.isWorksActive != value.isWorksActive) {
+      this.qp.filter.isWorksActive = value.isWorksActive;
     }
+
+    this.qp.filter.works = [];
+
+    if (Array.isArray(value.works)) {
+      value.works.map(v => {
+        const e = this.workList.find(element => element.label === v);
+        this.qp.filter.works.push(e.id);
+      });
+    }
+
+    console.log(this.qp.filter);
 
     return true;
   }

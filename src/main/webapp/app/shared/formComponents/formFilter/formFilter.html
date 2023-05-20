@@ -58,12 +58,12 @@
                         </div>
 
                         <div class="werke_row_inner">
-                            <div class="input-row" formGroup="filterWorks">
+                            <div class="input-row">
 
-                                <mat-form-field appearance="fill" formControlName="workCtrl">
-                                    <mat-select multiple>
+                                <mat-form-field appearance="fill">
+                                    <mat-select multiple [formControl]="works">
                                         <mat-option *ngFor="let work of workList"
-                                                    [value]="work">{{work.label}}</mat-option>
+                                                    [value]="work.label">{{work.label}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
 

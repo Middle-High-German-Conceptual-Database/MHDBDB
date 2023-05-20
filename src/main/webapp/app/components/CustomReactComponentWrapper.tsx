@@ -110,10 +110,12 @@ export class CustomReactComponentWrapperComponent implements OnChanges, OnDestro
     this.workService.getSeriesList(id).then(
       data => {
         this.items = this.findAndUpdate(this.items, id, checked, data[0]);
+        this.componentClick.emit(this.items);
         this.render();
       }
     )
 
+    this.componentClick.emit(this.items);
     this.render();
   }
 
