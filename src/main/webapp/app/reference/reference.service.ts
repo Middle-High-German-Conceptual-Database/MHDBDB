@@ -388,19 +388,13 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
     if (qp.filter.tokenFilters[0].label != '') {
       if (qp.filter.tokenFilters[0].searchLabelinLemma) {
         token0 = `
-                {
-                    {
-                      ?wordLemma dhpluso:canonicalForm/dhpluso:writtenRep ?wordLabel .
-                      ?wordId dhpluso:canonicalForm ?lemma .
-                      ?annotationId oa:hasBody ?wordId .
-                      ?annotationId oa:hasTarget ?textId .
-                      ?textId mhdbdbxml:partOf/dhpluso:hasElectronicInstance ?id .
-                      ?id rdf:type dhpluso:Text .
-                      filter(regex(str(?wordLabel), "${this._labelFilterGenerator(qp.filter.tokenFilters[0].label, false)}", "i"))
-                    }
-                    ${posFilter(0, qp.filter.tokenFilters[0].pos)}
-                    ${conceptFilter(0, qp.filter.tokenFilters[0].concepts)}
-                }
+                  ?wordLemma dhpluso:canonicalForm/dhpluso:writtenRep ?wordLabel .
+                  ?wordId dhpluso:canonicalForm ?lemma .
+                  ?annotationId oa:hasBody ?wordId .
+                  ?annotationId oa:hasTarget ?textId .
+                  ?textId mhdbdbxml:partOf/dhpluso:hasElectronicInstance ?id .
+                  ?id rdf:type dhpluso:Text .
+                  filter(regex(str(?wordLabel), "${this._labelFilterGenerator(qp.filter.tokenFilters[0].label, false)}", "i"))
                 `;
       } else {
         token0 = `
@@ -416,7 +410,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                 `;
       }
     } else {
-      token0 = `
+      /*token0 = `
             {
                 ?token0
                     a tei:seg ;
@@ -425,7 +419,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                 ${posFilter(0, qp.filter.tokenFilters[0].pos)}
                 ${conceptFilter(0, qp.filter.tokenFilters[0].concepts)}
             }
-            `;
+            `;*/
     }
 
     const lines = `
@@ -515,13 +509,9 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
     } else {
       qt = `
             SELECT DISTINCT ?wordLemma ?wordLabel ?wordId ?annotationId ?textId ?id
-            where {
+            WHERE {
                 ${token0}
-
             }
-            # order by ?text
-            offset ${qp.offset}
-            limit ${qp.limit}
             `;
     }
 
@@ -585,25 +575,36 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
 
             `;
     } else {
-      q = `
+      console.log(token0);
+      if (token0 !== '') {
+        q = `
                 SELECT DISTINCT ?id ?label ?rootId ?electronicId ?workId
                 WHERE {
-                    {
-                    ${qt}
-
-                        SELECT DISTINCT ?id ?label ?rootId ?electronicId ?workId
-                        WHERE {
-                            ${instanceSelect}
-
-                            ?electronicId rdfs:label ?label .
-                            filter(langmatches(lang(?label),'${qp.lang}'))
+                        {
+                        ${qt}
                         }
-                        ${this._sparqlOrder(qp.order, qp.desc)}
-                        ${this._sparqlLimitOffset(qp.limit, qp.offset)}
-                    }
+
+                        ?id rdfs:label ?label .
+                        filter(langmatches(lang(?label),'${qp.lang}'))
                 }
                 `;
+      } else {
+        q = `
+                SELECT DISTINCT ?id ?label ?rootId ?electronicId ?workId
+                WHERE {
+                        {
+                          ${instanceSelect}
+                        }
+
+                        ?id rdfs:label ?label .
+                        filter(langmatches(lang(?label),'${qp.lang}'))
+                }
+                `;
+      }
     }
+
+    console.log(q);
+
     return q;
   }
 
