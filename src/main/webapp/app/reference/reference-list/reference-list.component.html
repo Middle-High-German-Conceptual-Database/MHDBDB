@@ -62,6 +62,7 @@
          class="search-results">
         <div *ngFor="let instance of instances">
             <dhpp-text-element [instance]="instance" [qp]="qp"></dhpp-text-element>
+
         </div>
         <mat-spinner *ngIf="isLoadingNext"></mat-spinner>
     </div>
