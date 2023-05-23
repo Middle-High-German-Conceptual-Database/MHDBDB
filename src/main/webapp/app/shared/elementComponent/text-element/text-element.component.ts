@@ -44,6 +44,8 @@ export class TextElementComponent extends BaseIndexElementDirective<WorkClass, W
 
   ngOnInit(): void {
     super.ngOnInit();
+    console.log(this.instance);
+
     // this.loadSenses();
     // this.loadOccurrences();
   }

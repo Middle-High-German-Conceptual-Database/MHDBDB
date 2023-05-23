@@ -14,6 +14,7 @@ import { Kwic, ElectronicText, Token } from './reference.class';
 import { WorkFilterI, WorkOptionsI } from 'app/work/work.service';
 import { ContextRangeT, TokenFilterI } from 'app/reference/referencePassage.service';
 import { DictionaryQueryParameterI } from 'app/dictionary/dictionary.service';
+import { WordClass } from 'app/dictionary/dictionary.class';
 
 export interface TextQueryParameterI extends QueryParameterI<TextFilterI, TextOptionsI> {}
 
@@ -620,7 +621,10 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       }
     }
 
-    var newQuery = `
+    let newQuery = '';
+
+    if (token0 !== '') {
+      newQuery = `
                     SELECT DISTINCT * WHERE {
                     ?rootId mhdbdbxml:partOf ?textId .
                     ?textId dhpluso:hasElectronicInstance ?workId .
@@ -643,13 +647,14 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                     ${this._sparqlOrder(qp.order, qp.desc)}
                     ${this._sparqlLimitOffset(qp.limit, qp.offset)}
             `;
+    }
 
     if (countResults) {
       q = `
                 SELECT (count(*) as ?count)
                 where {
                     {
-                        ${newQuery}
+                        <http://www.temporarydisabled.com> ?predicate ?object .
                     }
                 }
 
@@ -662,11 +667,40 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
   }
 
   protected _jsonToObject(bindings): ElectronicText[] {
-    let instances: ElectronicText[] = [];
-    bindings.forEach(row => {
-      instances.push(new ElectronicText(row.id.value, row.label.value, row.rootId.value, row.electronicId.value, row.workId.value));
+    let results: ElectronicText[] = super._jsonToObject(bindings) as ElectronicText[];
+
+    //let instances: ElectronicText[] = [];
+
+    bindings.forEach(item => {
+      let element = results.find(element => element.id === item.id.value);
+
+      // words
+      if ('word0' in item && element && !element.words) {
+        let formList: string[] = [item.word0.value];
+        element.words = formList;
+      } else if ('word0' in item && element && !element.words.find(form => form === item.word0.value)) {
+        element.words.push(item.word0.value);
+      }
+
+      // wordLabel
+      if ('wordLabel' in item && element && !element.wordLabels) {
+        let formList: string[] = [item.wordLabel.value];
+        element.wordLabels = formList;
+      } else if ('wordLabel' in item && element && !element.wordLabels.find(form => form === item.wordLabel.value)) {
+        element.wordLabels.push(item.wordLabel.value);
+      }
+
+      // annotations
+      if ('annotationId' in item && element && !element.annotationIds) {
+        let formList: string[] = [item.annotationId.value];
+        element.annotationIds = formList;
+      } else if ('annotationId' in item && element && !element.annotationIds.find(form => form === item.annotationId.value)) {
+        element.annotationIds.push(item.annotationId.value);
+      }
+
+      // instances.push(new ElectronicText(row.id.value, row.label.value, row.rootId.value, row.electronicId.value, row.workId.value));
     });
-    return instances;
+    return results;
   }
 
   public getText(textId: string): Promise<ElectronicText> {
