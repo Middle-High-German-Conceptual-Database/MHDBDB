@@ -359,7 +359,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       let posFilter = '';
       if (pos.length > 0) {
         posFilter = `
-                ?word${i} dhpluso:partOfSpeech ?pos${i} .
+                ?wordId dhpluso:partOfSpeech ?pos${i} .
                 FILTER ( ?pos${i} IN (${posUris.join()}) )
                 `;
       }
@@ -628,6 +628,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                     SELECT DISTINCT * WHERE {
                     ?rootId mhdbdbxml:partOf ?textId .
                     ?textId dhpluso:hasElectronicInstance ?workId .
+                    ?workId rdf:type dhpluso:Text .
     					      ?textId dhpluso:hasElectronicInstance ?electronicId .
                     ?electronicId rdf:type dhpluso:Text .
 
@@ -645,7 +646,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
 
                     }
                     ${this._sparqlOrder(qp.order, qp.desc)}
-                    ${this._sparqlLimitOffset(qp.limit, qp.offset)}
+
             `;
     }
 
@@ -675,11 +676,11 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       let element = results.find(element => element.id === item.id.value);
 
       // words
-      if ('word0' in item && element && !element.words) {
-        let formList: string[] = [item.word0.value];
+      if ('wordId' in item && element && !element.words) {
+        let formList: string[] = [item.wordId.value];
         element.words = formList;
-      } else if ('word0' in item && element && !element.words.find(form => form === item.word0.value)) {
-        element.words.push(item.word0.value);
+      } else if ('wordId' in item && element && !element.words.find(form => form === item.wordId.value)) {
+        element.words.push(item.wordId.value);
       }
 
       // wordLabel
