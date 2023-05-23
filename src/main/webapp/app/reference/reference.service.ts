@@ -371,7 +371,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       let conceptFilter = '';
       if (concepts.length > 0) {
         conceptFilter = `
-                ?concept${i} skos:narrowerTransitive?/^dhpluso:isLexicalizedSenseOf/dhpluso:isSenseOf ?word${i}
+                ?concept${i} skos:narrowerTransitive?/^dhpluso:isLexicalizedSenseOf/dhpluso:isSenseOf ?wordId .
                 FILTER ( ?concept${i} IN (${conceptUris.join()}) )
                 `;
       }

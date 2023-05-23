@@ -1,6 +1,6 @@
 <form *ngIf="form" [formGroup]="form" novalidate>
     <div [formGroup]="filterConcepts">
-        <mat-form-field class="form-check form-check-inline">
+        <mat-form-field class="form-check form-check-inline" style="width: 100%;">
             <mat-label>Begriff</mat-label>
             <input type="text" class="input-text"
                 [formControl]="conceptCtrl" #conceptInput [matAutocomplete]="auto" [matChipInputFor]="chipList"

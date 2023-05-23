@@ -1,61 +1,58 @@
 /* eslint-disable object-shorthand */
-import {HttpClient} from '@angular/common/http';
-import {Injectable, OnInit} from '@angular/core';
-import {LanguageService, NAMEDGRAPHS} from 'app/shared/base.imports';
-import {Person} from '../indices/person/person.class';
+import { HttpClient } from '@angular/common/http';
+import { Injectable, OnInit } from '@angular/core';
+import { LanguageService, NAMEDGRAPHS } from 'app/shared/base.imports';
+import { Person } from '../indices/person/person.class';
 import {
   MhdbdbIdLabelEntityService,
   FilterIdI,
   FilterLabelI,
   OptionsI,
-  QueryParameterI, SparqlBindingI
-} from "../shared/mhdbdb-graph.service";
-import {WorkClass, WorkMetadataClass, SeriesClass} from "./work.class";
-import {ElectronicText} from "app/text/text.class";
-import {Concept} from "app/concept/concept.class";
-import {WordClass} from "app/dictionary/dictionary.class";
-import {DatePrecision} from "app/shared/baseIndexComponent/baseindexcomponent.class";
+  QueryParameterI,
+  SparqlBindingI
+} from '../shared/mhdbdb-graph.service';
+import { WorkClass, WorkMetadataClass, SeriesClass } from './work.class';
+import { ElectronicText } from 'app/text/text.class';
+import { Concept } from 'app/concept/concept.class';
+import { WordClass } from 'app/dictionary/dictionary.class';
+import { DatePrecision } from 'app/shared/baseIndexComponent/baseindexcomponent.class';
 
-export interface WorkQueryParameterI extends QueryParameterI<WorkFilterI, WorkOptionsI> {
-}
+export interface WorkQueryParameterI extends QueryParameterI<WorkFilterI, WorkOptionsI> {}
 
 export interface WorkFilterI extends FilterIdI, FilterLabelI {
-  authorIds?: string[],
-  isAuthorIdsActive: boolean
+  authorIds?: string[];
+  isAuthorIdsActive: boolean;
 }
 
 export interface WorkOptionsI extends OptionsI {
-  useLucene: boolean
+  useLucene: boolean;
 }
 
-export const defaultWorkQP: WorkQueryParameterI =
-  {
-    order: 'label',
-    desc: false,
-    limit: 10,
-    offset: 0,
-    lang: undefined,
-    namedGraphs: NAMEDGRAPHS.get('default'),
-    filter: {
-      label: '',
-      isLabelActive: true,
-      authorIds: [],
-      isAuthorIdsActive: true
-    },
-    option: {
-      useLucene: false
-    }
+export const defaultWorkQP: WorkQueryParameterI = {
+  order: 'label',
+  desc: false,
+  limit: 10,
+  offset: 0,
+  lang: undefined,
+  namedGraphs: NAMEDGRAPHS.get('default'),
+  filter: {
+    label: '',
+    isLabelActive: true,
+    authorIds: [],
+    isAuthorIdsActive: true
+  },
+  option: {
+    useLucene: false
   }
+};
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI, WorkFilterI, WorkOptionsI, WorkClass> {
   protected _defaultQp: WorkQueryParameterI = defaultWorkQP;
 
-  constructor(
-    protected _languageService: LanguageService
-  ) {
-    super(_languageService)
-    this._languageService.getCurrent().then(v => this._defaultQp.lang = v)
+  constructor(protected _languageService: LanguageService) {
+    super(_languageService);
+    this._languageService.getCurrent().then(v => (this._defaultQp.lang = v));
   }
 
   async getWorkMetadata(workId: string): Promise<[(WorkMetadataClass[]), number]> {
@@ -77,21 +74,17 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
             filter(langMatches( lang(?genreFormMainParent), "de" ))
             filter(langMatches( lang(?label), "de" ))
             }
-        `
+        `;
     return new Promise<[(WorkMetadataClass[]), number]>(resolve => {
-      this._sq.query(query).then(
-        data => {
-          let total: number = 0
-          if (
-            data.results.bindings &&
-            data.results.bindings.length >= 1
-          ) {
-              resolve([this._jsonToObjectMeta(data.results.bindings), data.results.bindings.length])
-          } else {
-            resolve([[],0])
-          }
-        })
-    })
+      this._sq.query(query).then(data => {
+        let total: number = 0;
+        if (data.results.bindings && data.results.bindings.length >= 1) {
+          resolve([this._jsonToObjectMeta(data.results.bindings), data.results.bindings.length]);
+        } else {
+          resolve([[], 0]);
+        }
+      });
+    });
   }
 
   async getWorkList(): Promise<[(WorkClass[]), number]> {
@@ -102,23 +95,19 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
             ?id dhpluso:hasExpression/dhpluso:hasInstance ?instance .
             filter(langMatches( lang(?label), "de" ))
             }
-        `
+            ORDER BY ASC(?label)
+        `;
     return new Promise<[(WorkClass[]), number]>(resolve => {
-      this._sq.query(query).then(
-        data => {
-          let total: number = 0
-          if (
-            data.results.bindings &&
-            data.results.bindings.length >= 1
-          ) {
-            resolve([this._jsonToObjectMeta(data.results.bindings), data.results.bindings.length])
-          } else {
-            resolve([[],0])
-          }
-        })
-    })
+      this._sq.query(query).then(data => {
+        let total: number = 0;
+        if (data.results.bindings && data.results.bindings.length >= 1) {
+          resolve([this._jsonToObjectMeta(data.results.bindings), data.results.bindings.length]);
+        } else {
+          resolve([[], 0]);
+        }
+      });
+    });
   }
-
 
   async getSeriesParentList(): Promise<[(SeriesClass[]), number]> {
     const query = `
@@ -128,21 +117,17 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
             ?id skos:prefLabel ?label .
             filter(langMatches( lang(?label), "de" ))
             }
-        `
+        `;
     return new Promise<[(SeriesClass[]), number]>(resolve => {
-      this._sq.query(query).then(
-        data => {
-          let total: number = 0
-          if (
-            data.results.bindings &&
-            data.results.bindings.length >= 1
-          ) {
-            resolve([this._jsonToObject(data.results.bindings), data.results.bindings.length])
-          } else {
-            resolve([[],0])
-          }
-        })
-    })
+      this._sq.query(query).then(data => {
+        let total: number = 0;
+        if (data.results.bindings && data.results.bindings.length >= 1) {
+          resolve([this._jsonToObject(data.results.bindings), data.results.bindings.length]);
+        } else {
+          resolve([[], 0]);
+        }
+      });
+    });
   }
 
   async getSeriesList(parent: string): Promise<[(SeriesClass[]), number]> {
@@ -153,21 +138,17 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
             ?id skos:prefLabel ?label .
             filter(langMatches( lang(?label), "de" ))
             }
-        `
+        `;
     return new Promise<[(SeriesClass[]), number]>(resolve => {
-      this._sq.query(query).then(
-        data => {
-          let total: number = 0
-          if (
-            data.results.bindings &&
-            data.results.bindings.length >= 1
-          ) {
-            resolve([this._jsonToObject(data.results.bindings), data.results.bindings.length])
-          } else {
-            resolve([[],0])
-          }
-        })
-    })
+      this._sq.query(query).then(data => {
+        let total: number = 0;
+        if (data.results.bindings && data.results.bindings.length >= 1) {
+          resolve([this._jsonToObject(data.results.bindings), data.results.bindings.length]);
+        } else {
+          resolve([[], 0]);
+        }
+      });
+    });
   }
 
   /*
@@ -362,66 +343,64 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
 
       }*/
 
-
   protected _jsonToObjectMeta(bindings: SparqlBindingI[], excludeKeys?: string[]): WorkMetadataClass[] {
-    let results: WorkMetadataClass[] = super._jsonToObject(bindings) as WorkMetadataClass[]
-    bindings.forEach(
-      row => {
-        let element = results.find(element => element.id.toString() === row.id.value)
+    let results: WorkMetadataClass[] = super._jsonToObject(bindings) as WorkMetadataClass[];
+    bindings.forEach(row => {
+      let element = results.find(element => element.id.toString() === row.id.value);
 
-        if ('sameAs' in row && element && !element.sameAs) {
-          let broaderList: string[] = []
-          broaderList.push(row.sameAs.value)
-          element.sameAs = broaderList
-        } else if ('sameAs' in row && element && !element.sameAs.includes(row.sameAs.value)) {
-          element.sameAs.push(row.sameAs.value)
-        }
+      if ('sameAs' in row && element && !element.sameAs) {
+        let broaderList: string[] = [];
+        broaderList.push(row.sameAs.value);
+        element.sameAs = broaderList;
+      } else if ('sameAs' in row && element && !element.sameAs.includes(row.sameAs.value)) {
+        element.sameAs.push(row.sameAs.value);
+      }
 
-        if ('authorSameAs' in row && element && !element.authorSameAs) {
-          let broaderList: string[] = []
-          broaderList.push(row.authorSameAs.value)
-          element.authorSameAs = broaderList
-        } else if ('authorSameAs' in row && element && !element.authorSameAs.includes(row.authorSameAs.value)) {
-          element.authorSameAs.push(row.authorSameAs.value)
-        }
+      if ('authorSameAs' in row && element && !element.authorSameAs) {
+        let broaderList: string[] = [];
+        broaderList.push(row.authorSameAs.value);
+        element.authorSameAs = broaderList;
+      } else if ('authorSameAs' in row && element && !element.authorSameAs.includes(row.authorSameAs.value)) {
+        element.authorSameAs.push(row.authorSameAs.value);
+      }
 
-        if ('instance' in row && element && !element.instances) {
-          let broaderList: string[] = []
-          broaderList.push(row.instance.value)
-          element.instances = broaderList
-        } else if ('instance' in row && element && !element.instances.includes(row.instance.value)) {
-          element.instances.push(row.instance.value)
-        }
+      if ('instance' in row && element && !element.instances) {
+        let broaderList: string[] = [];
+        broaderList.push(row.instance.value);
+        element.instances = broaderList;
+      } else if ('instance' in row && element && !element.instances.includes(row.instance.value)) {
+        element.instances.push(row.instance.value);
+      }
 
-        if ('dateOfCreation' in row && element && !element.dateOfCreation) {
-          element.dateOfCreation = new DatePrecision(row.dateOfCreation.value, row.dateOfCreation.value);
-        }
+      if ('dateOfCreation' in row && element && !element.dateOfCreation) {
+        element.dateOfCreation = new DatePrecision(row.dateOfCreation.value, row.dateOfCreation.value);
+      }
 
-        if ('authorLabel' in row && element && !element.authorLabel) {
-          element.authorLabel = row.authorLabel.value;
-        }
+      if ('authorLabel' in row && element && !element.authorLabel) {
+        element.authorLabel = row.authorLabel.value;
+      }
 
-        if ('authorSameAs' in row && element && !element.authorSameAs) {
-          element.authorSameAs = row.authorSameAs.value;
-        }
+      if ('authorSameAs' in row && element && !element.authorSameAs) {
+        element.authorSameAs = row.authorSameAs.value;
+      }
 
-        if ('genreForm' in row && element && !element.genreForm) {
-          let broaderList: string[] = []
-          broaderList.push(row.genreForm.value)
-          element.genreForm = broaderList
-        } else if ('genreForm' in row && element && !element.genreForm.includes(row.genreForm.value)) {
-          element.genreForm.push(row.genreForm.value)
-        }
+      if ('genreForm' in row && element && !element.genreForm) {
+        let broaderList: string[] = [];
+        broaderList.push(row.genreForm.value);
+        element.genreForm = broaderList;
+      } else if ('genreForm' in row && element && !element.genreForm.includes(row.genreForm.value)) {
+        element.genreForm.push(row.genreForm.value);
+      }
 
-        if ('genreFormMainParent' in row && element && !element.genreFormMainParent) {
-          let broaderList: string[] = []
-          broaderList.push(row.genreFormMainParent.value)
-          element.genreFormMainParent = broaderList
-        } else if ('genreFormMainParent' in row && element && !element.genreFormMainParent.includes(row.genreFormMainParent.value)) {
-          element.genreFormMainParent.push(row.genreFormMainParent.value)
-        }
+      if ('genreFormMainParent' in row && element && !element.genreFormMainParent) {
+        let broaderList: string[] = [];
+        broaderList.push(row.genreFormMainParent.value);
+        element.genreFormMainParent = broaderList;
+      } else if ('genreFormMainParent' in row && element && !element.genreFormMainParent.includes(row.genreFormMainParent.value)) {
+        element.genreFormMainParent.push(row.genreFormMainParent.value);
+      }
 
-       /* if (element && !element.authors) {
+      /* if (element && !element.authors) {
           const authorElem = new Person(
             row.authorId.value,
             row.authorLabel.value,
@@ -436,13 +415,12 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
           )
           element.authors.push(authorElem)
         }*/
-      }
-    )
-    return results
+    });
+    return results;
   }
 
   _jsonToObject(bindings: any): WorkClass[] {
-    let results: WorkClass[] = super._jsonToObject(bindings) as WorkClass[]
+    let results: WorkClass[] = super._jsonToObject(bindings) as WorkClass[];
 
     /* bindings.forEach(
       item => {
@@ -464,11 +442,10 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
         }
       }
     ); */
-    return results
+    return results;
   }
 
   protected _sparqlQuery(qp: WorkQueryParameterI, countResults: boolean): string {
-
     let instanceSelector = `?id a dhpluso:Text ;
                                     dhpluso:hasExpression ?text .
                                 ?text a dhpluso:Text .
@@ -477,9 +454,9 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
                                 ?id rdfs:label ?label .
                                 filter(langMatches( lang(?label), "${qp.lang}" ))
                                 FILTER regex(?label, "${qp.filter.label}", "i")
-                                `
+                                `;
 
-    let labelQuery = ''
+    let labelQuery = '';
     labelQuery = instanceSelector;
 
     let instanceSelect = '';
@@ -489,7 +466,7 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
                 WHERE {
                     ${labelQuery}
                 }
-            `
+            `;
 
     let q = '';
     if (countResults) {
@@ -502,11 +479,11 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
                     }
                 }
 
-            `
+            `;
     } else {
       q = instanceSelect;
     }
-    console.warn(q)
-    return q
+    console.warn(q);
+    return q;
   }
 }
