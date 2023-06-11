@@ -6,9 +6,9 @@ import { classFilterT, FilterClassExtendedI, FilterClassI, FilterLabelI, Options
 import { FormDirective } from '../formDirective';
 import { GlobalSearchEntityClass } from 'app/globalSearch/globalSearch.class';
 import { Concept } from 'app/concept/concept.class';
-import { BehaviorSubject, merge, Observable } from 'rxjs';
+import { BehaviorSubject, merge, Observable, Subject, Subscription } from 'rxjs';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { debounceTime, distinctUntilChanged, map, startWith } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, startWith, takeUntil } from 'rxjs/operators';
 import { WorkService } from 'app/work/work.service';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { SeriesClass, WorkClass } from 'app/work/work.class';
@@ -16,7 +16,17 @@ import { FlatTreeControl } from '@angular/cdk/tree';
 import { CollectionViewer, DataSource, SelectionChange } from '@angular/cdk/collections';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { TokenFilterI } from 'app/text/textPassage.service';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
+import { defaultFilterClassExtended, selectFilterClassExtended } from 'app/store/general-filter.reducer';
+import {
+  setLabelActive,
+  setSeriesFilterActive,
+  setWorksActive,
+  updateLabel,
+  setAuthorActive,
+  updateWorks,
+  updateSeries
+} from 'app/store/general-filter.actions';
 
 @Component({
   selector: 'dhpp-form-filter',
@@ -24,23 +34,32 @@ import { Store } from '@ngrx/store';
   styleUrls: ['./formFilter.scss']
 })
 export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends FilterClassExtendedI, o extends OptionsI, instanceClass>
-  extends FormDirective<qT, f, o, instanceClass>
   implements OnInit, OnDestroy {
+  form: FormGroup;
+  private destroy$ = new Subject<void>();
+
   filterConcepts;
   filterSeries;
   filterWorks;
+
+  filterMap;
 
   workList: WorkClass[] = [];
   seriesList: SeriesClass[] = [];
   seriesChildList: SeriesClass[] = [];
   conceptLabels: string[] = [];
   seriesLabels: string[] = [];
+  filterWorksTemp = [];
+  filterSeriesTemp = [];
 
   filterSeriesGroup: any[] = [];
 
   filterSeriesCheckboxes: FormGroup;
+  filterWorksCheckboxes: FormGroup;
 
   labelAuthorTimeSearch = 'Lebensdaten AutorIn';
+
+  private filter$: Subscription;
 
   minValue: number = 900;
   maxValue: number = 1200;
@@ -73,13 +92,125 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
     public workService: WorkService,
     private store: Store
   ) {
-    super(historyService, help);
-
     // Autocomplete for concepts field
     this.filteredConcepts = this.conceptCtrl.valueChanges.pipe(
       startWith(null),
       map((concept: string | null) => (concept ? this._filterConcept(concept) : this.conceptLabels.slice()))
     );
+  }
+
+  ngOnInit() {
+    this.filterMap = { ...defaultFilterClassExtended } as FilterClassExtendedI;
+
+    this.filterSeriesCheckboxes = new FormGroup({});
+    this.seriesList.forEach(item => {
+      if (this.filterMap && this.filterMap.series && this.filterMap.series.includes(item.id)) {
+        this.filterSeriesCheckboxes.addControl(item.label, new FormControl(true));
+      } else {
+        this.filterSeriesCheckboxes.addControl(item.label, new FormControl(false));
+      }
+    });
+
+    this.filterWorksCheckboxes = new FormGroup({});
+    this.workList.forEach(work => {
+      if (this.filterMap && this.filterMap.works && this.filterMap.works.includes(work.id)) {
+        this.filterWorksCheckboxes.addControl(work.label, new FormControl(true));
+      } else {
+        this.filterWorksCheckboxes.addControl(work.label, new FormControl(false));
+      }
+    });
+
+    this.form = new FormGroup({
+      label: new FormControl(this.filterMap.label),
+      isLabelActive: new FormControl(this.filterMap.isLabelActive),
+      isSeriesFilterActive: new FormControl(this.filterMap.isSeriesFilterActive),
+      isConceptsActive: new FormControl(this.filterMap.isConceptsActive),
+      isWorksActive: new FormControl(this.filterMap.isWorksActive),
+      isAuthorActive: new FormControl(this.filterMap.isAuthorActive),
+      works: new FormControl([]),
+      series: new FormControl([]),
+      filterSeriesCheckboxes: this.filterSeriesCheckboxes
+    });
+
+    this.workService.getWorkList().then(data => {
+      this.workList = data[0];
+    });
+
+    this.workService.getSeriesParentList().then(data => {
+      this.seriesList = data[0];
+    });
+
+    this.filter$ = this.store
+      .pipe(
+        select(selectFilterClassExtended),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(tokenFilter => {
+        this.form.disable({ emitEvent: false }); // disable form to prevent emitting events while patching values
+        this.form.patchValue(tokenFilter, { emitEvent: false });
+        this.form.enable({ emitEvent: false }); // re-enable form after patching values
+
+        this.filterMap = { ...tokenFilter }; // update filterMap after patching the form
+      });
+
+    this.form.valueChanges
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(value => {
+        console.log(value);
+
+        if (this.filterMap.isSeriesFilterActive != value.isSeriesFilterActive) {
+          this.store.dispatch(setSeriesFilterActive({ isSeriesFilterActive: value.isSeriesFilterActive }));
+        }
+
+        if (this.filterMap.isAuthorActive != value.isAuthorActive) {
+          this.store.dispatch(setAuthorActive({ isAuthorActive: value.isAuthorActive }));
+        }
+
+        if (this.filterMap.isLabelActive != value.isLabelActive) {
+          this.store.dispatch(setLabelActive({ isLabelActive: value.isLabelActive }));
+        }
+
+        if (this.filterMap.label != value.label) {
+          this.store.dispatch(updateLabel({ label: value.label }));
+        }
+
+        if (this.filterMap.isWorksActive != value.isWorksActive) {
+          this.store.dispatch(setWorksActive({ isWorksActive: value.isWorksActive }));
+        }
+
+        if (Array.isArray(value.works && value.works.length > 0)) {
+          this.filterWorksTemp = [];
+          value.works.map(v => {
+            const e = this.workList.find(element => element.label === v);
+            this.filterWorksTemp.push(e.id);
+          });
+          console.log('Dispatching works:', this.filterWorksTemp);
+
+          this.store.dispatch(updateWorks({ works: this.filterWorksTemp }));
+          this.form.get('works').setValue(this.filterWorksTemp, { emitEvent: false });
+        }
+
+        if (Array.isArray(value.series && value.series.length > 0)) {
+          this.filterSeriesTemp = [];
+          value.series.map(v => {
+            const e = this.seriesList.find(element => element.label === v);
+            this.filterSeriesTemp.push(e.id);
+          });
+          console.log('Dispatching series:', this.filterSeriesTemp);
+
+          this.store.dispatch(updateSeries({ series: this.filterSeriesTemp }));
+          this.form.get('series').setValue(this.filterSeriesTemp, { emitEvent: false });
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private _filterConcept(value: string): string[] {
@@ -110,34 +241,7 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
     this.conceptCtrl.setValue(null);
   }
 
-  initHtmlForm(filterMap: f) {
-    this.form = new FormGroup({
-      label: new FormControl(filterMap.label),
-      isLabelActive: new FormControl(filterMap.isLabelActive),
-      isSeriesFilterActive: new FormControl(filterMap.isSeriesFilterActive),
-      isConceptsActive: new FormControl(filterMap.isConceptsActive),
-      isWorksActive: new FormControl(filterMap.isWorksActive),
-      works: new FormControl(''),
-      series: new FormControl('')
-    });
-
-    /*  this.workList.forEach(work => {
-      this.conceptLabels.push(work.label);
-      if (filterMap.concepts.includes(work.id)) {
-        this.filterWorks.addControl(work.label.trim(), new FormControl(true));
-      }
-    });
-*/
-
-    this.filterSeriesCheckboxes = new FormGroup({});
-    this.seriesList.forEach(item => {
-      if (filterMap && filterMap.seriesFilter && filterMap.seriesFilter.includes(item.id)) {
-        this.filterSeriesCheckboxes.addControl(item.label, new FormControl(true));
-      } else {
-        this.filterSeriesCheckboxes.addControl(item.label, new FormControl(false));
-      }
-    });
-  }
+  /*
 
   loadFilter(filterMap: f) {
     this.workService.getWorkList().then(data => {
@@ -178,11 +282,11 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
       });
     }
 
-    /* this.workList.forEach(concept => {
+    this.workList.forEach(concept => {
       this.concepts.removeControl(concept.label);
-    }); */
+    });
 
-    /* filterMap.concepts.forEach(
+    filterMap.concepts.forEach(
       conceptUri => {
         const concept = this.workList.find(element => element.id == conceptUri)
         if (concept) {
@@ -192,56 +296,12 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
         }
 
       }
-    ) */
+    )
   }
+  */
 
   handleOnClick(event) {
     console.log(event);
-  }
-
-  onValueChanges(value) {
-    console.log(value);
-
-    if (this.qp.filter.isSeriesFilterActive != value.isSeriesFilterActive) {
-      this.qp.filter.isSeriesFilterActive = value.isSeriesFilterActive;
-    }
-
-    if (this.qp.filter.isLabelActive != value.isLabelActive) {
-      this.qp.filter.isLabelActive = value.isLabelActive;
-    }
-    if (this.qp.filter.label != value.label) {
-      this.qp.filter.label = value.label;
-    }
-
-    this.qp.filter.series = [];
-    for (let v in value.filterSeries) {
-      const e = this.seriesList.find(element => element.label === v);
-      this.qp.filter.series.push(e.id);
-    }
-
-    /* this.qp.filter.isConceptsActive = value.isConceptsActive
-    this.qp.filter.concepts = []
-    for (let v in value.filterConcepts) {
-      const e = this.workList.find(element => element.label === v)
-      this.qp.filter.concepts.push(e.id)
-    } */
-
-    if (this.qp.filter.isWorksActive != value.isWorksActive) {
-      this.qp.filter.isWorksActive = value.isWorksActive;
-    }
-
-    this.qp.filter.works = [];
-
-    if (Array.isArray(value.works)) {
-      value.works.map(v => {
-        const e = this.workList.find(element => element.label === v);
-        this.qp.filter.works.push(e.id);
-      });
-    }
-
-    console.log(this.qp.filter);
-
-    return true;
   }
 
   onSeriesChange(event: MatCheckboxChange, series: SeriesClass) {
@@ -257,14 +317,6 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
     });
-  }
-
-  ngOnInit() {
-    super.ngOnInit();
-  }
-
-  ngOnDestroy(): void {
-    super.ngOnDestroy();
   }
 }
 
