@@ -27,7 +27,18 @@ module.exports = (options) => ({
     tls: 'empty'
   },
   module: {
-    rules: [{
+    rules: [
+      {
+        test: /\.mjs$/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env']
+          }
+        }
+      },
+      {
         test: /\.html$/,
         loader: 'html-loader',
         options: {
@@ -62,11 +73,7 @@ module.exports = (options) => ({
           system: true
         }
       },
-      {
-        test: /\.mjs$/,
-        include: /node_modules/,
-        type: 'javascript/auto'
-      }
+
     ]
   },
   plugins: [

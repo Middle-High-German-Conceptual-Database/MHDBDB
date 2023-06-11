@@ -2,14 +2,14 @@
 
 <div class="container">
     <ul>
-        <li *ngFor="let filter of filters; index as i">
+        <li *ngFor="let filter of tokenFilters$ | async; index as i">
             <div class="row" style="border: 1px solid #ffd740; margin-top: 15px;">
                 <div class="col" style="margin: 20px;">
                     <mat-tab-group animationDuration="0ms" style="width: 100%;">
                         <mat-tab label="Wort">
                             <div class="werke-blk">
-                                <dhpp-form-token [routeString]="routeString"></dhpp-form-token>
-                                <dhpp-form-tokenContext [routeString]="routeString"></dhpp-form-tokenContext>
+                                <dhpp-form-token [filter]="filter" [routeString]="routeString"></dhpp-form-token>
+                                <dhpp-form-tokenContext [filter]="filter" [routeString]="routeString"></dhpp-form-tokenContext>
                             </div>
                         </mat-tab>
                         <!-- <mat-tab label="Begriff">

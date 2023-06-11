@@ -16,6 +16,7 @@ import { FlatTreeControl } from '@angular/cdk/tree';
 import { CollectionViewer, DataSource, SelectionChange } from '@angular/cdk/collections';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { TokenFilterI } from 'app/text/textPassage.service';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'dhpp-form-filter',
@@ -66,7 +67,12 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
   @ViewChild('conceptInput', { static: false }) conceptInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
 
-  constructor(public historyService: HistoryService<qT, f, o, instanceClass>, public help: MatDialog, public workService: WorkService) {
+  constructor(
+    public historyService: HistoryService<qT, f, o, instanceClass>,
+    public help: MatDialog,
+    public workService: WorkService,
+    private store: Store
+  ) {
     super(historyService, help);
 
     // Autocomplete for concepts field

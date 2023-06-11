@@ -5,136 +5,130 @@ import { FilterAuthorI, FilterCorpusI, FilterI, MhdbdbGraphService, OptionsI, Qu
 import { Line, TextPassage, Token } from './text.class';
 import { TextService } from './text.service';
 
-
 interface ValueTranslationI {
-    value: string;
-    de: string;
-    en: string;
+  value: string;
+  de: string;
+  en: string;
 }
-export type ContextUnitsT = 'lines' | 'words'
+export type ContextUnitsT = 'lines' | 'words';
 export const contextUnits: ValueTranslationI[] = [
-    {
-        value: "lines",
-        de: "Zeilen/Verse",
-        en: "lines/verses"
-    },
-    {
-        value: "words",
-        de: "Wörter",
-        en: "words"
-    },
-]
-export type ContextRangeT = 1 | 2 | 3 | 4 | 5
-export const contextRange: number[] = [1, 2, 3, 4, 5]
+  {
+    value: 'lines',
+    de: 'Zeilen/Verse',
+    en: 'lines/verses'
+  },
+  {
+    value: 'words',
+    de: 'Wörter',
+    en: 'words'
+  }
+];
+export type ContextRangeT = 1 | 2 | 3 | 4 | 5;
+export const contextRange: number[] = [1, 2, 3, 4, 5];
 
 export interface TokenFilterI {
-    searchLabelinLemma: boolean,
-    label?: string,
-    pos?: string[],
-    concepts?: string[],
-    positionInLine?: number
-    connectorAnd: boolean
+  searchLabelInLemma: boolean;
+  label?: string;
+  pos?: string[];
+  concepts?: string[];
+  positionInLine?: number;
+  connectorAnd: boolean;
 }
 
 export interface TextPassageFilterI extends FilterI, FilterAuthorI, FilterCorpusI {
-    context: ContextRangeT,
-    contextUnit: ContextUnitsT,
-    directlyFollowing: boolean,
-    tokenFilters?: TokenFilterI[],    
-    startTokenId?: string,
-    endTokenId?: string
+  context: ContextRangeT;
+  contextUnit: ContextUnitsT;
+  directlyFollowing: boolean;
+  tokenFilters?: TokenFilterI[];
+  startTokenId?: string;
+  endTokenId?: string;
 }
 
-export interface TextPassageOptionsI extends OptionsI {
-
-}
+export interface TextPassageOptionsI extends OptionsI {}
 
 export interface TextPassageQueryParameterI extends QueryParameterI<TextPassageFilterI, TextPassageOptionsI> {
-    filter: TextPassageFilterI,
-    option: TextPassageOptionsI
+  filter: TextPassageFilterI;
+  option: TextPassageOptionsI;
 }
 
 export const defaultTokenFilter: TokenFilterI = {
-    searchLabelinLemma: false,
-    label: '',
-    pos: [],
-    concepts: [],
-    connectorAnd: true
-}
+  searchLabelInLemma: false,
+  label: '',
+  pos: [],
+  concepts: [],
+  connectorAnd: true
+};
 
-export const defaultTextPassageQP: TextPassageQueryParameterI =
-{
-    order: 'label',
-    desc: false,
-    limit: 10,
-    offset: 0,
-    lang: undefined,
-    namedGraphs: NAMEDGRAPHS.get('text'),
-    filter: {
-        context: 1,
-        contextUnit: 'lines',
-        directlyFollowing: true,
-        tokenFilters: [defaultTokenFilter],
-        corpus: [],
-        authors: []
-    },
-    option: {
-        useLucene: false
-    }
-}
+export const defaultTextPassageQP: TextPassageQueryParameterI = {
+  order: 'label',
+  desc: false,
+  limit: 10,
+  offset: 0,
+  lang: undefined,
+  namedGraphs: NAMEDGRAPHS.get('text'),
+  filter: {
+    context: 1,
+    contextUnit: 'lines',
+    directlyFollowing: true,
+    tokenFilters: [defaultTokenFilter],
+    corpus: [],
+    authors: []
+  },
+  option: {
+    useLucene: false
+  }
+};
 
 @Injectable({ providedIn: 'root' })
-export class TextPassageService extends MhdbdbGraphService<TextPassageQueryParameterI, TextPassageFilterI, TextPassageOptionsI, TextPassage> {
-    protected _defaultQp: TextPassageQueryParameterI = defaultTextPassageQP;
+export class TextPassageService extends MhdbdbGraphService<
+  TextPassageQueryParameterI,
+  TextPassageFilterI,
+  TextPassageOptionsI,
+  TextPassage
+> {
+  protected _defaultQp: TextPassageQueryParameterI = defaultTextPassageQP;
 
-    constructor(
-        protected _languageService: LanguageService,
-        protected textService: TextService
-    ) {
-        super(_languageService)
-        this._languageService.getCurrent().then(v => this._defaultQp.lang = v)
-    }
+  constructor(protected _languageService: LanguageService, protected textService: TextService) {
+    super(_languageService);
+    this._languageService.getCurrent().then(v => (this._defaultQp.lang = v));
+  }
 
-    protected _sparqlQuery(
-        qp: TextPassageQueryParameterI,
-        countResults: boolean = false
-    ): string {
-
-        function posFilter(i: number, pos: string[]): string {
-            let posUris = pos.map(p => `<${p}>`);
-            let posFilter = ''
-            if (pos.length > 0) {
-                posFilter = `
+  protected _sparqlQuery(qp: TextPassageQueryParameterI, countResults: boolean = false): string {
+    function posFilter(i: number, pos: string[]): string {
+      let posUris = pos.map(p => `<${p}>`);
+      let posFilter = '';
+      if (pos.length > 0) {
+        posFilter = `
                 ?posAnnotation${i}
                     oa:hasBody ?pos${i} ;
                     oa:hasTarget ?token${i} ;
                 .
                 FILTER ( ?pos${i} IN (${posUris.join()}) )
-                `
-            }
-            return posFilter
-        }
+                `;
+      }
+      return posFilter;
+    }
 
-        function conceptFilter(i: number, concepts: string[]): string {
-            let conceptUris = concepts.map(c => `<${c}>`);
-            let conceptFilter = ''
-            if (concepts.length > 0) {
-                conceptFilter = `
+    function conceptFilter(i: number, concepts: string[]): string {
+      let conceptUris = concepts.map(c => `<${c}>`);
+      let conceptFilter = '';
+      if (concepts.length > 0) {
+        conceptFilter = `
                 ?conceptAnnotation${i}
                     oa:hasBody ?word${i} ;
                     oa:hasTarget ?token${i} ;
                 .
                 ?concept${i} skos:narrowerTransitive?/^dhpluso:isLexicalizedSenseOf/dhpluso:isSenseOf ?word${i}
                 FILTER ( ?concept${i} IN (${conceptUris.join()}) )
-                `
-            }
-            return conceptFilter
-        }
+                `;
+      }
+      return conceptFilter;
+    }
 
-        let token0 = ''
-        if (qp.filter.tokenFilters[ 0 ].label != '') {
-            if (qp.filter.tokenFilters[0].searchLabelinLemma) {
-                token0 = `
+    let token0 = '';
+    if (qp.filter.tokenFilters[0].label != '') {
+      if (qp.filter.tokenFilters[0].searchLabelInLemma) {
+        token0 = `
                 {
                     {
                         ?word a dhpluso:Word .
@@ -144,45 +138,45 @@ export class TextPassageService extends MhdbdbGraphService<TextPassageQueryParam
                     [
                         oa:hasBody ?word ;
                         oa:hasTarget ?token0 ;
-                    ]      
-                    ${posFilter(0, qp.filter.tokenFilters[0].pos)}  
-                    ${conceptFilter(0, qp.filter.tokenFilters[0].concepts)}                
+                    ]
+                    ${posFilter(0, qp.filter.tokenFilters[0].pos)}
+                    ${conceptFilter(0, qp.filter.tokenFilters[0].concepts)}
                 }
-                `
-            } else {
-                token0 = `
+                `;
+      } else {
+        token0 = `
                     {
                         ?search a luc-index:token ;
-                            luc:query "content:${this._labelFilterGenerator(qp.filter.tokenFilters[0].label, true)}" ;    
+                            luc:query "content:${this._labelFilterGenerator(qp.filter.tokenFilters[0].label, true)}" ;
                             luc:entities ?token0 .
                         ?token0 mhdbdbxml:partOf ?text ;
                             mhdbdbxml:n ?n0 .
                         ${posFilter(0, qp.filter.tokenFilters[0].pos)}
                         ${conceptFilter(0, qp.filter.tokenFilters[0].concepts)}
                     }
-                `
-            }
-        }
-        else {
-            token0 = `
+                `;
+      }
+    } else {
+      token0 = `
             {
-                ?token0 
+                ?token0
                     a tei:seg ;
                     mhdbdbxml:n ?n0 ;
                 .
                 ${posFilter(0, qp.filter.tokenFilters[0].pos)}
                 ${conceptFilter(0, qp.filter.tokenFilters[0].concepts)}
             }
-            `
-        }
+            `;
+    }
 
-
-        const lines = `
+    const lines = `
             {
                 ?token0 mhdbdbxml:parent ?lines .
                 ?lines a tei:l .
-            }            
-            ${qp.filter.context > 1 ? `
+            }
+            ${
+              qp.filter.context > 1
+                ? `
                 UNION
                 {
                     select ?lines  {
@@ -203,18 +197,20 @@ export class TextPassageService extends MhdbdbGraphService<TextPassageQueryParam
                     }
                     Limit ${qp.filter.context - 1}
                 }
-            ` : ""}            
-        `
+            `
+                : ''
+            }
+        `;
 
-        let tokenSelects: string[] = []
-        let tokens: string[] = []
-        qp.filter.tokenFilters.forEach((tokenFilter, i) => {
-            tokenSelects.push(`?token${i}`)
-            if (i > 0) {
-                if (tokenFilter.searchLabelinLemma) {
-                    tokens.push(
-                        `
-                        {                                                                                                                
+    let tokenSelects: string[] = [];
+    let tokens: string[] = [];
+    qp.filter.tokenFilters.forEach((tokenFilter, i) => {
+      tokenSelects.push(`?token${i}`);
+      if (i > 0) {
+        if (tokenFilter.searchLabelInLemma) {
+          tokens.push(
+            `
+                        {
                             ?lines mhdbdbxml:child ?token${i} .
                             [
                                 oa:hasBody ?word ;
@@ -224,17 +220,17 @@ export class TextPassageService extends MhdbdbGraphService<TextPassageQueryParam
                                 ?word${i} a dhpluso:Word .
                                 ?word${i} dhpluso:canonicalForm/dhpluso:writtenRep ?label${i} .
                                 filter(regex(str(?label${i}), "${this._labelFilterGenerator(tokenFilter.label, false)}", "i"))
-                            }                        
+                            }
                             ?token${i} mhdbdbxml:n ?n${i} .
                             ${posFilter(i, tokenFilter.pos)}
                             ${conceptFilter(i, tokenFilter.concepts)}
-                            ${qp.filter.directlyFollowing === true ? `filter (?n${i} > ?n${i - 1})` : ''}                        
+                            ${qp.filter.directlyFollowing === true ? `filter (?n${i} > ?n${i - 1})` : ''}
                         }
                         `
-                    )
-                } else {
-                    tokens.push(
-                        `
+          );
+        } else {
+          tokens.push(
+            `
                         {
                             ?lines mhdbdbxml:child ?token${i} .
                             ?token${i} mhdbdbxml:firstChild/mhdbdbxml:content ?content${i}
@@ -242,28 +238,27 @@ export class TextPassageService extends MhdbdbGraphService<TextPassageQueryParam
                             ?token${i} mhdbdbxml:n ?n${i} .
                             ${posFilter(i, tokenFilter.pos)}
                             ${conceptFilter(i, tokenFilter.concepts)}
-                            ${qp.filter.directlyFollowing === true ? `filter (?n${i} > ?n${i - 1})` : ''}                        
+                            ${qp.filter.directlyFollowing === true ? `filter (?n${i} > ?n${i - 1})` : ''}
                         }
                         `
-                    )
-                }
+          );
+        }
+      }
+    });
 
-            }
-        })
-
-        let q = ''
-        if (countResults) {
-            q = `
-                SELECT (count(*) as ?count) where {    
+    let q = '';
+    if (countResults) {
+      q = `
+                SELECT (count(*) as ?count) where {
                     ${token0}
                     ${lines}
                     ${tokens.join('\r\n')}
                 }
-            `
-        } else {
-            q = `
-            select distinct ${tokenSelects.join(' ')} 
-            where { 
+            `;
+    } else {
+      q = `
+            select distinct ${tokenSelects.join(' ')}
+            where {
                 ${token0}
                 ${lines}
                 ${tokens.join('\r\n')}
@@ -271,39 +266,39 @@ export class TextPassageService extends MhdbdbGraphService<TextPassageQueryParam
             # order by ?text
             offset ${qp.offset}
             limit ${qp.limit}
-            `
-        }
-        return q
+            `;
     }
+    return q;
+  }
 
-    protected _jsonToObject(bindings: any): TextPassage[] {
-        interface typeValue {
-            type: string;
-            value: string;
-        }
-        let instances: TextPassage[]= []
+  protected _jsonToObject(bindings: any): TextPassage[] {
+    interface typeValue {
+      type: string;
+      value: string;
+    }
+    let instances: TextPassage[] = [];
 
-        bindings.forEach(element => {
-            let tokenIds: string[] = []
-            const values: typeValue[] = Object.values(element) as typeValue[]
-            values.forEach(val => {
-                tokenIds.push(val.value)
-            })
-            this.getTextpassage(tokenIds[0], tokenIds[-1]).then(v => instances.push(v))
-        });        
-        return instances
-    }  
+    bindings.forEach(element => {
+      let tokenIds: string[] = [];
+      const values: typeValue[] = Object.values(element) as typeValue[];
+      values.forEach(val => {
+        tokenIds.push(val.value);
+      });
+      this.getTextpassage(tokenIds[0], tokenIds[-1]).then(v => instances.push(v));
+    });
+    return instances;
+  }
 
-    private _sparqlTextPassage(startTokenId: string, endTokenId?: string): string {
-        let q: string = ''
-        if (endTokenId) {
-            q = `
+  private _sparqlTextPassage(startTokenId: string, endTokenId?: string): string {
+    let q: string = '';
+    if (endTokenId) {
+      q = `
                 select distinct ?text ?line ?lineN ?token ?n ?index ?content
-                where {     
+                where {
                     {
                         select ?text ?token ?n
                         where {
-                            <${startTokenId}> 
+                            <${startTokenId}>
                                 mhdbdbxml:partOf ?text ;
                                 mhdbdbxml:n ?nF .
 
@@ -311,102 +306,92 @@ export class TextPassageService extends MhdbdbGraphService<TextPassageQueryParam
                                 mhdbdbxml:partOf ?text ;
                                 mhdbdbxml:n ?nL .
 
-                            ?token 
-                                mhdbdbxml:partOf ?text ;                
-                                mhdbdbxml:n ?n;    
+                            ?token
+                                mhdbdbxml:partOf ?text ;
+                                mhdbdbxml:n ?n;
                             .
-                            filter (?n>=?nF && ?n<=?nL)                            
-                        }          
+                            filter (?n>=?nF && ?n<=?nL)
+                        }
                     }
-                    ?token 
+                    ?token
                         mhdbdbxml:parent ?line ;
                         mhdbdbxml:firstChild/mhdbdbxml:content ?content ;
-                    .    
-                    ?line 
-                        a tei:l ;
-                        mhdbdbxml:n ?lineN; 
                     .
-                } 
-                order by ?n            
-            `
-        } else {
-            q = `
+                    ?line
+                        a tei:l ;
+                        mhdbdbxml:n ?lineN;
+                    .
+                }
+                order by ?n
+            `;
+    } else {
+      q = `
                 select distinct ?text ?line ?lineN ?token ?n ?index ?content
-                where {     
+                where {
                     <${startTokenId}>
-                        mhdbdbxml:parent ?line ;  
+                        mhdbdbxml:parent ?line ;
                     .
-                    
-                    ?line         
+
+                    ?line
                         a tei:l ;
-                        mhdbdbxml:n ?lineN; 
-                    .       
-                    
-                    ?token 
-                        mhdbdbxml:parent ?line ;    
+                        mhdbdbxml:n ?lineN;
+                    .
+
+                    ?token
+                        mhdbdbxml:parent ?line ;
                         mhdbdbxml:partOf ?text ;
                         mhdbdbxml:n ?n ;
                         mhdbdbxml:firstChild/mhdbdbxml:content ?content ;
                     .
-                } 
-                order by ?n            
-            `
-        }
-
-        return q
-    }
-
-    private _jsonToObjectTextPassage(bindings): Promise<TextPassage> {
-        return new Promise<TextPassage>((resolve, reject) => {
-            if (bindings) {
-                this.textService.getText(bindings[0].text.value).then(
-                    text => {
-                        const lineIds: string[] = [...Array.from(new Set(bindings.map(row => row.line.value as string)))] as string[];
-                        let lines: Line[] = []
-                        lineIds.forEach(
-                            lineId => {
-                                let rows = bindings.filter(element => element.line.value === lineId)
-                                let tokens: Token[] = []
-                                rows.forEach(
-                                    row => {
-                                        const token = new Token(row.token.value, row.n.value, row.content.value)
-                                        tokens.push(token)
-                                    }
-                                )
-                                let line = new Line(
-                                    lineId,
-                                    bindings.find(element => element.line.value === lineId).lineN.value,
-                                    tokens)
-                                lines.push(line)
-                            }
-                        )
-                        const textPassage = new TextPassage(lines, text)                        
-                        resolve(textPassage)
-                    },
-                    error => {
-                        reject(error)
-                    }
-                )
-            } else {
-                resolve(undefined)
-            }
-        })      
-    }
-
-    public getTextpassage(startTokenId: string, endTokenId?: string): Promise<TextPassage> {
-        const query = this._sparqlTextPassage(startTokenId, endTokenId)
-        return new Promise<TextPassage>((resolve, reject) => {
-            this._sq.query(query).then(
-                data => {
-                    const r = this._jsonToObjectTextPassage(data['results']['bindings']).then(
-                        res => resolve(res)
-                    )                    
-                },
-                error => {
-                    reject(error)
                 }
-            )
-        })
+                order by ?n
+            `;
     }
 
+    return q;
+  }
+
+  private _jsonToObjectTextPassage(bindings): Promise<TextPassage> {
+    return new Promise<TextPassage>((resolve, reject) => {
+      if (bindings) {
+        this.textService.getText(bindings[0].text.value).then(
+          text => {
+            const lineIds: string[] = [...Array.from(new Set(bindings.map(row => row.line.value as string)))] as string[];
+            let lines: Line[] = [];
+            lineIds.forEach(lineId => {
+              let rows = bindings.filter(element => element.line.value === lineId);
+              let tokens: Token[] = [];
+              rows.forEach(row => {
+                const token = new Token(row.token.value, row.n.value, row.content.value);
+                tokens.push(token);
+              });
+              let line = new Line(lineId, bindings.find(element => element.line.value === lineId).lineN.value, tokens);
+              lines.push(line);
+            });
+            const textPassage = new TextPassage(lines, text);
+            resolve(textPassage);
+          },
+          error => {
+            reject(error);
+          }
+        );
+      } else {
+        resolve(undefined);
+      }
+    });
+  }
+
+  public getTextpassage(startTokenId: string, endTokenId?: string): Promise<TextPassage> {
+    const query = this._sparqlTextPassage(startTokenId, endTokenId);
+    return new Promise<TextPassage>((resolve, reject) => {
+      this._sq.query(query).then(
+        data => {
+          const r = this._jsonToObjectTextPassage(data['results']['bindings']).then(res => resolve(res));
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  }
 }

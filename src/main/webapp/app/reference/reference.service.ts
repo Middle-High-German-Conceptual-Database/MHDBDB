@@ -15,6 +15,7 @@ import { WorkFilterI, WorkOptionsI } from 'app/work/work.service';
 import { ContextRangeT, TokenFilterI } from 'app/reference/referencePassage.service';
 import { DictionaryQueryParameterI } from 'app/dictionary/dictionary.service';
 import { WordClass } from 'app/dictionary/dictionary.class';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface TextQueryParameterI extends QueryParameterI<TextFilterI, TextOptionsI> {}
 
@@ -35,7 +36,8 @@ export interface TextOptionsI extends OptionsI {
 }
 
 export const defaultTokenFilter: TokenFilterI = {
-  searchLabelinLemma: false,
+  id: uuidv4(),
+  searchLabelInLemma: false,
   label: '',
   pos: [],
   concepts: [],
@@ -121,7 +123,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
 
     let token0 = ''
     if (qp.filter.tokenFilters[0].label != '') {
-      if (qp.filter.tokenFilters[0].searchLabelinLemma) {
+      if (qp.filter.tokenFilters[0].searchLabelInLemma) {
         token0 = `
                 {
                     {
@@ -197,7 +199,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
     qp.filter.tokenFilters.forEach((tokenFilter, i) => {
       tokenSelects.push(`?token${i}`)
       if (i > 0) {
-        if (tokenFilter.searchLabelinLemma) {
+        if (tokenFilter.searchLabelInLemma) {
           tokens.push(
             `
                         {
@@ -380,7 +382,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
 
     let token0 = '';
     if (qp.filter.tokenFilters[0].label != '') {
-      if (qp.filter.tokenFilters[0].searchLabelinLemma) {
+      if (qp.filter.tokenFilters[0].searchLabelInLemma) {
         token0 = `
                     ?wordId a dhpluso:Word .
                     ?wordId dhpluso:canonicalForm/dhpluso:writtenRep ?wordLabel .
@@ -455,7 +457,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
     qp.filter.tokenFilters.forEach((tokenFilter, i) => {
       tokenSelects.push(`?token${i}`);
       if (i > 0) {
-        if (tokenFilter.searchLabelinLemma) {
+        if (tokenFilter.searchLabelInLemma) {
           tokens.push(
             `
                         {

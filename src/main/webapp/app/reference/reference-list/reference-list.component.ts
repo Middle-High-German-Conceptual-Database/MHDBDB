@@ -20,6 +20,10 @@ import { WordClass } from 'app/dictionary/dictionary.class';
 import { WorkQueryParameterI } from 'app/work/work.service';
 import { Utils } from 'app/shared/utils';
 import { PoS } from 'app/shared/pos/pos.class';
+import { Store, select } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { addTokenFilter, removeFilter, updateFilter, moveTokenFilterUp, moveTokenFilterDown, reset } from 'app/store/filter.actions';
+import { selectFilter, selectTokenFilters } from 'app/store/filter.reducer';
 
 @Component({
   selector: 'dhpp-reference-list',
@@ -39,6 +43,8 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
 
   textInstances: WordClass[] = [];
 
+  tokenFilters$: Observable<TokenFilterI[]>;
+
   constructor(
     public router: Router,
     public route: ActivatedRoute,
@@ -46,9 +52,11 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
     public http: HttpClient,
     public service: TextService, // --> service
     public dicService: DictionaryService,
-    public history: HistoryService<TextQueryParameterI, TextFilterI, TextOptionsI, ElectronicText>
+    public history: HistoryService<TextQueryParameterI, TextFilterI, TextOptionsI, ElectronicText>,
+    private store: Store
   ) {
     super(router, route, locationService, http, service, history);
+    this.tokenFilters$ = this.store.pipe(select(selectTokenFilters));
   }
 
   ////////////////////
@@ -56,11 +64,19 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
   ////////////////////
 
   public addFilter() {
-    this.filters.push({ id: 2, name: 'zweiter filter' });
+    this.store.dispatch(addTokenFilter({ tokenFilter: defaultTokenFilter }));
   }
 
-  public removeFilter(i: number) {
-    this.filters.splice(i, 1);
+  public removeFilter(indexToRemove: number) {
+    this.store.dispatch(removeFilter({ filterIndex: indexToRemove }));
+  }
+
+  public moveUp(indexToMove: number) {
+    this.store.dispatch(moveTokenFilterUp({ filterIndex: indexToMove }));
+  }
+
+  public moveDown(indexToMove: number) {
+    this.store.dispatch(moveTokenFilterDown({ filterIndex: indexToMove }));
   }
 
   ngOnInit() {
@@ -70,7 +86,9 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
 
   reset() {
     this.textInstances = [];
+    this.store.dispatch(reset());
   }
+
   loadSenses() {
     let newQp = {
       order: 'label',

@@ -24,6 +24,10 @@ import { MHDBDBFormModule } from 'app/shared/formComponents/formModule';
 import { MHDBDBViewWidgetsModule } from 'app/shared/viewWidgets/viewWidgetsModule';
 import { MaterialModule } from 'app/shared/MaterialModule';
 import { RouterModule } from '@angular/router';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { filterReducer } from './store/filter.reducer';
+import { generalFilterReducer } from './store/general-filter.reducer';
 
 @NgModule({
   imports: [
@@ -43,6 +47,13 @@ import { RouterModule } from '@angular/router';
     MHDBDBFormModule,
     MHDBDBViewWidgetsModule,
     MaterialModule,
+    StoreModule.forRoot({
+      filter: filterReducer,
+      generalFilter: generalFilterReducer
+    }),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25 // Retains last 25 states
+    }),
     RouterModule.forRoot(routes, { useHash: true, onSameUrlNavigation: 'reload' }),
     TreeModule
   ],

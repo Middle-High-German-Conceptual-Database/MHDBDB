@@ -1,81 +1,27 @@
 <div class="full-height-container">
-    <div class="container">
+    <div class="container justify-content-center">
         <div class="row justify-content-center">
-            <div class="col-8">
-                <div class="banner-box">
-                    <mat-form-field>
-                        <mat-label>Wortform</mat-label>
-                        <input type="text" class="input-text" matInput>
-                    </mat-form-field>
-                </div>
-            </div>
-        </div>
-        <div class="row justify-content-center" style="margin-top: 30px;">
-            <div class="col-4">
-                <div class="banner-box">
-                    <h2>Neuigkeiten</h2>
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="banner-box">
-                    <h2>Wussten Sie schon?</h2>
-                </div>
+            <div class="col-12 text-center">
+                <mat-form-field appearance="fill" class="example-form-field">
+                    <mat-label>{{ findFilterValue(searchFilterValue) }}</mat-label>
+                    <input matInput [(ngModel)]="searchTerm"/>
+                    <button matPrefix mat-icon-button aria-label="Clear" (click)="doSearch()">
+                        <mat-icon>search</mat-icon>
+                    </button>
+                    <button *ngIf="searchTerm" matSuffix mat-icon-button aria-label="Clear" (click)="searchTerm=''">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                    <button matSuffix mat-icon-button aria-label="Clear" (click)="selectFilter=!selectFilter">
+                        <mat-icon *ngIf="!selectFilter">keyboard_arrow_down</mat-icon>
+                        <mat-icon *ngIf="selectFilter">keyboard_arrow_up</mat-icon>
+                    </button>
+                </mat-form-field>
+                <mat-form-field *ngIf="selectFilter" (change)="selectFilter=false" appearance="fill" class="example-form-field">
+                    <select matNativeControl [(ngModel)]="searchFilterValue" (ngModelChange)="selectFilter=false">
+                        <option *ngFor="let value of searchFilterValues" [value]="value.id">{{value.name}}</option>
+                    </select>
+                </mat-form-field>
             </div>
         </div>
     </div>
 </div>
-
-<!--
-<div class="banner_wapper">
-    <div class="home-banner" style="background-image:url('/content/images/mhdbdb_background.jpg'); background-size: cover;">
-        <div class="container">
-            <div class="flxrow banner-row">
-                <div class="banner-left flxrow">
-                    <div class="banner-box">
-                        <h2>Neuigkeiten</h2>
-                    </div>
-                    <div class="banner-box">
-                        <h2>Wussten Sie schon?</h2>
-                    </div>
-                </div>
-                <div class="banner-right">
-                    <div class="banner-box">
-                        <h2>Showcase </h2>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>-->
-<!--
-
-<section class="container_wrapper">
-
-    <div class="home_wapper">
-        <div class="container">
-            <div class="home_contain flxrow">
-                <div class="yello_box">
-                    <div class="yello_box-sub">
-                        <h2>Universum/Welt</h2>
-                    </div>
-                </div>
-                <div class="yello_box">
-                    <div class="yello_box-sub">
-                        <h2>Universum/Welt</h2>
-                    </div>
-                </div>
-                <div class="third-row">
-                    <div class="border-div">
-                        <h2>Statistiken</h2>
-                    </div>
-                    <div class="border-div">
-                        <h2>Twitter</h2>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-</section>
--->
-
