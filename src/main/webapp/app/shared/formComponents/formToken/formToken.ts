@@ -160,7 +160,7 @@ export class FormTokenWordComponent {
   form: FormGroup;
   private destroy$ = new Subject<void>();
 
-  constructor(public service: tokenFormService, private store: Store) {}
+  constructor(public service: tokenFormService, public store: Store) {}
 
   ngOnInit() {
     this.tokenFilter = { ...this.tokenFilter } as TokenFilterI;
@@ -219,7 +219,7 @@ export class FormTokenPosComponent implements OnInit, OnDestroy {
   private formValueChangesSubscription$: Subscription;
   private destroy$ = new Subject<void>();
 
-  constructor(public service: tokenFormService, public posService: PosService, private store: Store) {}
+  constructor(public service: tokenFormService, public posService: PosService, public store: Store) {}
 
   ngOnInit() {
     this.tokenFilter = { ...this.tokenFilter } as TokenFilterI;
@@ -295,7 +295,7 @@ export class FormTokenConceptsComponent implements OnInit, OnDestroy {
   @ViewChild('conceptInput', { static: false }) conceptInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
 
-  constructor(public service: tokenFormService, public conceptService: ConceptService, private store: Store) {
+  constructor(public service: tokenFormService, public conceptService: ConceptService, public store: Store) {
     this.filteredConcepts = this.conceptCtrl.valueChanges.pipe(
       startWith(null),
       map((concept: string | null) => (concept ? this._filterConcept(concept) : this.conceptLabels.slice()))

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { LanguageService } from 'app/shared/base.imports';
 import { NAMEDGRAPHS } from '../../../../../src/main/webapp/app/app.constants';
 import { FilterAuthorI, FilterCorpusI, FilterI, MhdbdbGraphService, OptionsI, QueryParameterI } from '../shared/mhdbdb-graph.service';
 import { Line, TextPassage, Token } from './text.class';
 import { TextService } from './text.service';
-
+import { selectLanguage } from 'app/store/language.reducer';
+import { Store, select } from '@ngrx/store';
 interface ValueTranslationI {
   value: string;
   de: string;
@@ -88,9 +88,9 @@ export class TextPassageService extends MhdbdbGraphService<
 > {
   protected _defaultQp: TextPassageQueryParameterI = defaultTextPassageQP;
 
-  constructor(protected _languageService: LanguageService, protected textService: TextService) {
-    super(_languageService);
-    this._languageService.getCurrent().then(v => (this._defaultQp.lang = v));
+  constructor(public store: Store, protected textService: TextService) {
+    super(store);
+    this.store.select(selectLanguage).subscribe(v => (this._defaultQp.lang = v));
   }
 
   protected _sparqlQuery(qp: TextPassageQueryParameterI, countResults: boolean = false): string {

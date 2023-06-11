@@ -16,6 +16,8 @@ import { ElectronicText } from 'app/text/text.class';
 import { Concept } from 'app/concept/concept.class';
 import { WordClass } from 'app/dictionary/dictionary.class';
 import { DatePrecision } from 'app/shared/baseIndexComponent/baseindexcomponent.class';
+import { Store, select } from '@ngrx/store';
+import { selectLanguage } from 'app/store/language.reducer';
 
 export interface WorkQueryParameterI extends QueryParameterI<WorkFilterI, WorkOptionsI> {}
 
@@ -50,9 +52,9 @@ export const defaultWorkQP: WorkQueryParameterI = {
 export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI, WorkFilterI, WorkOptionsI, WorkClass> {
   protected _defaultQp: WorkQueryParameterI = defaultWorkQP;
 
-  constructor(protected _languageService: LanguageService) {
-    super(_languageService);
-    this._languageService.getCurrent().then(v => (this._defaultQp.lang = v));
+  constructor(public store: Store) {
+    super(store);
+    this.store.select(selectLanguage).subscribe(v => (this._defaultQp.lang = v));
   }
 
   async getWorkMetadata(workId: string): Promise<[(WorkMetadataClass[]), number]> {

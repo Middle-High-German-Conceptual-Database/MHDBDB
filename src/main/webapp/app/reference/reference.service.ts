@@ -16,6 +16,8 @@ import { ContextRangeT, TokenFilterI } from 'app/reference/referencePassage.serv
 import { DictionaryQueryParameterI } from 'app/dictionary/dictionary.service';
 import { WordClass } from 'app/dictionary/dictionary.class';
 import { v4 as uuidv4 } from 'uuid';
+import { selectLanguage } from 'app/store/language.reducer';
+import { Store, select } from '@ngrx/store';
 
 export interface TextQueryParameterI extends QueryParameterI<TextFilterI, TextOptionsI> {}
 
@@ -76,11 +78,14 @@ export const defaultTextQP: TextQueryParameterI = {
 
 @Injectable({ providedIn: 'root' })
 export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI, TextFilterI, TextOptionsI, ElectronicText> {
+  protected _sparqlQuery(qp: TextQueryParameterI, countResults: boolean): string {
+    throw new Error('Method not implemented.');
+  }
   protected _defaultQp: TextQueryParameterI = defaultTextQP;
 
-  constructor(protected _languageService: LanguageService) {
-    super(_languageService);
-    this._languageService.getCurrent().then(v => (this._defaultQp.lang = v));
+  constructor(public store: Store) {
+    super(store);
+    this.store.select(selectLanguage).subscribe(v => (this._defaultQp.lang = v));
   }
 
   /*_sparqlQuery(
@@ -353,7 +358,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
     return q
   }*/
 
-  protected _sparqlQuery(qp: TextQueryParameterI, countResults: boolean): string {
+  public sparqlQuery(qp: TextQueryParameterI, countResults: boolean): string {
     console.log('TextService._sparqlQuery', qp);
 
     function posFilter(i: number, pos: string[]): string {

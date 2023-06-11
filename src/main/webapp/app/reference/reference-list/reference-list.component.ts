@@ -53,7 +53,7 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
     public service: TextService, // --> service
     public dicService: DictionaryService,
     public history: HistoryService<TextQueryParameterI, TextFilterI, TextOptionsI, ElectronicText>,
-    private store: Store
+    public store: Store
   ) {
     super(router, route, locationService, http, service, history);
     this.tokenFilters$ = this.store.pipe(select(selectTokenFilters));
@@ -87,6 +87,11 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
   reset() {
     this.textInstances = [];
     this.store.dispatch(reset());
+  }
+
+  search() {
+    const sparql = this.service.sparqlQuery(this.qp, false);
+    console.log(sparql);
   }
 
   loadSenses() {

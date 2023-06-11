@@ -90,7 +90,7 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
     public historyService: HistoryService<qT, f, o, instanceClass>,
     public help: MatDialog,
     public workService: WorkService,
-    private store: Store
+    public store: Store
   ) {
     // Autocomplete for concepts field
     this.filteredConcepts = this.conceptCtrl.valueChanges.pipe(
@@ -146,11 +146,26 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
         takeUntil(this.destroy$)
       )
       .subscribe(tokenFilter => {
+        let modifiedFilter = { ...tokenFilter };
+        // iterate over works and series and add label to filter instead of id
+        if (tokenFilter.works) {
+          modifiedFilter.works = tokenFilter.works.map(id => {
+            let work = this.workList.find(work => work.id == id);
+            return work ? work.label : '';
+          });
+        }
+        if (tokenFilter.series) {
+          modifiedFilter.series = tokenFilter.series.map(id => {
+            let series = this.seriesList.find(series => series.id == id);
+            return series ? series.label : '';
+          });
+        }
+
         this.form.disable({ emitEvent: false }); // disable form to prevent emitting events while patching values
-        this.form.patchValue(tokenFilter, { emitEvent: false });
+        this.form.patchValue(modifiedFilter, { emitEvent: false });
         this.form.enable({ emitEvent: false }); // re-enable form after patching values
 
-        this.filterMap = { ...tokenFilter }; // update filterMap after patching the form
+        this.filterMap = { ...modifiedFilter }; // update filterMap after patching the form
       });
 
     this.form.valueChanges
@@ -160,8 +175,6 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
         takeUntil(this.destroy$)
       )
       .subscribe(value => {
-        console.log(value);
-
         if (this.filterMap.isSeriesFilterActive != value.isSeriesFilterActive) {
           this.store.dispatch(setSeriesFilterActive({ isSeriesFilterActive: value.isSeriesFilterActive }));
         }
@@ -182,28 +195,23 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
           this.store.dispatch(setWorksActive({ isWorksActive: value.isWorksActive }));
         }
 
-        if (Array.isArray(value.works && value.works.length > 0)) {
+        if (Array.isArray(value.works) && value.works.length > 0) {
           this.filterWorksTemp = [];
           value.works.map(v => {
             const e = this.workList.find(element => element.label === v);
             this.filterWorksTemp.push(e.id);
           });
-          console.log('Dispatching works:', this.filterWorksTemp);
-
           this.store.dispatch(updateWorks({ works: this.filterWorksTemp }));
-          this.form.get('works').setValue(this.filterWorksTemp, { emitEvent: false });
         }
 
-        if (Array.isArray(value.series && value.series.length > 0)) {
+        if (Array.isArray(value.series) && value.series.length > 0) {
           this.filterSeriesTemp = [];
           value.series.map(v => {
             const e = this.seriesList.find(element => element.label === v);
             this.filterSeriesTemp.push(e.id);
           });
-          console.log('Dispatching series:', this.filterSeriesTemp);
-
           this.store.dispatch(updateSeries({ series: this.filterSeriesTemp }));
-          this.form.get('series').setValue(this.filterSeriesTemp, { emitEvent: false });
+          //  this.form.get('series').setValue(this.filterSeriesTemp, { emitEvent: false });
         }
       });
   }
@@ -301,7 +309,7 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
   */
 
   handleOnClick(event) {
-    console.log(event);
+    this.store.dispatch(updateSeries({ series: event }));
   }
 
   onSeriesChange(event: MatCheckboxChange, series: SeriesClass) {

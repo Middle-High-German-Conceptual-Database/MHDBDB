@@ -28,6 +28,7 @@ import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { filterReducer } from './store/filter.reducer';
 import { generalFilterReducer } from './store/general-filter.reducer';
+import { languageReducer } from './store/language.reducer';
 
 @NgModule({
   imports: [
@@ -49,7 +50,8 @@ import { generalFilterReducer } from './store/general-filter.reducer';
     MaterialModule,
     StoreModule.forRoot({
       filter: filterReducer,
-      generalFilter: generalFilterReducer
+      generalFilter: generalFilterReducer,
+      language: languageReducer
     }),
     StoreDevtoolsModule.instrument({
       maxAge: 25 // Retains last 25 states
