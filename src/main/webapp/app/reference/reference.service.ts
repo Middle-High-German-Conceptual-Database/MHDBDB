@@ -44,7 +44,8 @@ export const defaultTokenFilter: TokenFilterI = {
   label: '',
   pos: [],
   concepts: [],
-  connectorAnd: true
+  connectorAnd: true,
+  relation: 'and'
 };
 
 export const defaultTextQP: TextQueryParameterI = {
@@ -368,34 +369,59 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
   public sparqlQuery(qp: any, countResults: boolean): string {
     console.log('TextService._sparqlQuery', qp);
 
-    function posFilter(i: number, pos: string[]): string {
+    function posFilter(i: number, pos: string[], relation: string): string {
       let posUris = pos.map(p => `<${p}>`);
       let posFilter = '';
+      if (relation === 'or' && i > 0) {
+        posFilter += ' OPTIONAL ';
+      }
+      if (relation === 'or') {
+        posFilter += '{';
+      }
       if (pos.length > 0) {
-        posFilter = `
+        posFilter += `
                 ?wordId${i} dhpluso:partOfSpeech ?pos${i} .
                 FILTER ( ?pos${i} IN (${posUris.join()}) )
                 `;
       }
+      if (relation === 'or') {
+        posFilter += '}';
+      }
       return posFilter;
     }
 
-    function conceptFilter(i: number, concepts: string[]): string {
+    function conceptFilter(i: number, concepts: string[], relation: string): string {
       let conceptUris = concepts.map(c => `<${c}>`);
       let conceptFilter = '';
+      if (relation === 'or' && i > 0) {
+        conceptFilter += ' OPTIONAL ';
+      }
+      if (relation === 'or') {
+        conceptFilter += '{';
+      }
       if (concepts.length > 0) {
-        conceptFilter = `
+        conceptFilter += `
                 ?concept${i} skos:narrowerTransitive?/^dhpluso:isLexicalizedSenseOf/dhpluso:isSenseOf ?wordId${i} .
                 FILTER ( ?concept${i} IN (${conceptUris.join()}) )
                 `;
       }
+      if (relation === 'or') {
+        conceptFilter += '}';
+      }
       return conceptFilter;
     }
 
-    function wordFilter(i: number, word: string): string {
+    function wordFilter(i: number, word: string, relation: string): string {
       let wordFilter = '';
+
+      if (relation === 'or' && i > 0) {
+        wordFilter += ' OPTIONAL ';
+      }
+      if (relation === 'or') {
+        wordFilter += '{';
+      }
       if (word != '') {
-        wordFilter = `
+        wordFilter += `
                 ?wordId${i} a dhpluso:Word .
                 ?wordId${i} dhpluso:canonicalForm/dhpluso:writtenRep ?wordLabel${i} .
                 ?wordId${i} dhpluso:canonicalForm ?lemma${i} .
@@ -404,6 +430,9 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                 ?annotationId${i} oa:hasTarget ?rootId .
                 filter(regex(str(?wordLabel${i}), "${labelFilterGenerator(word, false)}", "i"))
                 `;
+      }
+      if (relation === 'or') {
+        wordFilter += '}';
       }
       return wordFilter;
     }
@@ -414,7 +443,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
     let concepts: string[] = [];
     let poss: string[] = [];
 
-    qp.tokenFilters.forEach((tokenFilter, i) => {
+    qp.filter.tokenFilters.forEach((tokenFilter, i) => {
       wordSelects.push(`?concept${i}`);
       wordSelects.push(`?pos${i}`);
       wordSelects.push(`?wordId${i}`);
@@ -422,17 +451,17 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       wordSelects.push(`?annotationId${i}`);
       //wordSelects.push(`?rootId${i}`);
 
-      let word = wordFilter(i, tokenFilter.label);
-      let concept = conceptFilter(i, tokenFilter.concepts);
-      let pos = posFilter(i, tokenFilter.pos);
+      let word = wordFilter(i, tokenFilter.label, tokenFilter.relation);
+      let concept = conceptFilter(i, tokenFilter.concepts, tokenFilter.relation);
+      let pos = posFilter(i, tokenFilter.pos, tokenFilter.relation);
 
       words.push(word);
       concepts.push(concept);
       poss.push(pos);
     });
 
-    if (qp.tokenFilters[0].label != '') {
-      if (qp.tokenFilters[0].searchLabelInLemma) {
+    if (qp.filter.tokenFilters[0].label != '') {
+      if (qp.filter.tokenFilters[0].searchLabelInLemma) {
         /* token0 = `
                     ?wordId a dhpluso:Word .
                     ?wordId dhpluso:canonicalForm/dhpluso:writtenRep ?wordLabel .
@@ -502,7 +531,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
             }
         `;
 
-    let tokenSelects: string[] = [];
+    /* let tokenSelects: string[] = [];
     let tokens: string[] = [];
     qp.tokenFilters.forEach((tokenFilter, i) => {
       tokenSelects.push(`?token${i}`);
@@ -544,9 +573,9 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
           );
         }
       }
-    });
+    }); */
 
-    let qt = '';
+    /*   let qt = '';
     if (countResults) {
       qt = `
                 SELECT (count(*) as ?count)
@@ -573,25 +602,26 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
             ${this._sparqlLimitOffset(qp.limit, qp.offset)}
 
             `;
-    }
+    } */
 
     let bindings: string[] = [];
     let filters: string[] = [];
 
     let labelQuery = '';
-    if (qp.isLabelActive && qp.label) {
-      if (qp.option.useLucene) {
+    if (qp.filter.isLabelActive && qp.filter.label) {
+      if (qp.filter.option.useLucene) {
         // Todo: Add Lucene Index to graphdb
         labelQuery = `
                         ?search a luc-index:electronic ;
-                        luc:query "title:${labelFilterGenerator(qp.label, qp.option.useLucene)}" ;
+                        luc:query "title:${labelFilterGenerator(qp.filter.label, qp.filter.option.useLucene)}" ;
                         luc:entities ?id .
                         `;
       } else {
-        filters.push(`filter(regex(str(?label), "${labelFilterGenerator(qp.label, qp.option.useLucene)}", "i"))`);
+        filters.push(`filter(regex(str(?label), "${labelFilterGenerator(qp.filter.label, qp.filter.option.useLucene)}", "i"))`);
       }
     }
 
+    // Filters Section
     if (qp.isWorksActive && qp.works) {
       let tempFilters = [];
       qp.works.forEach((work, i) => {
@@ -695,7 +725,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                     ${filters.join('\r\n')}
 
                     }
-                    ${this._sparqlOrder(qp.order, qp.desc)}
+                    ${this.sparqlOrder(qp.order, qp.desc)}
 
             `;
 
@@ -715,6 +745,14 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
     }
 
     return q;
+  }
+
+  public sparqlOrder(key: string, desc: boolean): string {
+    if (desc) {
+      return `ORDER BY DESC(?${key})`; // Todo: ORDER BY DESC(LCASE(?${key})) does not work! Lcase does not support rdfs:literal
+    } else {
+      return `ORDER BY ASC(?${key})`;
+    }
   }
 
   public _jsonToObject(bindings): ElectronicText[] {

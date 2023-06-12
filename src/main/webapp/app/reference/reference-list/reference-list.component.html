@@ -29,9 +29,9 @@
                                 class="fas fa-plus"></i></button>
                         </div>
                         <div class="col-10" style="padding-top: 10px;">
-                            <mat-radio-group aria-label="Verbindung zu nächsten Wortformen">
-                                <mat-radio-button value="true">Und</mat-radio-button>
-                                <mat-radio-button value="false">Oder</mat-radio-button>
+                            <mat-radio-group [value]="filter.relation" (change)="onRelationChange($event, filter.id)" aria-label="Verbindung zu nächsten Wortformen">
+                                <mat-radio-button value="and">Und</mat-radio-button>
+                                <mat-radio-button value="or">Oder</mat-radio-button>
                                 <mat-radio-button value="not">Nicht</mat-radio-button>
                             </mat-radio-group>
                         </div>

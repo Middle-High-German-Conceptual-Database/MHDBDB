@@ -36,6 +36,7 @@ export interface TokenFilterI {
   concepts?: string[];
   positionInLine?: number;
   connectorAnd: boolean;
+  relation: string;
 }
 
 export interface TextPassageFilterI extends FilterI, FilterAuthorI, FilterCorpusI {
@@ -60,7 +61,8 @@ export const defaultTokenFilter: TokenFilterI = {
   label: '',
   pos: [],
   concepts: [],
-  connectorAnd: true
+  connectorAnd: true,
+  relation: 'and'
 };
 
 export const defaultTextPassageQP: TextPassageQueryParameterI = {

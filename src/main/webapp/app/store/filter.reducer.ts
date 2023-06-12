@@ -8,7 +8,8 @@ import {
   moveTokenFilterDown,
   removeFilter,
   updateFilter,
-  updateFilterById
+  updateFilterById,
+  updateRelation
 } from './filter.actions';
 import { TextQueryParameterI, defaultTextQP } from 'app/reference/reference.service';
 
@@ -64,6 +65,15 @@ const _filterReducer = createReducer(
     if (index >= 0) {
       const newTokenFilters = [...state.filter.tokenFilters];
       newTokenFilters[index] = newFilter;
+      return { ...state, filter: { ...state.filter, tokenFilters: newTokenFilters } };
+    }
+    return state;
+  }),
+  on(updateRelation, (state, { filterId, relation }) => {
+    const index = state.filter.tokenFilters.findIndex(filter => filter.id === filterId);
+    if (index >= 0) {
+      const newTokenFilters = [...state.filter.tokenFilters];
+      newTokenFilters[index] = { ...newTokenFilters[index], relation };
       return { ...state, filter: { ...state.filter, tokenFilters: newTokenFilters } };
     }
     return state;

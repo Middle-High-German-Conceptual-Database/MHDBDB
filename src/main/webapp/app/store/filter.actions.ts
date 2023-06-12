@@ -19,3 +19,5 @@ export const updateFilterById = createAction(
   '[Filter] Update Filter By ID',
   props<{ filterId: string | number; newFilter: TokenFilterI }>()
 );
+
+export const updateRelation = createAction('[Filter Component] Update Relation', props<{ filterId: string; relation: string }>());

@@ -22,9 +22,21 @@ import { Utils } from 'app/shared/utils';
 import { PoS } from 'app/shared/pos/pos.class';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { addTokenFilter, removeFilter, updateFilter, moveTokenFilterUp, moveTokenFilterDown, reset } from 'app/store/filter.actions';
-import { selectFilter, selectTokenFilters } from 'app/store/filter.reducer';
+import {
+  addTokenFilter,
+  removeFilter,
+  updateFilter,
+  moveTokenFilterUp,
+  moveTokenFilterDown,
+  reset,
+  updateRelation,
+  updateFilterById
+} from 'app/store/filter.actions';
+import { selectFilter, selectTokenFilterById, selectTokenFilters } from 'app/store/filter.reducer';
 import { SparqlQuery } from 'app/shared/mhdbdb-graph.service';
+import { MatRadioChange } from '@angular/material/radio';
+import { take } from 'rxjs/operators';
+import { selectFilterClassExtended } from 'app/store/general-filter.reducer';
 
 @Component({
   selector: 'dhpp-reference-list',
@@ -46,8 +58,14 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
 
   tokenFilters$: Observable<TokenFilterI[]>;
   filters$: Observable<any>;
+  generalFilter$: Observable<any>;
 
   filter: any;
+  generalFilter: any;
+
+  relation: string = 'and';
+
+  selectedFilter: TokenFilterI;
 
   constructor(
     public router: Router,
@@ -62,9 +80,14 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
     super(router, route, locationService, http, service, history);
     this.tokenFilters$ = this.store.pipe(select(selectTokenFilters));
     this.filters$ = this.store.pipe(select(selectFilter));
+    this.generalFilter$ = this.store.pipe(select(selectFilterClassExtended));
 
     this.filters$.subscribe(f => {
       this.filter = f;
+    });
+
+    this.generalFilter$.subscribe(f => {
+      this.generalFilter = f;
     });
   }
 
@@ -88,6 +111,18 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
     this.store.dispatch(moveTokenFilterDown({ filterIndex: indexToMove }));
   }
 
+  onRelationChange(event: MatRadioChange, filterId: string) {
+    this.store
+      .pipe(
+        select(selectTokenFilterById, { id: filterId }),
+        take(1)
+      )
+      .subscribe(filter => {
+        const updatedFilter = { ...filter, relation: event.value };
+        this.store.dispatch(updateFilterById({ filterId: filterId, newFilter: updatedFilter }));
+      });
+  }
+
   ngOnInit() {
     super.ngOnInit();
     this.isLoading = false;
@@ -102,7 +137,7 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
   }
 
   search() {
-    const sparql = this.service.sparqlQuery(this.filter, false);
+    const sparql = this.service.sparqlQuery({ ...this.generalFilter, filter: this.filter }, false);
     const _sq = new SparqlQuery();
 
     _sq.query(sparql).then(data => {
