@@ -18,6 +18,7 @@ import { WordClass } from 'app/dictionary/dictionary.class';
 import { v4 as uuidv4 } from 'uuid';
 import { selectLanguage } from 'app/store/language.reducer';
 import { Store, select } from '@ngrx/store';
+import { BehaviorSubject } from 'rxjs';
 
 export interface TextQueryParameterI extends QueryParameterI<TextFilterI, TextOptionsI> {}
 
@@ -78,14 +79,20 @@ export const defaultTextQP: TextQueryParameterI = {
 
 @Injectable({ providedIn: 'root' })
 export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI, TextFilterI, TextOptionsI, ElectronicText> {
+  languageSubject = new BehaviorSubject<string>(''); // Initialize with empty string or any other initial value
+
   protected _sparqlQuery(qp: TextQueryParameterI, countResults: boolean): string {
     throw new Error('Method not implemented.');
   }
-  protected _defaultQp: TextQueryParameterI = defaultTextQP;
+
+  _defaultQp: TextQueryParameterI = defaultTextQP;
 
   constructor(public store: Store) {
     super(store);
-    this.store.select(selectLanguage).subscribe(v => (this._defaultQp.lang = v));
+
+    this.store.pipe(select(selectLanguage)).subscribe(language => {
+      this.languageSubject.next(language); // Update the subject's value whenever the store changes
+    });
   }
 
   /*_sparqlQuery(
@@ -358,7 +365,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
     return q
   }*/
 
-  public sparqlQuery(qp: TextQueryParameterI, countResults: boolean): string {
+  public sparqlQuery(qp: any, countResults: boolean): string {
     console.log('TextService._sparqlQuery', qp);
 
     function posFilter(i: number, pos: string[]): string {
@@ -366,7 +373,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       let posFilter = '';
       if (pos.length > 0) {
         posFilter = `
-                ?wordId dhpluso:partOfSpeech ?pos${i} .
+                ?wordId${i} dhpluso:partOfSpeech ?pos${i} .
                 FILTER ( ?pos${i} IN (${posUris.join()}) )
                 `;
       }
@@ -378,26 +385,64 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       let conceptFilter = '';
       if (concepts.length > 0) {
         conceptFilter = `
-                ?concept${i} skos:narrowerTransitive?/^dhpluso:isLexicalizedSenseOf/dhpluso:isSenseOf ?wordId .
+                ?concept${i} skos:narrowerTransitive?/^dhpluso:isLexicalizedSenseOf/dhpluso:isSenseOf ?wordId${i} .
                 FILTER ( ?concept${i} IN (${conceptUris.join()}) )
                 `;
       }
       return conceptFilter;
     }
 
-    let token0 = '';
-    if (qp.filter.tokenFilters[0].label != '') {
-      if (qp.filter.tokenFilters[0].searchLabelInLemma) {
-        token0 = `
+    function wordFilter(i: number, word: string): string {
+      let wordFilter = '';
+      if (word != '') {
+        wordFilter = `
+                ?wordId${i} a dhpluso:Word .
+                ?wordId${i} dhpluso:canonicalForm/dhpluso:writtenRep ?wordLabel${i} .
+                ?wordId${i} dhpluso:canonicalForm ?lemma${i} .
+
+                ?annotationId${i} oa:hasBody ?wordId${i} .
+                ?annotationId${i} oa:hasTarget ?rootId .
+                filter(regex(str(?wordLabel${i}), "${labelFilterGenerator(word, false)}", "i"))
+                `;
+      }
+      return wordFilter;
+    }
+
+    let wordSelects: string[] = [];
+
+    let words: string[] = [];
+    let concepts: string[] = [];
+    let poss: string[] = [];
+
+    qp.tokenFilters.forEach((tokenFilter, i) => {
+      wordSelects.push(`?concept${i}`);
+      wordSelects.push(`?pos${i}`);
+      wordSelects.push(`?wordId${i}`);
+      wordSelects.push(`?wordLabel${i}`);
+      wordSelects.push(`?annotationId${i}`);
+      //wordSelects.push(`?rootId${i}`);
+
+      let word = wordFilter(i, tokenFilter.label);
+      let concept = conceptFilter(i, tokenFilter.concepts);
+      let pos = posFilter(i, tokenFilter.pos);
+
+      words.push(word);
+      concepts.push(concept);
+      poss.push(pos);
+    });
+
+    if (qp.tokenFilters[0].label != '') {
+      if (qp.tokenFilters[0].searchLabelInLemma) {
+        /* token0 = `
                     ?wordId a dhpluso:Word .
                     ?wordId dhpluso:canonicalForm/dhpluso:writtenRep ?wordLabel .
                     ?wordId dhpluso:canonicalForm ?lemma .
 
                     ?annotationId oa:hasBody ?wordId .
                     ?annotationId oa:hasTarget ?rootId .
-                    filter(regex(str(?wordLabel), "${this._labelFilterGenerator(qp.filter.tokenFilters[0].label, false)}", "i"))
+                    filter(regex(str(?wordLabel), "${labelFilterGenerator(qp.tokenFilters[0].label, false)}", "i"))
 
-                `;
+                `; */
       } else {
         /* token0 = `
                     {
@@ -430,7 +475,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                 ?lines a tei:l .
             }
             ${
-              qp.filter.context > 1
+              qp.context > 1
                 ? `
                 UNION
                 {
@@ -440,7 +485,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                         ?lineX mhdbdbxml:nextSibling+ ?lines .
                         ?lines a tei:l .
                     }
-                    Limit ${qp.filter.context - 1}
+                    Limit ${qp.context - 1}
                 }
                 UNION
                 {
@@ -450,7 +495,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                         ?lineX mhdbdbxml:prevSibling+ ?lines .
                         ?lines a tei:l .
                     }
-                    Limit ${qp.filter.context - 1}
+                    Limit ${qp.context - 1}
                 }
             `
                 : ''
@@ -459,7 +504,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
 
     let tokenSelects: string[] = [];
     let tokens: string[] = [];
-    qp.filter.tokenFilters.forEach((tokenFilter, i) => {
+    qp.tokenFilters.forEach((tokenFilter, i) => {
       tokenSelects.push(`?token${i}`);
       if (i > 0) {
         if (tokenFilter.searchLabelInLemma) {
@@ -474,7 +519,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                             {
                                 ?word${i} a dhpluso:Word .
                                 ?word${i} dhpluso:canonicalForm/dhpluso:writtenRep ?label${i} .
-                                filter(regex(str(?label${i}), "${this._labelFilterGenerator(tokenFilter.label, false)}", "i"))
+                                filter(regex(str(?label${i}), "${labelFilterGenerator(tokenFilter.label, false)}", "i"))
                             }
                             ?token${i} mhdbdbxml:n ?n${i} .
                             ${posFilter(i, tokenFilter.pos)}
@@ -489,7 +534,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                         {
                             ?lines mhdbdbxml:child ?token${i} .
                             ?token${i} mhdbdbxml:firstChild/mhdbdbxml:content ?content${i}
-                            filter (regex(str(?content${i}),"${this._labelFilterGenerator(tokenFilter.label, false)}"))
+                            filter (regex(str(?content${i}),"${labelFilterGenerator(tokenFilter.label, false)}"))
                             ?token${i} mhdbdbxml:n ?n${i} .
                             ${posFilter(i, tokenFilter.pos)}
                             ${conceptFilter(i, tokenFilter.concepts)}
@@ -506,7 +551,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       qt = `
                 SELECT (count(*) as ?count)
                 WHERE {
-                    ${token0}
+                    ${words.join('\r\n')}
                     ${lines}
                     ${tokens.join('\r\n')}
                 }
@@ -516,9 +561,11 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
             `;
     } else {
       qt = `
-            SELECT DISTINCT ?wordLemma ?wordLabel ?wordId ?annotationId ?textId ?id ?rootId ?workId ?electronicId ${tokenSelects.join(' ')}
+            SELECT DISTINCT ?wordLemma ?wordLabel ?wordId ?annotationId ?textId ?id ?rootId ?workId ?electronicId ${tokenSelects.join(
+              ' '
+            )} ${wordSelects.join(' ')}
             WHERE {
-                ${token0}
+                ${words.join('\r\n')}
                 ${lines}
                 ${tokens.join('\r\n')}
             }
@@ -532,22 +579,22 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
     let filters: string[] = [];
 
     let labelQuery = '';
-    if (qp.filter.isLabelActive && qp.filter.label) {
+    if (qp.isLabelActive && qp.label) {
       if (qp.option.useLucene) {
         // Todo: Add Lucene Index to graphdb
         labelQuery = `
                         ?search a luc-index:electronic ;
-                        luc:query "title:${this._labelFilterGenerator(qp.filter.label, qp.option.useLucene)}" ;
+                        luc:query "title:${labelFilterGenerator(qp.label, qp.option.useLucene)}" ;
                         luc:entities ?id .
                         `;
       } else {
-        filters.push(`filter(regex(str(?label), "${this._labelFilterGenerator(qp.filter.label, qp.option.useLucene)}", "i"))`);
+        filters.push(`filter(regex(str(?label), "${labelFilterGenerator(qp.label, qp.option.useLucene)}", "i"))`);
       }
     }
 
-    if (qp.filter.isWorksActive && qp.filter.works) {
+    if (qp.isWorksActive && qp.works) {
       let tempFilters = [];
-      qp.filter.works.forEach((work, i) => {
+      qp.works.forEach((work, i) => {
         bindings.push(`Bind (<${work}> as ?work${i})`);
         tempFilters.push(`?workId = ?work${i}`);
       });
@@ -556,14 +603,14 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       filters.push(`filter(${orFilter})`);
     }
 
-    if (qp.filter.isIdActive && qp.filter.id) {
-      bindings.push(`Bind (<${qp.filter.id}> as ?id)`);
+    if (qp.isIdActive && qp.id) {
+      bindings.push(`Bind (<${qp.id}> as ?id)`);
     }
-    if (qp.filter.isElectronicIdActive && qp.filter.electronicId) {
-      bindings.push(`Bind (<${qp.filter.electronicId}> as ?electronicId)`);
+    if (qp.isElectronicIdActive && qp.electronicId) {
+      bindings.push(`Bind (<${qp.electronicId}> as ?electronicId)`);
     }
-    if (qp.filter.isWorkIdActive && qp.filter.workId) {
-      bindings.push(`Bind (<${qp.filter.workId}> as ?workId)`);
+    if (qp.isWorkIdActive && qp.workId) {
+      bindings.push(`Bind (<${qp.workId}> as ?workId)`);
     }
 
     let instanceSelect = `
@@ -576,62 +623,59 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
             ${filters.join('\r\n')}
         `;
 
-    let q: string = '';
-    if (countResults) {
-      q = `
-                SELECT (count(*) as ?count)
-                where {
-                    {
-                        ${instanceSelect}
-                    }
-                }
+    /*    let q: string = '';
+       if (countResults) {
+         q = `
+                   SELECT (count(*) as ?count)
+                   where {
+                       {
+                           ${instanceSelect}
+                       }
+                   }
 
-            `;
-    } else {
-      console.log(token0);
-      if (token0 !== '') {
-        q = `
-                SELECT DISTINCT ?id ?label ?rootId ?electronicId ?workId ${tokenSelects.join(' ')}
-                WHERE {
-                        {
-                        ${qt}
-                        }
+               `;
+       } else {
+         console.log(token0);
+         if (token0 !== '') {
+           q = `
+                   SELECT DISTINCT ?id ?label ?rootId ?electronicId ?workId ${tokenSelects.join(' ')}
+                   WHERE {
+                           {
+                           ${qt}
+                           }
 
-                        ?workId rdfs:label ?label .
-                        filter(langmatches(lang(?label),'${qp.lang}'))
-
-
-                }
-
-                ${this._sparqlOrder(qp.order, qp.desc)}
-                ${this._sparqlLimitOffset(qp.limit, qp.offset)}
-
-                `;
-      } else {
-        q = `
-                SELECT DISTINCT ?id ?label ?rootId ?electronicId ?workId
-                WHERE {
-                        {
-                          ${instanceSelect}
-                        }
-
-                        ?id rdfs:label ?label .
-                        filter(langmatches(lang(?label),'${qp.lang}'))
+                           ?workId rdfs:label ?label .
+                           filter(langmatches(lang(?label),'${this.languageSubject.value}'))
 
 
-                }
+                   }
 
-                ${this._sparqlOrder(qp.order, qp.desc)}
-                ${this._sparqlLimitOffset(qp.limit, qp.offset)}
+                   ${this._sparqlOrder(qp.order, qp.desc)}
+                   ${this._sparqlLimitOffset(qp.limit, qp.offset)}
 
-                `;
-      }
-    }
+                   `;
+         } else {
+           q = `
+                   SELECT DISTINCT ?id ?label ?rootId ?electronicId ?workId
+                   WHERE {
+                           {
+                             ${instanceSelect}
+                           }
 
-    let newQuery = '';
+                           ?id rdfs:label ?label .
+                           filter(langmatches(lang(?label),'${this.languageSubject.value}'))
 
-    if (token0 !== '') {
-      newQuery = `
+
+                   }
+
+                   ${this._sparqlOrder(qp.order, qp.desc)}
+                   ${this._sparqlLimitOffset(qp.limit, qp.offset)}
+
+                   `;
+         }
+       } */
+
+    let newQuery = `
                     SELECT DISTINCT * WHERE {
                     ?rootId mhdbdbxml:partOf ?textId .
                     ?textId dhpluso:hasElectronicInstance ?workId .
@@ -639,10 +683,9 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
     					      ?textId dhpluso:hasElectronicInstance ?electronicId .
                     ?electronicId rdf:type dhpluso:Text .
 
-                    ${token0}
-
-                    ${posFilter(0, qp.filter.tokenFilters[0].pos)}
-                    ${conceptFilter(0, qp.filter.tokenFilters[0].concepts)}
+                    ${words.join('\r\n')}
+                    ${concepts.join('\r\n')}
+                    ${poss.join('\r\n')}
 
                     ?electronicId rdfs:label ?label .
     					      filter(langmatches(lang(?label),'de'))
@@ -655,8 +698,8 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                     ${this._sparqlOrder(qp.order, qp.desc)}
 
             `;
-    }
 
+    let q = '';
     if (countResults) {
       q = `
                 SELECT (count(*) as ?count)
@@ -674,7 +717,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
     return q;
   }
 
-  protected _jsonToObject(bindings): ElectronicText[] {
+  public _jsonToObject(bindings): ElectronicText[] {
     let results: ElectronicText[] = super._jsonToObject(bindings) as ElectronicText[];
 
     //let instances: ElectronicText[] = [];
@@ -683,28 +726,62 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       let element = results.find(element => element.id === item.id.value);
 
       // words
-      if ('wordId' in item && element && !element.words) {
+      /* if ('wordId' in item && element && !element.words) {
         let formList: string[] = [item.wordId.value];
         element.words = formList;
       } else if ('wordId' in item && element && !element.words.find(form => form === item.wordId.value)) {
         element.words.push(item.wordId.value);
+      } */
+
+      // words
+      let wordIndex = 0;
+      while (`wordId${wordIndex}` in item) {
+        if (element && !element.words) {
+          let formList = [item[`wordId${wordIndex}`].value];
+          element.words = formList;
+        } else if (element && !element.words.find(form => form === item[`wordId${wordIndex}`].value)) {
+          element.words.push(item[`wordId${wordIndex}`].value);
+        }
+        wordIndex++;
       }
 
       // wordLabel
-      if ('wordLabel' in item && element && !element.wordLabels) {
+      let wordLabelsIndex = 0;
+      while (`wordLabel${wordLabelsIndex}` in item) {
+        if (element && !element.wordLabels) {
+          let formList = [item[`wordLabel${wordLabelsIndex}`].value];
+          element.wordLabels = formList;
+        } else if (element && !element.wordLabels.find(form => form === item[`wordLabel${wordLabelsIndex}`].value)) {
+          element.wordLabels.push(item[`wordLabel${wordLabelsIndex}`].value);
+        }
+        wordLabelsIndex++;
+      }
+
+      /* if ('wordLabel' in item && element && !element.wordLabels) {
         let formList: string[] = [item.wordLabel.value];
         element.wordLabels = formList;
       } else if ('wordLabel' in item && element && !element.wordLabels.find(form => form === item.wordLabel.value)) {
         element.wordLabels.push(item.wordLabel.value);
-      }
+      } */
 
       // annotations
-      if ('annotationId' in item && element && !element.annotationIds) {
+      let wordAnnotationIdIndex = 0;
+      while (`annotationId${wordAnnotationIdIndex}` in item) {
+        if (element && !element.annotationIds) {
+          let formList = [item[`annotationId${wordAnnotationIdIndex}`].value];
+          element.annotationIds = formList;
+        } else if (element && !element.annotationIds.find(form => form === item[`annotationId${wordAnnotationIdIndex}`].value)) {
+          element.annotationIds.push(item[`annotationId${wordAnnotationIdIndex}`].value);
+        }
+        wordAnnotationIdIndex++;
+      }
+
+      /* if ('annotationId' in item && element && !element.annotationIds) {
         let formList: string[] = [item.annotationId.value];
         element.annotationIds = formList;
       } else if ('annotationId' in item && element && !element.annotationIds.find(form => form === item.annotationId.value)) {
         element.annotationIds.push(item.annotationId.value);
-      }
+      } */
 
       // instances.push(new ElectronicText(row.id.value, row.label.value, row.rootId.value, row.electronicId.value, row.workId.value));
     });
@@ -906,5 +983,42 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
         }
       );
     });
+  }
+}
+function labelFilterGenerator(label: any, arg1: boolean) {
+  // labelFilter = this._regExpEscape(labelFilter)
+  let newlabelfilter = String(label).trim();
+  const replacements = {
+    '\\*': '.*',
+    '\\+': '.+',
+    '\\?': '.{1}',
+    '\\^': '^',
+    '\\$': '$',
+    // Add all replacements like â -> a here
+    ae: '(?:ae|[æä])',
+    oe: '(?:oe|[œö])',
+    ue: '(?:ue|[ü])',
+    a: '[aáàäâ]',
+    e: '[eëêèé]',
+    i: '[iïîìí]',
+    o: '[oóôöò]',
+    u: '[uùüúû]',
+    y: '[yýŷÿ]',
+    s: '[sſ]'
+  };
+
+  Object.entries(replacements).forEach(([orig, replacement]) => {
+    newlabelfilter = newlabelfilter.replace(orig, replacement);
+  });
+
+  newlabelfilter = newlabelfilter.replace(/\\~(\d+)/, '.{$1}');
+
+  try {
+    new RegExp(newlabelfilter);
+    console.warn('regex: ', newlabelfilter);
+    return newlabelfilter;
+  } catch (error) {
+    console.error('Invalid regex: ', newlabelfilter);
+    return label;
   }
 }

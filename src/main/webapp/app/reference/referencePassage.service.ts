@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { selectLanguage } from 'app/store/language.reducer';
 import { NAMEDGRAPHS } from '../../../../../src/main/webapp/app/app.constants';
 import { FilterAuthorI, FilterCorpusI, FilterI, MhdbdbGraphService, OptionsI, QueryParameterI } from '../shared/mhdbdb-graph.service';
 import { Line, TextPassage, Token } from './reference.class';

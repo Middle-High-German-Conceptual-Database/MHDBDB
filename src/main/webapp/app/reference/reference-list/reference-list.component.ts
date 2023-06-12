@@ -24,6 +24,7 @@ import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { addTokenFilter, removeFilter, updateFilter, moveTokenFilterUp, moveTokenFilterDown, reset } from 'app/store/filter.actions';
 import { selectFilter, selectTokenFilters } from 'app/store/filter.reducer';
+import { SparqlQuery } from 'app/shared/mhdbdb-graph.service';
 
 @Component({
   selector: 'dhpp-reference-list',
@@ -44,6 +45,9 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
   textInstances: WordClass[] = [];
 
   tokenFilters$: Observable<TokenFilterI[]>;
+  filters$: Observable<any>;
+
+  filter: any;
 
   constructor(
     public router: Router,
@@ -57,6 +61,11 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
   ) {
     super(router, route, locationService, http, service, history);
     this.tokenFilters$ = this.store.pipe(select(selectTokenFilters));
+    this.filters$ = this.store.pipe(select(selectFilter));
+
+    this.filters$.subscribe(f => {
+      this.filter = f;
+    });
   }
 
   ////////////////////
@@ -81,17 +90,25 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
 
   ngOnInit() {
     super.ngOnInit();
+    this.isLoading = false;
+
     // this.loadSenses()
   }
 
   reset() {
     this.textInstances = [];
     this.store.dispatch(reset());
+    this.isLoading = false;
   }
 
   search() {
-    const sparql = this.service.sparqlQuery(this.qp, false);
-    console.log(sparql);
+    const sparql = this.service.sparqlQuery(this.filter, false);
+    const _sq = new SparqlQuery();
+
+    _sq.query(sparql).then(data => {
+      this.instances = this.service._jsonToObject(data.results.bindings);
+    });
+    this.isLoading = false;
   }
 
   loadSenses() {
