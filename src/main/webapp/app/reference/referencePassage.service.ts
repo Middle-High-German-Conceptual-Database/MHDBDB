@@ -37,6 +37,9 @@ export interface TokenFilterI {
   positionInLine?: number;
   connectorAnd: boolean;
   relation: string;
+  context: number;
+  directlyFollowing: boolean;
+  contextUnit: string;
 }
 
 export interface TextPassageFilterI extends FilterI, FilterAuthorI, FilterCorpusI {
@@ -62,7 +65,10 @@ export const defaultTokenFilter: TokenFilterI = {
   pos: [],
   concepts: [],
   connectorAnd: true,
-  relation: 'and'
+  relation: 'and',
+  context: 1,
+  directlyFollowing: true,
+  contextUnit: 'lines'
 };
 
 export const defaultTextPassageQP: TextPassageQueryParameterI = {

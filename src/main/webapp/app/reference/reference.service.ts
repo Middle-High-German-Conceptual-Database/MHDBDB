@@ -45,7 +45,10 @@ export const defaultTokenFilter: TokenFilterI = {
   pos: [],
   concepts: [],
   connectorAnd: true,
-  relation: 'and'
+  relation: 'and',
+  context: 1,
+  directlyFollowing: true,
+  contextUnit: 'lines'
 };
 
 export const defaultTextQP: TextQueryParameterI = {
@@ -422,6 +425,35 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       }
       if (word != '') {
         wordFilter += `
+
+        ?typeId${i} dhpluso:writtenRep ?typeLabel${i} .
+        ?typeId${i} dhpluso:isTypeOf ?wordId${i} .
+        ?wordId${i} dhpluso:canonicalForm ?lemmaId${i} .
+
+        ?annotationId${i} oa:hasBody ?wordId${i} .
+        ?annotationId${i} oa:hasTarget ?rootId .
+
+        filter(regex(str(?typeLabel${i}), "${labelFilterGenerator(word, false)}", "i"))
+
+                `;
+      }
+      if (relation === 'or') {
+        wordFilter += '}';
+      }
+      return wordFilter;
+    }
+
+    function lemmaFilter(i: number, word: string, relation: string): string {
+      let wordFilter = '';
+
+      if (relation === 'or' && i > 0) {
+        wordFilter += ' OPTIONAL ';
+      }
+      if (relation === 'or') {
+        wordFilter += '{';
+      }
+      if (word != '') {
+        wordFilter += `
                 ?wordId${i} a dhpluso:Word .
                 ?wordId${i} dhpluso:canonicalForm/dhpluso:writtenRep ?wordLabel${i} .
                 ?wordId${i} dhpluso:canonicalForm ?lemma${i} .
@@ -450,12 +482,18 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       wordSelects.push(`?wordLabel${i}`);
       wordSelects.push(`?annotationId${i}`);
       //wordSelects.push(`?rootId${i}`);
+      let wordOrLemma = '';
 
-      let word = wordFilter(i, tokenFilter.label, tokenFilter.relation);
+      if (tokenFilter.searchLabelInLemma) {
+        wordOrLemma = lemmaFilter(i, tokenFilter.label, tokenFilter.relation);
+      } else {
+        wordOrLemma = wordFilter(i, tokenFilter.label, tokenFilter.relation);
+      }
+
       let concept = conceptFilter(i, tokenFilter.concepts, tokenFilter.relation);
       let pos = posFilter(i, tokenFilter.pos, tokenFilter.relation);
 
-      words.push(word);
+      words.push(wordOrLemma);
       concepts.push(concept);
       poss.push(pos);
     });
@@ -716,6 +754,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                     ${words.join('\r\n')}
                     ${concepts.join('\r\n')}
                     ${poss.join('\r\n')}
+
 
                     ?electronicId rdfs:label ?label .
     					      filter(langmatches(lang(?label),'de'))
