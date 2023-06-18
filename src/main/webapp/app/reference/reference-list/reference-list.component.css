@@ -1,0 +1,44 @@
+::ng-deep .custom-slider .ng5-slider .ng5-slider-bar {
+  background: #ffe4d1;
+  height: 2px;
+}
+::ng-deep .custom-slider .ng5-slider .ng5-slider-selection {
+  background: orange;
+}
+::ng-deep .custom-slider .ng5-slider .ng5-slider-pointer {
+  width: 8px;
+  height: 16px;
+  top: auto;
+  bottom: 0;
+  background-color: #333;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+}
+::ng-deep .custom-slider .ng5-slider .ng5-slider-pointer:after {
+  display: none;
+}
+::ng-deep .custom-slider .ng5-slider .ng5-slider-bubble {
+  bottom: 14px;
+}
+::ng-deep .custom-slider .ng5-slider .ng5-slider-limit {
+  font-weight: bold;
+  color: orange;
+}
+::ng-deep .custom-slider .ng5-slider .ng5-slider-tick {
+  width: 1px;
+  height: 10px;
+  margin-left: 4px;
+  border-radius: 0;
+  background: #ffe4d1;
+  top: -1px;
+}
+::ng-deep .custom-slider .ng5-slider .ng5-slider-tick.ng5-slider-selected {
+  background: orange;
+}
+.mat-card:not([class*='mat-elevation-z']) {
+  box-shadow: none;
+}
+.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background,
+.mat-checkbox-checked.mat-accent .mat-checkbox-background {
+  background-color: #40a9ff;
+}

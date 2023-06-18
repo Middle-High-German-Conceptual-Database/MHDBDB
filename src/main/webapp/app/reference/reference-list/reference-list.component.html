@@ -3,33 +3,33 @@
 <div class="container">
     <ul>
         <li *ngFor="let filter of tokenFilters$ | async; index as i">
-            <div class="row" style="border: 1px solid #ffd740; margin-top: 15px;">
+            <div class="row" style="border: 2px solid #ffd740; margin-top: 15px;">
                 <div class="col" style="margin: 20px;">
                     <mat-tab-group animationDuration="0ms" style="width: 100%;">
                         <mat-tab label="Wort">
                             <div class="werke-blk">
                                 <dhpp-form-token [filter]="filter" [routeString]="routeString"></dhpp-form-token>
-                                <dhpp-form-tokenContext [tokenFilter]="filter" [filter]="filter" [routeString]="routeString"></dhpp-form-tokenContext>
                             </div>
                         </mat-tab>
-                        <!-- <mat-tab label="Begriff">
+                        <mat-tab label="Begriff">
                              <div class="werke-blk">
-                                     <dhpp-form-token-concepts [tokenFilter]="tokenFilter"></dhpp-form-token-concepts>
+                                <dhpp-form-token-concepts [filter]="filter"  [tokenFilter]="filter"></dhpp-form-token-concepts>
                              </div>
                          </mat-tab>
-                         <mat-tab label="Name">
+                         <mat-tab label="Namen">
                              <div class="werke-blk">
-
+                                <dhpp-form-token-namen [filter]="filter"  [tokenFilter]="filter"></dhpp-form-token-namen>
                              </div>
-                         </mat-tab>-->
+                         </mat-tab>
                     </mat-tab-group>
                     <div class="row" style="padding-top: 35px; padding-bottom: 35px;">
                         <div class="col-1" style="padding-left: 40px;">
                             <button mat-mini-fab [disabled]="i < filters.length - 1" (click)="addFilter()"><i
-                                class="fas fa-plus"></i></button>
+                                    class="fas fa-plus"></i></button>
                         </div>
                         <div class="col-10" style="padding-top: 10px;">
-                            <mat-radio-group [value]="filter.relation" (change)="onRelationChange($event, filter.id)" aria-label="Verbindung zu nächsten Wortformen">
+                            <mat-radio-group [value]="filter.relation" (change)="onRelationChange($event, filter.id)"
+                                aria-label="Verbindung zu nächsten Wortformen">
                                 <mat-radio-button value="and">Und</mat-radio-button>
                                 <mat-radio-button value="or">Oder</mat-radio-button>
                                 <mat-radio-button value="not">Nicht</mat-radio-button>
@@ -37,7 +37,7 @@
                         </div>
                         <div class="col-1" style="padding-left: 40px;">
                             <button mat-mini-fab [disabled]="i == 0" (click)="removeFilter(i)"><i
-                                class="fas fa-minus"></i></button>
+                                    class="fas fa-minus"></i></button>
                         </div>
                     </div>
                 </div>
@@ -45,43 +45,47 @@
         </li>
     </ul>
 
-    <div class="row" style="border: 1px solid #40a9ff; margin-top: 15px;">
+    <div class="row" style="border: 2px solid #ff82ee; margin-top: 15px">
         <div class="col">
-            <dhpp-form-filter [label]="labelTextSearch"
-                              [routeString]="routeString"></dhpp-form-filter>
+            <dhpp-form-tokenContext [routeString]="routeString"></dhpp-form-tokenContext>
+        </div>
+    </div>
+
+    <div class="row" style="border: 2px solid #40a9ff; margin-top: 15px;">
+        <div class="col">
+            <dhpp-form-filter [label]="labelTextSearch" [routeString]="routeString"></dhpp-form-filter>
         </div>
     </div>
 
     <div class="row">
         <div class="col">
 
-                <div class="werke_row flxrow">
-                    <div class="werke_row_inner">
-                        <button mat-stroked-button color="link" type="submit" (click)="search()" (keydown.enter)="search()"><i
-                            class="fas fa-search"></i> Suchen
-                        </button>
-                    </div>
-                    <div class="werke_row_inner">
-                        <button mat-stroked-button color="link" (click)="reset()"><i class="fas fa-undo-alt"></i> Zurücksetzen</button>
-                    </div>
+            <div class="werke_row flxrow">
+                <div class="werke_row_inner">
+                    <button mat-stroked-button color="link" type="submit" (click)="search()"
+                        (keydown.enter)="search()"><i class="fas fa-search"></i> Suchen
+                    </button>
                 </div>
+                <div class="werke_row_inner">
+                    <button mat-stroked-button color="link" (click)="reset()"><i class="fas fa-undo-alt"></i>
+                        Zurücksetzen</button>
+                </div>
+            </div>
 
 
         </div>
     </div>
 
-    <div *ngIf="!isLoading; else loading"
-         class="search-results">
+    <div *ngIf="!isLoading; else loading" class="search-results">
         <div *ngFor="let instance of instances">
             <dhpp-text-element [instance]="instance" [qp]="qp"></dhpp-text-element>
 
         </div>
         <!-- <mat-spinner *ngIf="isLoadingNext"></mat-spinner> -->
     </div>
-   <!--  <ng-template #loading>
+    <!--  <ng-template #loading>
         <mat-spinner></mat-spinner>
     </ng-template> -->
 
 
 </div>
-

@@ -9,7 +9,11 @@ import {
   removeFilter,
   updateFilter,
   updateFilterById,
-  updateRelation
+  updateRelation,
+  updateContext,
+  updateContextUnit,
+  updateIsConceptsActive,
+  updateDirectlyFollowing
 } from './filter.actions';
 import { TextQueryParameterI, defaultTextQP } from 'app/reference/reference.service';
 
@@ -77,7 +81,23 @@ const _filterReducer = createReducer(
       return { ...state, filter: { ...state.filter, tokenFilters: newTokenFilters } };
     }
     return state;
-  })
+  }),
+  on(updateContext, (state, { newContext }) => ({
+    ...state,
+    filter: { ...state.filter, context: newContext }
+  })),
+  on(updateIsConceptsActive, (state, { newIsConceptsActive }) => ({
+    ...state,
+    filter: { ...state.filter, isConceptsActive: newIsConceptsActive }
+  })),
+  on(updateContextUnit, (state, { newContextUnit }) => ({
+    ...state,
+    filter: { ...state.filter, contextUnit: newContextUnit }
+  })),
+  on(updateDirectlyFollowing, (state, { newDirectlyFollowing }) => ({
+    ...state,
+    filter: { ...state.filter, directlyFollowing: newDirectlyFollowing }
+  }))
 );
 
 export function filterReducer(state: TextQueryParameterI | undefined, action: Action) {
@@ -102,13 +122,29 @@ export const selectTokenFilterById = createSelector(
 );
 
 /*
+
 this.store.dispatch(addTokenFilter({ tokenFilter: newTokenFilter }));
+
 this.store.dispatch(removeFilter({ filterIndex: indexToRemove }));
+
 this.store.dispatch(updateFilter({ filterIndex: indexToUpdate, newFilter: updatedFilter }));
+
 this.store.dispatch(moveTokenFilterUp({ filterIndex: indexToMove }));
+
 this.store.dispatch(moveTokenFilterDown({ filterIndex: indexToMove }));
+
 this.store.pipe(select(selectTokenFilterById, { id: idToFind })).subscribe(tokenFilter => {
   // Do something with tokenFilter
 });
+
 this.store.dispatch(updateFilterById({ filterId: idToUpdate, newFilter: updatedFilter }));
+
+this.store.dispatch(updateContext({ newContext: updatedContext }));
+
+this.store.dispatch(updateIsConceptsActive({ newIsConceptsActive: updatedIsConceptsActive }));
+
+this.store.dispatch(updateContextUnit({ newContextUnit: updatedContextUnit }));
+
+this.store.dispatch(updateDirectlyFollowing({ newDirectlyFollowing: updatedDirectlyFollowing }));
+
 */

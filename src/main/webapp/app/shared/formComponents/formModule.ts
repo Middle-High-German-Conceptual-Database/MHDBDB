@@ -26,7 +26,8 @@ import {
   FormTokenConceptsComponent,
   FormTokenPosComponent,
   FormTokenWordComponent,
-  tokenFormService
+  tokenFormService,
+  FormTokenNamenComponent
 } from './formToken/formToken';
 import { FormClassCheckboxesComponent, FormClassCheckboxesHelpComponent } from './formClassCheckboxes/formClassCheckboxes';
 import { FormWorkSearchComponent, FormWorkSearchHelpComponent } from 'app/shared/formComponents/formWorkSearch/formWorkSearch';
@@ -84,6 +85,7 @@ import { ReactWrapperComponent } from 'app/components/ReactWrapperComponent';
     FormTokenWordComponent,
     FormTokenContextComponent,
     FormTokenContextHelpComponent,
+    FormTokenNamenComponent,
     FormClassCheckboxesComponent,
     FormClassCheckboxesHelpComponent,
     FormAuthorComponent,
@@ -125,6 +127,7 @@ import { ReactWrapperComponent } from 'app/components/ReactWrapperComponent';
     FormTokenContextComponent,
     FormClassCheckboxesComponent,
     FormTokenConceptsComponent,
+    FormTokenNamenComponent,
     FormAuthorComponent,
     FormFilterComponent,
     CustomReactComponentWrapperComponent,

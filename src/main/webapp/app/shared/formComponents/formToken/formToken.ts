@@ -24,6 +24,7 @@ import { PosService } from '../../pos/pos.service';
 import { Store, select } from '@ngrx/store';
 import { selectTokenFilterById } from 'app/store/filter.reducer';
 import { updateFilterById } from 'app/store/filter.actions';
+import { OnomasticsService } from 'app/onomastics/onomastics.service';
 
 @Injectable({ providedIn: 'root' })
 export class tokenFormService {
@@ -228,6 +229,7 @@ export class FormTokenPosComponent implements OnInit, OnDestroy {
     this.posService.getTopConcepts().then(data => {
       this.posList = data as PoS[];
       this.posList.forEach(pos => {
+        if (pos.label === 'Substantiv') pos.label = 'Nomen';
         this.form.addControl(pos.label, new FormControl(this.tokenFilter.pos.includes(pos.id)));
       });
 
@@ -296,6 +298,106 @@ export class FormTokenConceptsComponent implements OnInit, OnDestroy {
   @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
 
   constructor(public service: tokenFormService, public conceptService: ConceptService, public store: Store) {
+    this.filteredConcepts = this.conceptCtrl.valueChanges.pipe(
+      startWith(null),
+      map((concept: string | null) => (concept ? this._filterConcept(concept) : this.conceptLabels.slice()))
+    );
+  }
+
+  private _filterConcept(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.conceptLabels.filter(concept => concept.toLowerCase().indexOf(filterValue) === 0);
+  }
+
+  get concepts() {
+    return <FormGroup>this.form.get('filterConcepts');
+  }
+
+  removeConcept(conceptLabel: string): void {
+    this.concepts.removeControl(conceptLabel);
+    this.concepts.updateValueAndValidity();
+  }
+
+  selectedConcept(event: MatAutocompleteSelectedEvent): void {
+    this.concepts.addControl(event.option.viewValue, new FormControl(true));
+    this.conceptInput.nativeElement.value = '';
+    this.conceptCtrl.setValue(null);
+  }
+
+  initHtmlForm() {
+    this.filterConcepts = new FormGroup({});
+    this.form = new FormGroup({
+      filterConcepts: this.filterConcepts
+    });
+
+    // @todo add redux
+
+    this.conceptList.forEach(concept => {
+      this.conceptLabels.push(concept.label);
+      if (this.tokenFilter.concepts.includes(concept.id)) {
+        this.concepts.addControl(concept.label.trim(), new FormControl(true));
+      }
+    });
+  }
+
+  private subscribe(): Subscription {
+    this.tokenFilter = { ...this.tokenFilter } as TokenFilterI;
+    return this.form.valueChanges.pipe(distinctUntilChanged()).subscribe(value => {
+      this.tokenFilter.concepts = [];
+      for (let v in value.filterConcepts) {
+        const e = this.conceptList.find(element => element.label === v);
+        this.tokenFilter.concepts.push(e.id);
+      }
+      const updatedFilter = { ...this.tokenFilter };
+      this.store.dispatch(updateFilterById({ filterId: this.filter.id, newFilter: updatedFilter }));
+      this.service.nextQp();
+    });
+  }
+
+  ngOnInit() {
+    this.conceptService.getAllConcepts().then(data => {
+      this.conceptList = data;
+      this.initHtmlForm();
+      this.subscription = this.subscribe();
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+}
+
+@Component({
+  selector: 'dhpp-form-token-namen',
+  templateUrl: './formTokenNamen.html'
+})
+export class FormTokenNamenComponent implements OnInit, OnDestroy {
+  @Input() tokenFilter;
+  @Input() filter: any;
+
+  public conceptList: Concept[];
+  public form: FormGroup;
+  public filterConcepts: FormGroup;
+  public conceptLabels: string[] = [];
+  private subscription: Subscription;
+
+  // chips input for concepts
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+  selectable = true;
+  removable = true;
+  addOnBlur = true;
+  visible = true;
+
+  // autocomplete concepts
+  conceptCtrl = new FormControl();
+  filteredConcepts: Observable<string[]>;
+
+  @ViewChild('conceptInput', { static: false }) conceptInput: ElementRef<HTMLInputElement>;
+  @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
+
+  constructor(public service: tokenFormService, public conceptService: OnomasticsService, public store: Store) {
     this.filteredConcepts = this.conceptCtrl.valueChanges.pipe(
       startWith(null),
       map((concept: string | null) => (concept ? this._filterConcept(concept) : this.conceptLabels.slice()))

@@ -26,6 +26,7 @@ export interface TextFilterI extends FilterIdLabelI, FilterWorksI, FilterPosI, F
   context: ContextRangeT;
   isWorkIdActive: boolean;
   directlyFollowing: boolean;
+  contextUnit: string;
   workId: string;
   isElectronicIdActive: boolean;
   electronicId: string;
@@ -74,7 +75,8 @@ export const defaultTextQP: TextQueryParameterI = {
     pos: [],
     works: [],
     concepts: [],
-    isConceptsActive: true
+    isConceptsActive: true,
+    contextUnit: 'lines'
   },
   option: {
     useLucene: false

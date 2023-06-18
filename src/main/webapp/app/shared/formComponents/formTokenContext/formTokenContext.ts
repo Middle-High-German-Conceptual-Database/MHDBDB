@@ -16,10 +16,10 @@ import { TextService } from '../../../text/text.service';
 import { HistoryService } from '../../historyService';
 import { FormDirective } from '../formDirective';
 import { Store, select } from '@ngrx/store';
-import { selectTokenFilterById } from 'app/store/filter.reducer';
+import { selectFilterState, selectTokenFilterById } from 'app/store/filter.reducer';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { updateFilterById } from 'app/store/filter.actions';
+import { updateContext, updateContextUnit, updateDirectlyFollowing } from 'app/store/filter.actions';
 
 @Component({
   selector: 'dhpp-form-tokenContext',
@@ -76,20 +76,18 @@ export class FormTokenContextComponent
     let changed: boolean = false;
     if (this.qp.filter.context != value.context) {
       this.qp.filter.context = value.context;
+      this.store.dispatch(updateContext({ newContext: value.context }));
       changed = true;
     }
     if (this.qp.filter.contextUnit != value.contextUnit) {
       this.qp.filter.contextUnit = value.contextUnit;
+      this.store.dispatch(updateContextUnit({ newContextUnit: value.contextUnit }));
       changed = true;
     }
     if (this.qp.filter.directlyFollowing != value.directlyFollowing) {
       this.qp.filter.directlyFollowing = value.directlyFollowing;
+      this.store.dispatch(updateDirectlyFollowing({ newDirectlyFollowing: value.directlyFollowing }));
       changed = true;
-    }
-
-    if (changed) {
-      const updatedFilter = { ...this.tokenFilter, ...value };
-      this.store.dispatch(updateFilterById({ filterId: this.filter.id, newFilter: updatedFilter }));
     }
 
     return changed;
@@ -109,7 +107,7 @@ export class FormTokenContextComponent
 
     this.store
       .pipe(
-        select(selectTokenFilterById, { id: this.filter.id }),
+        select(selectFilterState),
         takeUntil(this.destroy$)
       )
       .subscribe(tokenFilter => {

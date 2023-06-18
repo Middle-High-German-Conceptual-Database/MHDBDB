@@ -1,7 +1,7 @@
 <form *ngIf="form" [formGroup]="form" novalidate>
     <div [formGroup]="filterConcepts">
         <mat-form-field class="form-check form-check-inline" style="width: 100%;">
-            <mat-label>mit Bedeutung (Begriff)</mat-label>
+            <mat-label>Namen</mat-label>
             <input type="text" class="input-text"
                 [formControl]="conceptCtrl" #conceptInput [matAutocomplete]="auto" [matChipInputFor]="chipList"
                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" matInput>
