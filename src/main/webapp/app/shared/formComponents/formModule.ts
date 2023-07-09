@@ -37,6 +37,7 @@ import { FormFilterComponent, FormFilterHelpComponent } from 'app/shared/formCom
 import { MatTreeModule } from '@angular/material/tree';
 import { CustomReactComponentWrapperComponent } from 'app/components/CustomReactComponentWrapper';
 import { ReactWrapperComponent } from 'app/components/ReactWrapperComponent';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
 @NgModule({
   entryComponents: [
@@ -112,7 +113,8 @@ import { ReactWrapperComponent } from 'app/components/ReactWrapperComponent';
     MatRadioModule,
     MatSelectModule,
     MatSlideToggleModule,
-    MatTreeModule
+    MatTreeModule,
+    NgxSliderModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   exports: [

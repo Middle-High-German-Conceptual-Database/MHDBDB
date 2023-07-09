@@ -1,6 +1,8 @@
 <h2>Belegsuche</h2>
 
 <div class="container">
+    <form (keydown.enter)="$event.preventDefault(); search()">
+
     <ul>
         <li *ngFor="let filter of tokenFilters$ | async; index as i">
             <div class="row" style="border: 2px solid #ffd740; margin-top: 15px;">
@@ -8,7 +10,7 @@
                     <mat-tab-group animationDuration="0ms" style="width: 100%;">
                         <mat-tab label="Wort">
                             <div class="werke-blk">
-                                <dhpp-form-token [filter]="filter" [routeString]="routeString"></dhpp-form-token>
+                                <dhpp-form-token [filter]="filter" [tokenFilter]="filter" [routeString]="routeString"></dhpp-form-token>
                             </div>
                         </mat-tab>
                         <mat-tab label="Begriff">
@@ -44,6 +46,8 @@
             </div>
         </li>
     </ul>
+
+
 
     <div class="row" style="border: 2px solid #ff82ee; margin-top: 15px">
         <div class="col">
@@ -87,5 +91,5 @@
         <mat-spinner></mat-spinner>
     </ng-template> -->
 
-
+</form>
 </div>

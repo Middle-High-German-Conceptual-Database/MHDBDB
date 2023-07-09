@@ -8,13 +8,21 @@
         </mat-card-title>
     </mat-card-header>
     <mat-card-content>
-            <mat-card>
-                <mat-card-content>
-                    <dhpp-form-token-word [filter]="filter" [tokenFilter]="filter"></dhpp-form-token-word>
-                    <dhpp-form-token-pos [filter]="filter" [tokenFilter]="filter"></dhpp-form-token-pos>
-                    <dhpp-form-token-concepts [filter]="filter"  [tokenFilter]="filter"></dhpp-form-token-concepts>
-                </mat-card-content>
-                <!--<mat-card-actions>
+        <mat-card>
+            <mat-card-content>
+                <dhpp-form-token-word [filter]="filter" [tokenFilter]="filter"></dhpp-form-token-word>
+                <dhpp-form-token-pos [filter]="filter" [tokenFilter]="filter"></dhpp-form-token-pos>
+                <dhpp-form-token-concepts [filter]="filter" [tokenFilter]="filter"></dhpp-form-token-concepts>
+
+                <mat-slide-toggle class="example-margin" color="primary" [checked]="advancedSearch" (change)="setAdvChecked($event)" style="margin-top: 25px;">
+                    Erweiterte Suche
+                </mat-slide-toggle>
+
+                <dhpp-form-token-namen *ngIf="advancedSearch" [filter]="filter" [tokenFilter]="filter"></dhpp-form-token-namen>
+
+
+            </mat-card-content>
+            <!--<mat-card-actions>
                     <button mat-mini-fab [disabled]="first" (click)="delForm(i)"><i
                         class="fas fa-minus"></i></button>
                     <button mat-mini-fab [disabled]="first" (click)="upForm(i)"><i
@@ -23,8 +31,8 @@
                         class="fas fa-arrow-down"></i></button>
                     <button style="float: right;" mat-mini-fab (click)="addForm()"><i class="fas fa-plus"></i></button>
                 </mat-card-actions>-->
-            </mat-card>
-            <!--<div style="float: right; margin: 30px">
+        </mat-card>
+        <!--<div style="float: right; margin: 30px">
                 <mat-radio-group aria-label="Verbindung zu nächsten Wortformen" *ngIf="!last">
                     <mat-radio-button value="true">Und</mat-radio-button>
                     <mat-radio-button value="false">Oder</mat-radio-button>

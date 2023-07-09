@@ -91,11 +91,13 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
 
   async getWorkList(): Promise<[(WorkClass[]), number]> {
     const query = `
-    select distinct ?id ?label ?sameAs ?instance where {
+    select distinct ?id ?label ?sameAs ?instance ?authorLabel where {
             ?id rdfs:label ?label .
             ?id owl:sameAs ?sameAs .
+            ?id dhpluso:contribution/dhpluso:agent/rdfs:label ?authorLabel .
             ?id dhpluso:hasExpression/dhpluso:hasInstance ?instance .
             filter(langMatches( lang(?label), "de" ))
+            filter(langMatches( lang(?authorLabel), "de" ))
             }
             ORDER BY ASC(?label)
         `;

@@ -1,58 +1,43 @@
 import { Person } from '../indices/person/person.class';
-import {
-  AuthorsI,
-  DateOfCreationI,
-  DatePrecision,
-  MhdbdbIdLabelEntity
-} from "app/shared/baseIndexComponent/baseindexcomponent.class";
+import { AuthorsI, DateOfCreationI, DatePrecision, MhdbdbIdLabelEntity } from 'app/shared/baseIndexComponent/baseindexcomponent.class';
 
 export class WorkClass extends MhdbdbIdLabelEntity {
+  public authorLabel: string;
 
-
-//implements AuthorsI, DateOfCreationI {
-   // public authors: Person[];
-   // public dateOfCreation: DatePrecision
-
-    constructor(
-        public id: string,
-        public label: string,
-       // authors: Person[],
-       // date: Date,
-       // precision: Date,
-
-    ) {
-        super(id, label)
-       // this.authors = authors
-       // this.dateOfCreation = new DatePrecision(date, precision)
-    }
-}
-
-
-export class SeriesClass extends MhdbdbIdLabelEntity {
-
-
-//implements AuthorsI, DateOfCreationI {
+  //implements AuthorsI, DateOfCreationI {
   // public authors: Person[];
   // public dateOfCreation: DatePrecision
 
-  constructor(
-    public id: string,
-    public label: string,
-    // authors: Person[],
-    // date: Date,
-    // precision: Date,
+  constructor(public id: string, public label: string, public _authorLabel: string) // authors: Person[],
+  // date: Date,
+  // precision: Date,
 
-  ) {
-    super(id, label)
+  {
+    super(id, label);
+    this.authorLabel = _authorLabel;
     // this.authors = authors
     // this.dateOfCreation = new DatePrecision(date, precision)
   }
 }
 
+export class SeriesClass extends MhdbdbIdLabelEntity {
+  //implements AuthorsI, DateOfCreationI {
+  // public authors: Person[];
+  // public dateOfCreation: DatePrecision
 
-export class WorkMetadataClass extends WorkClass implements AuthorsI, DateOfCreationI{
+  constructor(public id: string, public label: string) // authors: Person[],
+  // date: Date,
+  // precision: Date,
 
-//implements AuthorsI, DateOfCreationI {
+  {
+    super(id, label);
+    // this.authors = authors
+    // this.dateOfCreation = new DatePrecision(date, precision)
+  }
+}
+
+export class WorkMetadataClass extends WorkClass implements AuthorsI, DateOfCreationI {
+  //implements AuthorsI, DateOfCreationI {
 
   public authors: Person[];
 
@@ -70,7 +55,6 @@ export class WorkMetadataClass extends WorkClass implements AuthorsI, DateOfCrea
   public genreFormMainParent: string[];
   public genreFormMainParentInstance: string[];
 
-
   constructor(
     public id: string,
     public label: string,
@@ -78,12 +62,11 @@ export class WorkMetadataClass extends WorkClass implements AuthorsI, DateOfCrea
     authors: Person[],
 
     sameAs: any[],
-    authorSameAs: any[],
-
+    authorSameAs: any[]
   ) {
-    super(id, label)
-    this.sameAs = sameAs
-    this.authors = authors
-    this.authorSameAs = authorSameAs
+    super(id, label, '');
+    this.sameAs = sameAs;
+    this.authors = authors;
+    this.authorSameAs = authorSameAs;
   }
 }

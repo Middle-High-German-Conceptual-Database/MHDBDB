@@ -42,8 +42,8 @@
                         <div class="werke_row_inner">
                             <div class="input-row">
                                 <div class="custom-slider">
-                                  <!--  <ngx-slider [(value)]="minValue" [(highValue)]="maxValue"
-                                                [options]="options"></ngx-slider>-->
+                                  <ngx-slider [(value)]="minValue" [(highValue)]="maxValue"
+                                                [options]="options"></ngx-slider>
                                 </div>
                             </div>
                         </div>
@@ -58,14 +58,33 @@
                         </div>
 
                         <div class="werke_row_inner">
-                            <div class="input-row">
+                            <div class="input-row" [formGroup]="filterWorks">
 
-                                <mat-form-field appearance="fill">
+                                <!-- <mat-form-field appearance="fill">
                                     <mat-select multiple [formControl]="works">
                                         <mat-option *ngFor="let work of workList"
-                                                    [value]="work.label">{{work.label}}</mat-option>
+                                                    [value]="work.label">{{work.label}} ({{work.authorLabel}})</mat-option>
                                     </mat-select>
+                                </mat-form-field> -->
+
+                                <mat-form-field class="form-check form-check-inline" style="width: 100%;">
+                                    <input type="text" class="input-text"
+                                        [formControl]="workCtrl" #workInput [matAutocomplete]="auto" [matChipInputFor]="chipList"
+                                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" matInput>
+                                    <mat-chip-list #chipList aria-label="Work selection">
+                                        <mat-chip *ngFor="let work of form.get('filterWorks').value | keyvalue" [selectable]="true"
+                                            [removable]="true" (removed)="removeWork(work.key)">
+                                            {{work.key}}
+                                            <mat-icon matChipRemove *ngIf="removable"><i class="fas fa-times"></i></mat-icon>
+                                        </mat-chip>
+                                    </mat-chip-list>
+                                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedWork($event)">
+                                        <mat-option *ngFor="let work of filteredWorks | async" [value]="work">
+                                            {{work}}
+                                        </mat-option>
+                                    </mat-autocomplete>
                                 </mat-form-field>
+
                             </div>
                         </div>
                         <button type="button" mat-button (click)="openHelp()"><i class="fas fa-question-circle"></i>

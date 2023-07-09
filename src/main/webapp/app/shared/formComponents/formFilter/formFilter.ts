@@ -27,6 +27,7 @@ import {
   updateWorks,
   updateSeries
 } from 'app/store/general-filter.actions';
+import { Options } from '@angular-slider/ngx-slider';
 
 @Component({
   selector: 'dhpp-form-filter',
@@ -48,6 +49,7 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
   seriesList: SeriesClass[] = [];
   seriesChildList: SeriesClass[] = [];
   conceptLabels: string[] = [];
+  workLabels: string[] = [];
   seriesLabels: string[] = [];
   filterWorksTemp = [];
   filterSeriesTemp = [];
@@ -63,12 +65,12 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
 
   minValue: number = 900;
   maxValue: number = 1200;
-  /* options: Options = {
+  options: Options = {
     floor: 700,
     ceil: 1600,
     step: 100,
     showTicks: true
-  }; */
+  };
 
   // chips input for concepts
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -78,6 +80,7 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
   visible = true;
 
   workCtrl = new FormControl();
+  filteredWorks: Observable<string[]>;
 
   // autocomplete concepts
   conceptCtrl = new FormControl();
@@ -85,6 +88,8 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
 
   @ViewChild('conceptInput', { static: false }) conceptInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
+
+  @ViewChild('workInput', { static: false }) workInput: ElementRef<HTMLInputElement>;
 
   constructor(
     public historyService: HistoryService<qT, f, o, instanceClass>,
@@ -96,6 +101,11 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
     this.filteredConcepts = this.conceptCtrl.valueChanges.pipe(
       startWith(null),
       map((concept: string | null) => (concept ? this._filterConcept(concept) : this.conceptLabels.slice()))
+    );
+
+    this.filteredWorks = this.workCtrl.valueChanges.pipe(
+      startWith(null),
+      map((work: string | null) => (work ? this._filterWork(work) : this.workLabels.slice()))
     );
   }
 
@@ -111,13 +121,15 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
       }
     });
 
-    this.filterWorksCheckboxes = new FormGroup({});
-    this.workList.forEach(work => {
-      if (this.filterMap && this.filterMap.works && this.filterMap.works.includes(work.id)) {
-        this.filterWorksCheckboxes.addControl(work.label, new FormControl(true));
-      } else {
-        this.filterWorksCheckboxes.addControl(work.label, new FormControl(false));
-      }
+    this.filterWorks = new FormGroup({});
+    this.workService.getWorkList().then(data => {
+      this.workList = data[0];
+      this.workList.forEach(work => {
+        this.workLabels.push(`${work.label.trim()} (${work.authorLabel.trim()})`);
+        if (this.filterMap && this.filterMap.works && this.filterMap.works.includes(work.id)) {
+          this.filterWorks.addControl(work.label.trim(), new FormControl(true));
+        }
+      });
     });
 
     this.form = new FormGroup({
@@ -127,13 +139,9 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
       isConceptsActive: new FormControl(this.filterMap.isConceptsActive),
       isWorksActive: new FormControl(this.filterMap.isWorksActive),
       isAuthorActive: new FormControl(this.filterMap.isAuthorActive),
-      works: new FormControl([]),
+      filterWorks: this.filterWorks,
       series: new FormControl([]),
       filterSeriesCheckboxes: this.filterSeriesCheckboxes
-    });
-
-    this.workService.getWorkList().then(data => {
-      this.workList = data[0];
     });
 
     this.workService.getSeriesParentList().then(data => {
@@ -226,6 +234,11 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
     return this.conceptLabels.filter(concept => concept.toLowerCase().indexOf(filterValue) === 0);
   }
 
+  private _filterWork(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.workLabels.filter(work => work.toLowerCase().indexOf(filterValue) === 0);
+  }
+
   get concepts() {
     return <FormGroup>this.form.get('filterConcepts');
   }
@@ -235,7 +248,18 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
   }
 
   get works() {
-    return <FormControl>this.form.get('works');
+    return <FormGroup>this.form.get('filterWorks');
+  }
+
+  removeWork(workLabel: string): void {
+    this.works.removeControl(workLabel);
+    this.works.updateValueAndValidity();
+  }
+
+  selectedWork(event: MatAutocompleteSelectedEvent): void {
+    this.works.addControl(event.option.viewValue, new FormControl(true));
+    this.workInput.nativeElement.value = '';
+    this.workCtrl.setValue(null);
   }
 
   removeConcept(conceptLabel: string): void {
@@ -248,65 +272,6 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
     this.conceptInput.nativeElement.value = '';
     this.conceptCtrl.setValue(null);
   }
-
-  /*
-
-  loadFilter(filterMap: f) {
-    this.workService.getWorkList().then(data => {
-      this.workList = data[0];
-    });
-
-    this.workService.getSeriesParentList().then(data => {
-      this.seriesList = data[0];
-    });
-
-    if (this.form.get('isLabelActive').value != filterMap.isLabelActive) {
-      this.form.patchValue({
-        isLabelActive: filterMap.isLabelActive
-      });
-    }
-
-    if (this.form.get('label').value != filterMap.label) {
-      this.form.patchValue({
-        label: filterMap.label
-      });
-    }
-
-    if (this.form.get('isSeriesFilterActive').value != filterMap.isSeriesFilterActive) {
-      this.form.patchValue({
-        isSeriesFilterActive: filterMap.isSeriesFilterActive
-      });
-    }
-
-    if (this.form.get('isConceptsActive').value != filterMap.isConceptsActive) {
-      this.form.patchValue({
-        isConceptsActive: filterMap.isConceptsActive
-      });
-    }
-
-    if (this.form.get('isWorksActive').value != filterMap.isWorksActive) {
-      this.form.patchValue({
-        isWorksActive: filterMap.isWorksActive
-      });
-    }
-
-    this.workList.forEach(concept => {
-      this.concepts.removeControl(concept.label);
-    });
-
-    filterMap.concepts.forEach(
-      conceptUri => {
-        const concept = this.workList.find(element => element.id == conceptUri)
-        if (concept) {
-          this.concepts.addControl(concept.label.trim(), new FormControl(true))
-        } else {
-          console.error("concept not found: " + conceptUri)
-        }
-
-      }
-    )
-  }
-  */
 
   handleOnClick(event) {
     this.store.dispatch(updateSeries({ series: event }));

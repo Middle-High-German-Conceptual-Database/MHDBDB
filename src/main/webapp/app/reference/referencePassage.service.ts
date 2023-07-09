@@ -34,12 +34,15 @@ export interface TokenFilterI {
   label?: string;
   pos?: string[];
   concepts?: string[];
+  onomastics?: string[];
+  searchExactForm?: boolean;
   positionInLine?: number;
   connectorAnd: boolean;
   relation: string;
   context: number;
   directlyFollowing: boolean;
   contextUnit: string;
+  advancedSearch?: boolean;
 }
 
 export interface TextPassageFilterI extends FilterI, FilterAuthorI, FilterCorpusI {
@@ -61,9 +64,12 @@ export interface TextPassageQueryParameterI extends QueryParameterI<TextPassageF
 export const defaultTokenFilter: TokenFilterI = {
   id: uuidv4(),
   searchLabelInLemma: false,
+  searchExactForm: false,
   label: '',
   pos: [],
   concepts: [],
+  advancedSearch: false,
+  onomastics: [],
   connectorAnd: true,
   relation: 'and',
   context: 1,

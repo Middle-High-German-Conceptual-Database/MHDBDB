@@ -45,6 +45,7 @@ export const defaultTokenFilter: TokenFilterI = {
   label: '',
   pos: [],
   concepts: [],
+  onomastics: [],
   connectorAnd: true,
   relation: 'and',
   context: 1,
@@ -416,7 +417,29 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       return conceptFilter;
     }
 
-    function wordFilter(i: number, word: string, relation: string): string {
+    // Namen
+    function onomasticsFilter(i: number, concepts: string[], relation: string): string {
+      let conceptUris = concepts.map(c => `<${c}>`);
+      let conceptFilter = '';
+      if (relation === 'or' && i > 0) {
+        conceptFilter += ' OPTIONAL ';
+      }
+      if (relation === 'or') {
+        conceptFilter += '{';
+      }
+      if (concepts.length > 0) {
+        conceptFilter += `
+                ?onomastic${i} skos:narrowerTransitive?/^dhpluso:isLexicalizedSenseOf/dhpluso:isSenseOf ?wordId${i} .
+                FILTER ( ?onomastic${i} IN (${conceptUris.join()}) )
+                `;
+      }
+      if (relation === 'or') {
+        conceptFilter += '}';
+      }
+      return conceptFilter;
+    }
+
+    function wordFilter(i: number, word: string, relation: string, exactForm: boolean): string {
       let wordFilter = '';
 
       if (relation === 'or' && i > 0) {
@@ -436,9 +459,15 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
         ?annotationId${i} oa:hasBody ?wordId${i} .
         ?annotationId${i} oa:hasTarget ?rootId .
 
-        filter(regex(str(?typeLabel${i}), "${labelFilterGenerator(word, false)}", "i"))
-
                 `;
+
+        if (exactForm == true) {
+          wordFilter += ` 
+                  ?typeId${i} dhpluso:writtenRep ?wr${i} .
+                   filter(regex(str(?wr${i}), "^${labelFilterGenerator(word, false)}$", "i")) .`;
+        } else {
+          wordFilter += ` filter(regex(str(?typeLabel${i}), "${labelFilterGenerator(word, false)}", "i")) .`;
+        }
       }
       if (relation === 'or') {
         wordFilter += '}';
@@ -476,9 +505,10 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
 
     let words: string[] = [];
     let concepts: string[] = [];
+    let onomastics: string[] = [];
     let poss: string[] = [];
 
-    qp.filter.tokenFilters.forEach((tokenFilter, i) => {
+    qp.filter.tokenFilters.forEach((tokenFilter, i: number) => {
       wordSelects.push(`?concept${i}`);
       wordSelects.push(`?pos${i}`);
       wordSelects.push(`?wordId${i}`);
@@ -490,7 +520,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       if (tokenFilter.searchLabelInLemma) {
         wordOrLemma = lemmaFilter(i, tokenFilter.label, tokenFilter.relation);
       } else {
-        wordOrLemma = wordFilter(i, tokenFilter.label, tokenFilter.relation);
+        wordOrLemma = wordFilter(i, tokenFilter.label, tokenFilter.relation, tokenFilter.searchExactForm);
       }
 
       let concept = conceptFilter(i, tokenFilter.concepts, tokenFilter.relation);
@@ -499,6 +529,11 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       words.push(wordOrLemma);
       concepts.push(concept);
       poss.push(pos);
+
+      if (tokenFilter.advancedSearch) {
+        let onomastic = onomasticsFilter(i, tokenFilter.onomastics, tokenFilter.relation);
+        onomastics.push(onomastic);
+      }
     });
 
     if (qp.filter.tokenFilters[0].label != '') {
@@ -756,6 +791,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
 
                     ${words.join('\r\n')}
                     ${concepts.join('\r\n')}
+                    ${onomastics.join('\r\n')}
                     ${poss.join('\r\n')}
 
 
@@ -768,6 +804,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
 
                     }
                     ${this.sparqlOrder(qp.order, qp.desc)}
+                    LIMIT 10
 
             `;
 
@@ -786,6 +823,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       q = `${newQuery}`;
     }
 
+    console.log('q', q);
     return q;
   }
 

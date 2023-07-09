@@ -25,6 +25,7 @@ import { Store, select } from '@ngrx/store';
 import { selectTokenFilterById } from 'app/store/filter.reducer';
 import { updateFilterById } from 'app/store/filter.actions';
 import { OnomasticsService } from 'app/onomastics/onomastics.service';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 @Injectable({ providedIn: 'root' })
 export class tokenFormService {
@@ -51,19 +52,24 @@ export class tokenFormService {
 })
 export class FormTokenComponent implements OnInit, OnDestroy {
   @Input() routeString: string;
+  @Input() tokenFilter;
   @Input() filter: any;
-
+  advancedSearch = false;
   public he: ListHistoryEntry<TextPassageQueryParameterI, TextPassageFilterI, TextPassageOptionsI, TextPassage>;
   isLoading: boolean = false;
   notifier = new Subject();
   private subscriptionQueryHistory: Subscription;
   private subscriptionTokenFormQp: Subscription;
   qp: TextPassageQueryParameterI;
+
+  private destroy$ = new Subject<void>();
+
   constructor(
     public historyService: HistoryService<TextPassageQueryParameterI, TextPassageFilterI, TextPassageOptionsI, TextPassage>,
     public help: MatDialog,
     public TextPassageService: TextPassageService,
-    public service: tokenFormService
+    public service: tokenFormService,
+    public store: Store
   ) {}
 
   openHelp() {
@@ -103,6 +109,13 @@ export class FormTokenComponent implements OnInit, OnDestroy {
     this.moveForm(-1, index);
   }
 
+  setAdvChecked(e: MatSlideToggleChange) {
+    this.advancedSearch = e.checked;
+
+    const updatedFilter = { ...this.tokenFilter, advancedSearch: e.checked };
+    this.store.dispatch(updateFilterById({ filterId: this.filter.id, newFilter: updatedFilter }));
+  }
+
   moveForm(shift, currentIndex) {
     let newIndex: number = currentIndex + shift;
     if (newIndex === -1) {
@@ -122,6 +135,17 @@ export class FormTokenComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.tokenFilter = { ...this.tokenFilter } as TokenFilterI;
+
+    this.store
+      .pipe(
+        select(selectTokenFilterById, { id: this.filter.id }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(tokenFilter => {
+        this.advancedSearch = tokenFilter.advancedSearch;
+      });
+
     this.historyService.history.pipe(takeUntil(this.notifier)).subscribe(historyMap => {
       this.he = this.historyService.getListHistoryEntry(this.routeString);
       if (this.he) {
@@ -168,7 +192,8 @@ export class FormTokenWordComponent {
 
     this.form = new FormGroup({
       label: new FormControl(this.tokenFilter.label),
-      searchLabelInLemma: new FormControl(this.tokenFilter.searchLabelInLemma)
+      searchLabelInLemma: new FormControl(this.tokenFilter.searchLabelInLemma),
+      searchExactForm: new FormControl(this.tokenFilter.searchExactForm)
     });
 
     this.store
@@ -189,7 +214,10 @@ export class FormTokenWordComponent {
         takeUntil(this.destroy$)
       )
       .subscribe(value => {
-        const changes = this.tokenFilter.label !== value.label || this.tokenFilter.searchLabelInLemma !== value.searchLabelInLemma;
+        const changes =
+          this.tokenFilter.label !== value.label ||
+          this.tokenFilter.searchLabelInLemma !== value.searchLabelInLemma ||
+          this.tokenFilter.searchExactForm !== value.searchExactForm;
         if (changes) {
           const updatedFilter = { ...this.tokenFilter, ...value };
           this.store.dispatch(updateFilterById({ filterId: this.filter.id, newFilter: updatedFilter }));
@@ -434,7 +462,7 @@ export class FormTokenNamenComponent implements OnInit, OnDestroy {
 
     this.conceptList.forEach(concept => {
       this.conceptLabels.push(concept.label);
-      if (this.tokenFilter.concepts.includes(concept.id)) {
+      if (this.tokenFilter.onomastics.includes(concept.id)) {
         this.concepts.addControl(concept.label.trim(), new FormControl(true));
       }
     });
@@ -443,10 +471,10 @@ export class FormTokenNamenComponent implements OnInit, OnDestroy {
   private subscribe(): Subscription {
     this.tokenFilter = { ...this.tokenFilter } as TokenFilterI;
     return this.form.valueChanges.pipe(distinctUntilChanged()).subscribe(value => {
-      this.tokenFilter.concepts = [];
+      this.tokenFilter.onomastics = [];
       for (let v in value.filterConcepts) {
         const e = this.conceptList.find(element => element.label === v);
-        this.tokenFilter.concepts.push(e.id);
+        this.tokenFilter.onomastics.push(e.id);
       }
       const updatedFilter = { ...this.tokenFilter };
       this.store.dispatch(updateFilterById({ filterId: this.filter.id, newFilter: updatedFilter }));

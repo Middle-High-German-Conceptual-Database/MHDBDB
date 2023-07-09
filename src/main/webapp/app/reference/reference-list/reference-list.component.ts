@@ -37,6 +37,7 @@ import { SparqlQuery } from 'app/shared/mhdbdb-graph.service';
 import { MatRadioChange } from '@angular/material/radio';
 import { take } from 'rxjs/operators';
 import { selectFilterClassExtended } from 'app/store/general-filter.reducer';
+import { showDialog } from 'app/store/ui.actions';
 
 @Component({
   selector: 'dhpp-reference-list',
@@ -91,6 +92,10 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
     });
   }
 
+  openDialog() {
+    this.store.dispatch(showDialog({ title: 'Test Title 1', content: 'Test Content' }));
+  }
+
   ////////////////////
   // Requests
   ////////////////////
@@ -137,6 +142,7 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
   }
 
   search() {
+    this.isLoading = true;
     const sparql = this.service.sparqlQuery({ ...this.generalFilter, filter: this.filter }, false);
     const _sq = new SparqlQuery();
 
@@ -144,61 +150,5 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
       this.instances = this.service._jsonToObject(data.results.bindings);
     });
     this.isLoading = false;
-  }
-
-  loadSenses() {
-    let newQp = {
-      order: 'label',
-      limit: 10,
-      offset: 0,
-      desc: false,
-      lang: 'de',
-      namedGraphs: 'https://dh.plus.ac.at/mhdbdb/namedGraph/mhdbdbMeta',
-      filter: {
-        label: (this.qp && this.qp.filter && this.qp.filter.tokenFilters[0].label) || '',
-        isLabelActive: true,
-        pos: [],
-        isPosActive: true,
-        concepts: [],
-        isConceptsActive: true,
-        hasSubterms: true,
-        workId: ''
-      },
-      option: {
-        useLucene: false
-      }
-    } as DictionaryQueryParameterI;
-
-    let workInstances = [];
-
-    // 1. search for words
-    this.dicService.getInstances(newQp).then(data => {
-      data.forEach((word: WordClass) => {
-        // check if workInstances contains id
-        if (word.texts && word.texts.length > 0) {
-          word.texts.forEach((text: PoS) => {
-            let i = workInstances.findIndex((item: any) => item.id === text);
-
-            if (i == -1) {
-              workInstances.push({ strippedId: text.strippedId, id: text.id, label: text.label, words: [word] });
-            } else {
-              workInstances[i].words.push(word);
-            }
-          });
-        }
-      });
-
-      this.textInstances = workInstances;
-
-      /*
-       */
-
-      /* let tempWord = new WordClass(word.id, newQp.filter.label);
-        this.dicService.getSenses(tempWord).then(data => {
-          console.log(data);
-          this.senses = data
-          this.total = data.length
-        }) */
-    });
   }
 }

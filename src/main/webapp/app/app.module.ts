@@ -29,6 +29,8 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { filterReducer } from './store/filter.reducer';
 import { generalFilterReducer } from './store/general-filter.reducer';
 import { languageReducer } from './store/language.reducer';
+import { uiReducer } from './store/ui.reducer';
+import { DialogComponent } from './shared/dhpp-help-dialog.component';
 
 @NgModule({
   imports: [
@@ -51,7 +53,8 @@ import { languageReducer } from './store/language.reducer';
     StoreModule.forRoot({
       filter: filterReducer,
       generalFilter: generalFilterReducer,
-      language: languageReducer
+      language: languageReducer,
+      ui: uiReducer
     }),
     StoreDevtoolsModule.instrument({
       maxAge: 25 // Retains last 25 states
@@ -67,7 +70,8 @@ import { languageReducer } from './store/language.reducer';
     DhppNavbarComponent,
     DhppFooterComponent,
     DhppHeaderComponent,
-    ScrollToTopComponent
+    ScrollToTopComponent,
+    DialogComponent
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

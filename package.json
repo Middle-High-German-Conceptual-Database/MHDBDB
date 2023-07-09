@@ -14,7 +14,7 @@
     "node_modules"
   ],
   "dependencies": {
-    "@angular-slider/ngx-slider": "^2.0.3",
+    "@angular-slider/ngx-slider": "^2.0.4",
     "@angular/animations": "10.2.5",
     "@angular/cdk": "^10.2.7",
     "@angular/common": "10.2.5",
