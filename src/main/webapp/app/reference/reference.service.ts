@@ -804,7 +804,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
 
                     }
                     ${this.sparqlOrder(qp.order, qp.desc)}
-                    LIMIT 10
+         
 
             `;
 
