@@ -808,7 +808,6 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
 
                     }
                     ORDER BY ASC(?label)
-                    LIMIT 20
 
             `;
 
