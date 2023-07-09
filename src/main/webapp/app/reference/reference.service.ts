@@ -796,14 +796,14 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
 
 
                     ?electronicId rdfs:label ?label .
-    					      filter(langmatches(lang(?label),'de'))
+    					      filter(langmatches(lang(?label),'de')) .
 
     					      BIND(?electronicId as ?id)
                     ${bindings.join('\r\n')}
                     ${filters.join('\r\n')}
 
                     }
-                    ${this.sparqlOrder(qp.order, qp.desc)}
+                    ORDER BY ASC(?label)
          
 
             `;
