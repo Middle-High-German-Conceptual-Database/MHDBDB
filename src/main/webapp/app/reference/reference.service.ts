@@ -789,15 +789,18 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                     ?rootId mhdbdbxml:partOf ?textId .
                     ?textId dhpluso:hasElectronicInstance ?workId .
                     ?workId rdf:type dhpluso:Text .
-    					      ?textId dhpluso:hasElectronicInstance ?electronicId .
-                    ?electronicId rdf:type dhpluso:Text .
+
+                    {
+    					        ?textId dhpluso:hasElectronicInstance ?electronicId .
+                      ?electronicId rdf:type dhpluso:Text .
+                    }
+                    
                     ?workId dhpluso:contribution/dhpluso:agent/rdfs:label ?authorLabel .
 
                     ${words.join('\r\n')}
                     ${concepts.join('\r\n')}
                     ${onomastics.join('\r\n')}
                     ${poss.join('\r\n')}
-
 
                     ?electronicId rdfs:label ?label .
     					      filter(langmatches(lang(?label),'de')) 
@@ -808,6 +811,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
 
                     }
                     ORDER BY ASC(?label)
+                    LIMIT 20
 
             `;
 

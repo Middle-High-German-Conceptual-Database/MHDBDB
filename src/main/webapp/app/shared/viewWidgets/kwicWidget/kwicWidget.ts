@@ -1,99 +1,103 @@
 import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { WordClass, SenseClass } from '../../../dictionary/dictionary.class';
-import { DictionaryFilterI, DictionaryOptionsI, DictionaryQueryParameterI, DictionaryService } from '../../../dictionary/dictionary.service';
+import {
+  DictionaryFilterI,
+  DictionaryOptionsI,
+  DictionaryQueryParameterI,
+  DictionaryService
+} from '../../../dictionary/dictionary.service';
 import { MhdbdbIdEntity, IdLabelI } from '../../baseIndexComponent/baseindexcomponent.class';
 import { Kwic, Token } from '../../../text/text.class';
 import { TextService } from '../../../text/text.service';
 import { ViewWidgetsDirective } from '../viewWidgetsDirective';
 
 @Component({
-    selector: 'dhpp-widget-kwic',
-    templateUrl: './kwicWidget.html',
-    styleUrls: ['./kwicWidget.scss']
+  selector: 'dhpp-widget-kwic',
+  templateUrl: './kwicWidget.html',
+  styleUrls: ['./kwicWidget.scss']
 })
-export class KwicWidgetComponent extends ViewWidgetsDirective<DictionaryQueryParameterI, DictionaryFilterI, DictionaryOptionsI, MhdbdbIdEntity, DictionaryService> implements OnInit {        
-    total: number
-    kwics: Kwic[] = []
-    public title: string = "Keyword in context"
-    punctuationRegexp = new RegExp('^[^\w\s]$')
-    
-    constructor(
-        public service: DictionaryService,
-        public help: MatDialog,
-        public router: Router,
-        public route: ActivatedRoute,
-        public locationService: Location,
-        public http: HttpClient,
-        public textService: TextService
-    ) {
-        super(service, help)
-    }
+export class KwicWidgetComponent
+  extends ViewWidgetsDirective<DictionaryQueryParameterI, DictionaryFilterI, DictionaryOptionsI, MhdbdbIdEntity, DictionaryService>
+  implements OnInit {
+  @Input() word;
 
-    ngOnInit(): void {      
-        super.ngOnInit()          
-        if (this.instance) {       
-            this.loadOccurrences()    
-            this.isLoaded = Promise.resolve(true)                   
-        }         
-    }
-    
-    openHelp() {
-        const dialogRef = this.help.open(KwicWidgetHelpComponent);
-        dialogRef.afterClosed().subscribe(result => {
-            console.log(`Dialog result: ${result}`);
-        });
-    }
+  total: number;
+  kwics: Kwic[] = [];
+  public title: string = 'Keyword in context';
+  punctuationRegexp = new RegExp('^[^ws]$');
 
-    joinTokens(tokens:Token[]) {
-        let stringList:string[]= []
-        tokens.forEach(
-            token => stringList.push(this.punctuationRegexp.test(token.content) ? token.content.trim() : " " + token.content.trim())
-        )
-        return stringList.join('')
+  constructor(
+    public service: DictionaryService,
+    public help: MatDialog,
+    public router: Router,
+    public route: ActivatedRoute,
+    public locationService: Location,
+    public http: HttpClient,
+    public textService: TextService
+  ) {
+    super(service, help);
+  }
+
+  ngOnInit(): void {
+    super.ngOnInit();
+    if (this.instance) {
+      this.loadOccurrences();
+      this.isLoaded = Promise.resolve(true);
     }
+  }
 
-    public loadOccurrences() {
-        this.textService.getAnnotations(this.limit, this.offset, this.instance.id, undefined, "tei:seg")
-            .then(annotations => {
-                this.isLoaded = Promise.resolve(true)
-                this.total = annotations[1]
-                if (annotations[1] > 0)
-                {
-                    annotations[0].forEach(
-                        annotation => {
-                            this.textService.getKwic(annotation.target).then(
-                                kwic => {
-                                    if (kwic) {
-                                        this.kwics.push(kwic)
-                                    }                                    
-                                }
-                            )
-                        })
-                }
-                else {
-                    this.kwics = []
-                }
+  openHelp() {
+    const dialogRef = this.help.open(KwicWidgetHelpComponent);
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
 
-            })
-            .catch(error => {
-                // console.warn(error)
-            })
-    }
+  joinTokens(tokens: Token[]) {
+    let stringList: string[] = [];
+    tokens.forEach(token =>
+      stringList.push(this.punctuationRegexp.test(token.content) ? token.content.trim() : ' ' + token.content.trim())
+    );
+    return stringList.join('');
+  }
 
-    public moreOccurrences() {
-        this.offset = this.offset + this.limit
-        this.loadOccurrences()
-    }
+  public loadOccurrences() {
+    console.log(this.word);
+    this.textService
+      .getAnnotations(this.limit, this.offset, this.word, undefined, 'tei:seg')
+      .then(annotations => {
+        this.isLoaded = Promise.resolve(true);
+        this.total = annotations[1];
+        if (annotations[1] > 0) {
+          annotations[0].forEach(annotation => {
+            this.textService.getKwic(annotation.target).then(kwic => {
+              if (kwic) {
+                this.kwics.push(kwic);
+              }
+            });
+          });
+        } else {
+          this.kwics = [];
+        }
+      })
+      .catch(error => {
+        // console.warn(error)
+      });
+  }
 
+  public moreOccurrences() {
+    this.offset = this.offset + this.limit;
+    this.loadOccurrences();
+  }
 }
 
 @Component({
-    selector: 'dhpp-widget-kwic-help',
-    templateUrl: './kwicWidgetHelp.html',
+  selector: 'dhpp-widget-kwic-help',
+  templateUrl: './kwicWidgetHelp.html'
 })
-export class KwicWidgetHelpComponent { }
+export class KwicWidgetHelpComponent {}
