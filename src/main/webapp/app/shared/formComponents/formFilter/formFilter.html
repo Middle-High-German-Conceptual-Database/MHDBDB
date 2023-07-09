@@ -80,7 +80,7 @@
                                     </mat-chip-list>
                                     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedWork($event)">
                                         <mat-option *ngFor="let work of filteredWorks | async" [value]="work.id"> <!-- using id as value -->
-                                            {{work.label}}
+                                            {{work.label}} ({{work.authorLabel}})
                                         </mat-option>
                                     </mat-autocomplete>
                                 </mat-form-field>
