@@ -68,19 +68,19 @@
                                 </mat-form-field> -->
 
                                 <mat-form-field class="form-check form-check-inline" style="width: 100%;">
-                                    <input type="text" class="input-text"
-                                        [formControl]="workCtrl" #workInput [matAutocomplete]="auto" [matChipInputFor]="chipList"
-                                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" matInput>
+                                    <input type="text" class="input-text" [formControl]="workCtrl" 
+                                           #workInput [matAutocomplete]="auto" [matChipInputFor]="chipList"
+                                           [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" matInput>
                                     <mat-chip-list #chipList aria-label="Work selection">
-                                        <mat-chip *ngFor="let work of form.get('filterWorks').value | keyvalue" [selectable]="true"
-                                            [removable]="true" (removed)="removeWork(work.key)">
-                                            {{work.key}}
+                                        <mat-chip *ngFor="let workId of form.get('filterWorks').value | keyvalue" [selectable]="selectable"
+                                                  [removable]="removable" (removed)="removeWork(workId.key)">
+                                            {{ findLabelById(workId.key) }} <!-- using a method to get label by id -->
                                             <mat-icon matChipRemove *ngIf="removable"><i class="fas fa-times"></i></mat-icon>
                                         </mat-chip>
                                     </mat-chip-list>
                                     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedWork($event)">
-                                        <mat-option *ngFor="let work of filteredWorks | async" [value]="work">
-                                            {{work}}
+                                        <mat-option *ngFor="let work of filteredWorks | async" [value]="work.id"> <!-- using id as value -->
+                                            {{work.label}}
                                         </mat-option>
                                     </mat-autocomplete>
                                 </mat-form-field>

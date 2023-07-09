@@ -698,9 +698,12 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
     }
 
     // Filters Section
+    console.log(qp);
+
     if (qp.isWorksActive && qp.works) {
       let tempFilters = [];
       qp.works.forEach((work, i) => {
+        console.log(work);
         bindings.push(`Bind (<${work}> as ?work${i})`);
         tempFilters.push(`?workId = ?work${i}`);
       });
@@ -788,6 +791,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                     ?workId rdf:type dhpluso:Text .
     					      ?textId dhpluso:hasElectronicInstance ?electronicId .
                     ?electronicId rdf:type dhpluso:Text .
+                    ?workId dhpluso:contribution/dhpluso:agent/rdfs:label ?authorLabel .
 
                     ${words.join('\r\n')}
                     ${concepts.join('\r\n')}
@@ -796,7 +800,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
 
 
                     ?electronicId rdfs:label ?label .
-    					      filter(langmatches(lang(?label),'de')) .
+    					      filter(langmatches(lang(?label),'de')) 
 
     					      BIND(?electronicId as ?id)
                     ${bindings.join('\r\n')}
@@ -804,7 +808,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
 
                     }
                     ORDER BY ASC(?label)
-         
+                    LIMIT 20
 
             `;
 
@@ -843,6 +847,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
     bindings.forEach(item => {
       let element = results.find(element => element.id === item.id.value);
 
+      element.authorLabel = item.authorLabel.value;
       // words
       /* if ('wordId' in item && element && !element.words) {
         let formList: string[] = [item.wordId.value];

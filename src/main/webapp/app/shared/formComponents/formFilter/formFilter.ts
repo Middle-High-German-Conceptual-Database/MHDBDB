@@ -80,7 +80,7 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
   visible = true;
 
   workCtrl = new FormControl();
-  filteredWorks: Observable<string[]>;
+  filteredWorks: Observable<WorkClass[]>;
 
   // autocomplete concepts
   conceptCtrl = new FormControl();
@@ -105,7 +105,7 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
 
     this.filteredWorks = this.workCtrl.valueChanges.pipe(
       startWith(null),
-      map((work: string | null) => (work ? this._filterWork(work) : this.workLabels.slice()))
+      map((work: string | null) => (work ? this._filterWork(work) : this.workList.slice()))
     );
   }
 
@@ -127,7 +127,8 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
       this.workList.forEach(work => {
         this.workLabels.push(`${work.label.trim()} (${work.authorLabel.trim()})`);
         if (this.filterMap && this.filterMap.works && this.filterMap.works.includes(work.id)) {
-          this.filterWorks.addControl(work.label.trim(), new FormControl(true));
+          // Use work id as control name instead of label
+          this.filterWorks.addControl(work.id, new FormControl(true));
         }
       });
     });
@@ -203,11 +204,13 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
           this.store.dispatch(setWorksActive({ isWorksActive: value.isWorksActive }));
         }
 
-        if (Array.isArray(value.works) && value.works.length > 0) {
+        const tempFilterWorksArray = Object.keys(value.filterWorks);
+
+        if (Array.isArray(tempFilterWorksArray) && tempFilterWorksArray.length > 0) {
           this.filterWorksTemp = [];
-          value.works.map(v => {
-            const e = this.workList.find(element => element.label === v);
-            this.filterWorksTemp.push(e.id);
+          tempFilterWorksArray.map(v => {
+            // const e = this.workList.find(element => element.label === v);
+            this.filterWorksTemp.push(v);
           });
           this.store.dispatch(updateWorks({ works: this.filterWorksTemp }));
         }
@@ -234,9 +237,9 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
     return this.conceptLabels.filter(concept => concept.toLowerCase().indexOf(filterValue) === 0);
   }
 
-  private _filterWork(value: string): string[] {
+  private _filterWork(value: string): WorkClass[] {
     const filterValue = value.toLowerCase();
-    return this.workLabels.filter(work => work.toLowerCase().indexOf(filterValue) === 0);
+    return this.workList.filter(work => work.label.toLowerCase().indexOf(filterValue) === 0);
   }
 
   get concepts() {
@@ -251,15 +254,23 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
     return <FormGroup>this.form.get('filterWorks');
   }
 
-  removeWork(workLabel: string): void {
-    this.works.removeControl(workLabel);
+  removeWork(workId: string): void {
+    this.works.removeControl(workId);
     this.works.updateValueAndValidity();
   }
 
+  findLabelById(id: string): string {
+    const workItem = this.workList.find(work => work.id === id);
+    return workItem ? `${workItem.label} (${workItem.authorLabel})` : id;
+  }
+
   selectedWork(event: MatAutocompleteSelectedEvent): void {
-    this.works.addControl(event.option.viewValue, new FormControl(true));
-    this.workInput.nativeElement.value = '';
-    this.workCtrl.setValue(null);
+    const work = this.workList.find(w => w.label === event.option.viewValue);
+    if (work) {
+      this.works.addControl(work.id, new FormControl(true));
+      this.workInput.nativeElement.value = '';
+      this.workCtrl.setValue(null);
+    }
   }
 
   removeConcept(conceptLabel: string): void {
