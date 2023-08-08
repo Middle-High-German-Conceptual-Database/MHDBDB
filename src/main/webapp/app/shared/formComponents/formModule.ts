@@ -29,14 +29,13 @@ import {
   tokenFormService,
   FormTokenNamenComponent
 } from './formToken/formToken';
-import { FormClassCheckboxesComponent, FormClassCheckboxesHelpComponent } from './formClassCheckboxes/formClassCheckboxes';
 import { FormWorkSearchComponent, FormWorkSearchHelpComponent } from 'app/shared/formComponents/formWorkSearch/formWorkSearch';
 import { FormLemmaSearchComponent, FormLemmaSearchHelpComponent } from 'app/shared/formComponents/formLemmaSearch/formLemmaSearch';
 import { FormAuthorComponent, FormAuthorHelpComponent } from 'app/shared/formComponents/formAuthor/formAuthor';
 import { FormFilterComponent, FormFilterHelpComponent } from 'app/shared/formComponents/formFilter/formFilter';
 import { MatTreeModule } from '@angular/material/tree';
-import { CustomReactComponentWrapperComponent } from 'app/components/CustomReactComponentWrapper';
-import { ReactWrapperComponent } from 'app/components/ReactWrapperComponent';
+// import { CustomReactComponentWrapperComponent } from 'app/components/CustomReactComponentWrapper';
+// import { ReactWrapperComponent } from 'app/components/ReactWrapperComponent';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
 @NgModule({
@@ -55,16 +54,14 @@ import { NgxSliderModule } from '@angular-slider/ngx-slider';
     FormTokenHelpComponent,
     FormTokenContextComponent,
     FormTokenContextHelpComponent,
-    FormClassCheckboxesComponent,
-    FormClassCheckboxesHelpComponent,
     FormHeaderComponent,
     FormFooterComponent,
     FormAuthorComponent,
     FormAuthorHelpComponent,
     FormFilterComponent,
-    FormFilterHelpComponent,
-    CustomReactComponentWrapperComponent,
-    ReactWrapperComponent
+    FormFilterHelpComponent
+    // CustomReactComponentWrapperComponent,
+    // ReactWrapperComponent
   ],
   declarations: [
     FormLemmaSearchComponent,
@@ -87,14 +84,12 @@ import { NgxSliderModule } from '@angular-slider/ngx-slider';
     FormTokenContextComponent,
     FormTokenContextHelpComponent,
     FormTokenNamenComponent,
-    FormClassCheckboxesComponent,
-    FormClassCheckboxesHelpComponent,
     FormAuthorComponent,
     FormAuthorHelpComponent,
     FormFilterComponent,
-    FormFilterHelpComponent,
-    CustomReactComponentWrapperComponent,
-    ReactWrapperComponent
+    FormFilterHelpComponent
+    // CustomReactComponentWrapperComponent,
+    // ReactWrapperComponent
   ],
   imports: [
     AppXSharedModule,
@@ -127,13 +122,12 @@ import { NgxSliderModule } from '@angular-slider/ngx-slider';
     FormFooterComponent,
     FormTokenComponent,
     FormTokenContextComponent,
-    FormClassCheckboxesComponent,
     FormTokenConceptsComponent,
     FormTokenNamenComponent,
     FormAuthorComponent,
-    FormFilterComponent,
-    CustomReactComponentWrapperComponent,
-    ReactWrapperComponent
+    FormFilterComponent
+    // CustomReactComponentWrapperComponent,
+    // ReactWrapperComponent
   ]
 })
 export class MHDBDBFormModule {}

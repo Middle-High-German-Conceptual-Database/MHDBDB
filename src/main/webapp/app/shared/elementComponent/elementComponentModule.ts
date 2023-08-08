@@ -28,7 +28,6 @@ import { ConceptElementComponent } from './concept-element/concept-element.compo
 import { OnomasticsElementComponent } from './onomastics-element/onomastics-element.component';
 import { TextElementComponent } from 'app/shared/elementComponent/text-element/text-element.component';
 import { MHDBDBViewWidgetsModule } from 'app/shared/viewWidgets/viewWidgetsModule';
-import { FixedFormFooterComponent } from 'app/shared/fixedFormFooter/fixed-form-footer.component';
 import { MHDBDBFormModule } from 'app/shared/formComponents/formModule';
 
 @NgModule({

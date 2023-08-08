@@ -1,11 +1,10 @@
-import {Routes} from '@angular/router';
+import { Routes } from '@angular/router';
 
-import {AppComponent} from "app/app.component";
-import {AppHomeComponent} from "app/home/home.component";
+import { AppHomeComponent } from 'app/home/home.component';
 
 export const routes: Routes = [
-  {path: '', component: AppHomeComponent},
-  {path: 'home', component: AppHomeComponent},
+  { path: '', component: AppHomeComponent },
+  { path: 'home', component: AppHomeComponent },
   {
     path: 'reference',
     loadChildren: () => import('./reference/reference.module').then(m => m.ReferenceModule),
@@ -50,10 +49,10 @@ export const routes: Routes = [
     path: 'text',
     loadChildren: () => import('./text/text.module').then(m => m.TextModule),
     runGuardsAndResolvers: 'always'
-  },
-  {
+  }
+  /*{
     path: 'globalSearch',
     loadChildren: () => import('./globalSearch/globalSearch.module').then(m => m.GlobalSearchModule),
     runGuardsAndResolvers: 'always'
-  },
+  },*/
 ];
