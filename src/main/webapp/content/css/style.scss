@@ -1164,3 +1164,10 @@ html .range_blk .ui-button.ui-state-disabled:active {
 .mat-tab-link {
   color: rgba(0, 0, 0, 0.9);
 }
+
+.mat-stroked-button {
+  border: 1px solid currentColor;
+  background-color: #ebc011;
+  padding: 0 15px;
+  line-height: 42px;
+}
