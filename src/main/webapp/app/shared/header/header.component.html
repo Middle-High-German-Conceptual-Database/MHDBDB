@@ -42,19 +42,23 @@
                     <div class="main_nav">
                         <ul>
                             <li><a routerLink="/reference/list" routerLinkActive="active">Belegsuche</a></li>
-                            <li><a routerLink="/work/list" routerLinkActive="active">Werke</a></li>
                             <li><a routerLink="/dictionary/list" routerLinkActive="active">Lemmata</a></li>
-                            <li><a routerLink="/concept/tree" routerLinkActive="active">Begriffssystem</a></li>
-                            <li><a routerLink="/onomastics/tree" routerLinkActive="active">Namenssystem</a></li>
-                            <!--<li ngbDropdown>
+                            <li><a routerLink="/concept/tree" routerLinkActive="active">Begriffssystem (Bedeutungen)</a></li>
+                            <li *ngIf="!isHomePage()"><a routerLink="/onomastics/tree" routerLinkActive="active">Namenssystem</a></li>
+                            <li *ngIf="!isHomePage()"><a routerLink="/onomastics/tree" routerLinkActive="active">Textreihen</a></li>
+                            <li *ngIf="!isHomePage()"><a routerLink="/work/list" routerLinkActive="active">Korpus</a></li>
+                            <li *ngIf="!isHomePage()" ngbDropdown>
                                 <a id="dropdownBasic1" ngbDropdownToggle>Indizes</a>
                                 <ul ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                                    <li ngbDropdownItem><a routerLink="/indices/place/list">Bibliografie</a></li>
+                                    <li ngbDropdownItem><a routerLink="/indices/place/list">Ereignisse</a></li>
                                     <li ngbDropdownItem><a routerLink="/indices/place/list">Orte</a></li>
                                     <li ngbDropdownItem><a routerLink="/indices/person/list">Personen</a></li>
+                                    <li ngbDropdownItem><a routerLink="/indices/person/list">Werke</a></li>
                                 </ul>
-                            </li>-->
-                            <!--<li ngbDropdown>
-                                <a id="dropdownBasic1" ngbDropdownToggle>Projekt</a>
+                            </li>
+                            <li *ngIf="!isHomePage()" ngbDropdown>
+                                <a id="dropdownBasic2" ngbDropdownToggle>About</a>
                                 <ul ngbDropdownMenu aria-labelledby="dropdownBasic1">
                                     <li ngbDropdownItem><a routerLink="/project/api">APIs</a></li>
                                     <li ngbDropdownItem><a routerLink="/project/datamodel">Datenmodell</a></li>
@@ -73,20 +77,18 @@
                                     <li ngbDropdownItem><a routerLink="/project/advisoryboard">Wissenschaftlicher
                                             Beirat</a></li>
                                 </ul>
-                            </li>-->
-                            <!--<li ngbDropdown>
-                                <a id="dropdownBasic1" ngbDropdownToggle>Hilfe</a>
+                            </li>
+                            <li *ngIf="!isHomePage()" ngbDropdown>
+                                <a id="dropdownBasic3" ngbDropdownToggle>Hilfe</a>
                                 <ul ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                                    <li ngbDropdownItem><a routerLink="/indices/person/list">Abkürzungsverzeichnis</a>
-                                    </li>
                                     <li ngbDropdownItem><a routerLink="/indices/person/list">FAQ</a></li>
                                     <li ngbDropdownItem><a routerLink="/indices/person/list">Handbuch</a></li>
                                     <li ngbDropdownItem><a routerLink="/indices/person/list">Tutorials</a></li>
                                 </ul>
-                            </li>-->
+                            </li>
                         </ul>
                     </div>
-                    <div class="user-icon"><a href="javascript:void(0)"><i class="fas fa-user"></i></a>
+                   <!-- <div class="user-icon"><a href="javascript:void(0)"><i class="fas fa-user"></i></a>
                         <div class="login-hide">
                             <div class="reg_text">Registrieren</div>
                             <form>
@@ -100,7 +102,7 @@
                                 </div>
                             </form>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="h_left-mb">
                         <a href="#">+43 662 123456</a> <a href="#">kontakt@mhdbdb.sbg.ac.at</a>
                     </div>

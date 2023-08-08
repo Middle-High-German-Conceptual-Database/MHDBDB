@@ -34,6 +34,8 @@ import { DialogComponent } from './shared/dhpp-help-dialog.component';
 
 import { MarkdownModule } from 'ngx-markdown';
 import { HttpClientModule } from '@angular/common/http';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { MarkdownDisplayComponent } from 'app/shared/markdown-display.component';
 
 @NgModule({
   imports: [
@@ -64,8 +66,9 @@ import { HttpClientModule } from '@angular/common/http';
     }),
     RouterModule.forRoot(routes, { useHash: true, onSameUrlNavigation: 'reload' }),
     TreeModule,
-    HttpClientModule
-    // MarkdownModule.forRoot()
+    HttpClientModule,
+    MarkdownModule.forRoot(),
+    NgbModule
   ],
   exports: [MaterialModule],
   declarations: [
@@ -76,7 +79,8 @@ import { HttpClientModule } from '@angular/common/http';
     DhppFooterComponent,
     DhppHeaderComponent,
     ScrollToTopComponent,
-    DialogComponent
+    DialogComponent,
+    MarkdownDisplayComponent
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
