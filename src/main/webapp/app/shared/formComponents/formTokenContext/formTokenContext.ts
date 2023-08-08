@@ -34,6 +34,11 @@ export class FormTokenContextComponent
 
   @Input() tokenFilter;
   @Input() filter: any;
+
+  context = new FormControl();
+  contextUnit = new FormControl();
+  directlyFollowing = new FormControl();
+
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -48,9 +53,9 @@ export class FormTokenContextComponent
     this.contextUnits = contextUnits;
     this.contextRange = contextRange;
     this.form = new FormGroup({
-      context: new FormControl(),
-      contextUnit: new FormControl(),
-      directlyFollowing: new FormControl()
+      context: this.context,
+      contextUnit: this.contextUnit,
+      directlyFollowing: this.directlyFollowing
     });
   }
 

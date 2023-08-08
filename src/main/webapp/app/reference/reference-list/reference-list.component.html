@@ -80,7 +80,7 @@
         </div>
     </div>
 
-    <div *ngIf="!isLoading; else loading" class="search-results">
+    <div *ngIf="!isLoading" class="search-results">
         <div *ngFor="let instance of instances">
             <dhpp-text-element [instance]="instance" [qp]="qp"></dhpp-text-element>
 

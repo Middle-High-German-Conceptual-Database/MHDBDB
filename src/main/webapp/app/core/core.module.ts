@@ -7,8 +7,6 @@ import locale from '@angular/common/locales/en';
 
 import { ErrorHandlerInterceptor } from 'app/blocks/interceptor/errorhandler.interceptor';
 
-import { selectLanguage } from 'app/store/language.reducer';
-
 @NgModule({
   imports: [HttpClientModule, CookieModule.forRoot()],
   providers: [

@@ -3,9 +3,6 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { HistoryService } from '../../historyService';
 import { classFilterT, FilterClassExtendedI, FilterClassI, FilterLabelI, OptionsI, QueryParameterI } from '../../mhdbdb-graph.service';
-import { FormDirective } from '../formDirective';
-import { GlobalSearchEntityClass } from 'app/globalSearch/globalSearch.class';
-import { Concept } from 'app/concept/concept.class';
 import { BehaviorSubject, merge, Observable, Subject, Subscription } from 'rxjs';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { debounceTime, distinctUntilChanged, map, startWith, takeUntil } from 'rxjs/operators';
@@ -15,7 +12,6 @@ import { SeriesClass, WorkClass } from 'app/work/work.class';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { CollectionViewer, DataSource, SelectionChange } from '@angular/cdk/collections';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { TokenFilterI } from 'app/text/textPassage.service';
 import { Store, select } from '@ngrx/store';
 import { defaultFilterClassExtended, selectFilterClassExtended } from 'app/store/general-filter.reducer';
 import {
