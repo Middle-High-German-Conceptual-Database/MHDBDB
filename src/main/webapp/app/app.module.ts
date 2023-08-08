@@ -64,8 +64,8 @@ import { HttpClientModule } from '@angular/common/http';
     }),
     RouterModule.forRoot(routes, { useHash: true, onSameUrlNavigation: 'reload' }),
     TreeModule,
-    HttpClientModule,
-    MarkdownModule.forRoot()
+    HttpClientModule
+    // MarkdownModule.forRoot()
   ],
   exports: [MaterialModule],
   declarations: [

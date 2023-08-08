@@ -14,7 +14,6 @@
     "removeComments": false,
     "noImplicitAny": false,
     "skipLibCheck": true,
-    "suppressImplicitAnyIndexErrors": true,
     "outDir": "build/resources/main/static/app",
     "lib": ["es5", "dom"],
     "typeRoots": ["node_modules/@types"],
