@@ -32,6 +32,9 @@ import { languageReducer } from './store/language.reducer';
 import { uiReducer } from './store/ui.reducer';
 import { DialogComponent } from './shared/dhpp-help-dialog.component';
 
+import { MarkdownModule } from 'ngx-markdown';
+import { HttpClientModule } from '@angular/common/http';
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -60,7 +63,9 @@ import { DialogComponent } from './shared/dhpp-help-dialog.component';
       maxAge: 25 // Retains last 25 states
     }),
     RouterModule.forRoot(routes, { useHash: true, onSameUrlNavigation: 'reload' }),
-    TreeModule
+    TreeModule,
+    HttpClientModule,
+    MarkdownModule.forRoot()
   ],
   exports: [MaterialModule],
   declarations: [
