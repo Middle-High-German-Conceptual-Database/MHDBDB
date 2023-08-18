@@ -1,0 +1,41 @@
+<h2>Werke</h2>
+
+<div class="container">
+    <div class="row" style="border: 1px solid #ffd740; margin-top: 15px;">
+        <div class="col">
+            <dhpp-form-header
+                [routeString]="routeString"
+            ></dhpp-form-header>
+            <dhpp-form-workSearch
+                [label]="labelTextSearch"
+                [routeString]="routeString">
+            </dhpp-form-workSearch>
+        </div>
+    </div>
+
+    <div class="row" style="border: 1px solid #40a9ff; margin-top: 15px;">
+        <div class="col">
+            <dhpp-form-filter [label]="labelTextSearch"
+                              [routeString]="routeString"></dhpp-form-filter>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <dhpp-form-footer [routeString]="routeString"></dhpp-form-footer>
+        </div>
+    </div>
+
+    <div class="search-results" infinite-scroll [infiniteScrollDistance]="2" [infiniteScrollUpDistance]="1.5"
+         [infiniteScrollThrottle]="500" (scrolled)="onScrollDown()">
+        <div>{{ total }} Werke gefunden</div>
+        <div *ngFor="let instance of instances">
+            <dhpp-work-element [instance]="instance"></dhpp-work-element>
+        </div>
+        <span *ngIf="total > instances.length">Scrollen für mehr Resultate</span>
+        <mat-spinner *ngIf="isLoadingNext"></mat-spinner>
+    </div>
+
+</div>
+
+

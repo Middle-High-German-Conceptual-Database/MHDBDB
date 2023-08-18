@@ -1,0 +1,8 @@
+<form *ngIf="form" [formGroup]="form" novalidate>
+    <mat-form-field>
+        <mat-label>Wortform</mat-label>
+        <input type="text" class="input-text" formControlName="label" matInput>
+    </mat-form-field>
+    <mat-slide-toggle formControlName="searchExactForm">Exakte Wortform</mat-slide-toggle>
+    <mat-slide-toggle formControlName="searchLabelInLemma">Lemma</mat-slide-toggle>
+</form>

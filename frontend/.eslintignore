@@ -1,0 +1,11 @@
+node_modules/
+src/main/docker/
+src/test/javascript/protractor.conf.js
+src/test/javascript/jest.conf.js
+src/
+src/test/javascript/
+webpack/
+target/
+build/
+node/
+postcss.config.js

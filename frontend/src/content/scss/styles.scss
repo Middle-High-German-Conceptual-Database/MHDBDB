@@ -1,0 +1,64 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import '../../content/fonts/fonts.css';
+@import '../../content/fonts/solid.css';
+@import '../../content/fonts/fontawesome.css';
+
+@import '../../content/css/style';
+@import '../../content/css/animate.min';
+@import '../../content/css/nice-select';
+@import '../../content/css/owl.carousel';
+@import '../../content/css/responsive';
+// @import './content/css/jquery-ui';
+
+mat-tree {
+  background: transparent !important;
+}
+
+.mat-tree-node {
+  display: flex;
+  align-items: center;
+  min-height: 8px !important;
+  flex: 1;
+  overflow: hidden;
+  word-wrap: break-word;
+}
+
+.mat-icon-button {
+  padding: 0;
+  min-width: 0;
+  width: 20px !important;
+  height: 20px !important;
+  flex-shrink: 0;
+  line-height: 40px !important;
+  border-radius: 50%;
+}
+
+.tab-links{ padding:2px 17px; }
+.tab-links > ul mat-tree > mat-tree-node > li{ padding:2px 0; color:#fff; font-size:15px; display:inline-block; }
+.tab-links > ul > li > ul{ padding:9px 8px; }
+.tab-links > ul > li > ul > li > a{ width:auto; line-height:25px; padding:0 8px;  color:#fff; font-size:15px; display:inline-block;  }
+.tab-links > ul > li > ul > li > a:hover,
+.tab-links > ul > li > ul > li.active > a{ background:#1c93eb; }
+
+h3 {
+  font-size: 1.2rem;
+}
+
+h4 {
+  font-size: 1rem;
+}
+
+h5 {
+  font-size: 0.8rem;
+}
+
+.mat-radio-button {
+  margin-right: 10px;
+}
+
+.MuiFormControlLabel-label {
+  font-family: Roboto, sans-serif !important;
+  font-size: 0.8rem !important;
+  font-weight: 200 !important;
+}

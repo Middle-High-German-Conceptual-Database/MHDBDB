@@ -1,0 +1,66 @@
+PREFIX :<http://www.ontotext.com/connectors/lucene#>
+PREFIX inst:<http://www.ontotext.com/connectors/lucene/instance#>
+INSERT DATA {
+	inst:word :createConnector '''
+{
+  "fields": [
+    {
+      "fieldName": "lemma",
+      "propertyChain": [
+        "https://dh.plus.ac.at/ontology#canonicalForm",
+        "https://dh.plus.ac.at/ontology#writtenRep"
+      ],
+      "indexed": true,
+      "stored": true,
+      "analyzed": true,
+      "multivalued": false,
+      "facet": true
+    },
+    {
+      "fieldName": "concepts",
+      "propertyChain": [
+        "^https://dh.plus.ac.at/ontology#isSenseOf",
+        "https://dh.plus.ac.at/ontology#isLexicalizedSenseOf"
+      ],
+      "indexed": true,
+      "stored": true,
+      "analyzed": true,
+      "multivalued": true,
+      "facet": true
+    },
+    {
+      "fieldName": "pos",
+      "propertyChain": [
+        "https://dh.plus.ac.at/ontology#partOfSpeech"
+      ],
+      "indexed": true,
+      "stored": true,
+      "analyzed": true,
+      "multivalued": true,
+      "facet": true
+    },
+    {
+      "fieldName": "self",
+      "propertyChain": [
+        "$self"
+      ],
+      "indexed": true,
+      "stored": true,
+      "analyzed": true,
+      "multivalued": false,
+      "facet": true
+    }
+  ],
+  "languages": [],
+  "types": [
+    "https://dh.plus.ac.at/ontology#Word"
+  ],
+  "readonly": false,
+  "detectFields": false,
+  "importGraph": false,
+  "boostProperties": [],
+  "stripMarkup": false,
+  "analyzer": "org.apache.lucene.analysis.de.GermanAnalyzer"
+}
+''' .
+}

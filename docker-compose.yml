@@ -1,0 +1,28 @@
+version: '3'
+services:
+  graphdb:
+    image: khaller/graphdb-free:10.3.0
+    ports:
+      - '7200:7200'
+    container_name: graphdb
+    environment:
+      - GDB_HEAP_SIZE=15G
+    volumes:
+      - ./graphdb:/opt/graphdb/home
+      - ./graphdb-import:/root/graphdb-import
+  backend:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    ports:
+      - '8081:8081'
+    container_name: backend
+  mhdbdb:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    ports:
+      - '9000:9000'
+    container_name: mhdbdb
+    volumes:
+      - ./:/usr/src/app/app-ui

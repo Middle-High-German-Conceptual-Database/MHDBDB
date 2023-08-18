@@ -1,0 +1,37 @@
+.mat-toolbar.mat-primary {
+  background: #efefef;
+  color:black;
+}
+
+.filler {
+  flex: 1 1 auto;
+}
+.gap {
+  margin-right: 10px;
+}
+
+.example-icon {
+  padding: 0 14px;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.example-chip-list {
+  width: 100%;
+}
+
+.mat-expansion-panel:not([class*='mat-elevation-z']) {
+  box-shadow: none;
+}
+
+.mat-expansion-panel-header {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.mat-expansion-panel-header-title > mat-panel-title {
+  padding: 0 24px 16px;
+}

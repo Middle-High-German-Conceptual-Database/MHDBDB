@@ -1,0 +1,15 @@
+<expansion-panel-wrapper [asPanel]="asPanel" [title]="title" [openHelpSubject]="openHelpSubject">
+        <table matSort *ngIf="isLoaded | async; else loading" (matSortChange)="sortData($event)">
+            <tr>
+                <th mat-sort-header="form">Wortform</th>
+                <th mat-sort-header="occurrences">Vorkommen im Korpus</th>
+            </tr>
+            <tr *ngFor="let element of sortedList">
+                <td>{{element.form}}</td>
+                <td>{{element.occurrences}}</td>
+            </tr>
+        </table>
+    <ng-template #loading>
+        <mat-spinner></mat-spinner>
+    </ng-template>
+</expansion-panel-wrapper>

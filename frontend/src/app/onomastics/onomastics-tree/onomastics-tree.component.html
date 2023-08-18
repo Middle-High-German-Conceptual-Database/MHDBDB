@@ -1,0 +1,40 @@
+<h1>Namenssystem</h1>
+<div class="begriffs_blk flxrow">
+    <div class="begriffs-left">
+
+        <div class="begriffs-left_inner">
+            <mat-tab-group class="tab-content" id="pills-tabContent" dynamicHeight>
+                <mat-tab label="Baum">
+                    <mat-tree class="tab-pane tab-links tab-content" [dataSource]="dataSource" [treeControl]="treeControl">
+                        <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+                            <li><button style="width: 25px; height: 25px; " disabled>
+                                    <fa-icon icon="caret-right">
+                                    </fa-icon>
+                                </button>
+                                <a (click)="selectTreeNode(node)">{{node.item.label}}</a>
+                            </li>
+                        </mat-tree-node>
+                        <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+                            <li><button style="width: 25px; height: 25px; " [attr.aria-label]="'toggle ' + node.item.label" matTreeNodeToggle>
+                                    <fa-icon icon="caret-right">
+                                    </fa-icon>
+                                </button>
+                                <a (click)="selectTreeNode(node)">{{node.item.label}}</a>
+                            </li>
+                            <mat-progress-bar *ngIf="node.isLoading" mode="indeterminate" class="example-tree-progress-bar">
+                            </mat-progress-bar>
+                        </mat-tree-node>
+                    </mat-tree>
+                </mat-tab>
+<!--                <mat-tab label="Liste"> Liste nicht implementiert. </mat-tab>-->
+            </mat-tab-group>
+        </div>
+    </div>
+
+    <div class="begriffs-right">
+        <div class="info_blk">
+            <dhpp-onomastics-view *ngIf="concept; else noConceptSelected" [instance]="concept"></dhpp-onomastics-view>
+            <ng-template #noConceptSelected>Bitte Namenskategorie wählen</ng-template>
+        </div>
+    </div>
+</div>

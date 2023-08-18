@@ -1,0 +1,18 @@
+<expansion-panel-wrapper [asPanel]="asPanel" [title]="title" [openHelpSubject]="openHelpSubject">
+    <mat-slide-toggle [checked]="includeNarrowerConcepts" (change)="toggleNarrower($any($event))">Untergeordnete Begriffe
+        einschließen</mat-slide-toggle>
+    <p *ngIf="isLoaded | async; else loading">
+        {{ total }} Wörter gefunden
+        <mat-card *ngFor="let word of words;">
+            <mat-card-title><a [routerLink]="['/dictionary/view/', word.strippedId]" [state]="{ instance: word }"><span class="fil-text">{{ word.label }}</span></a></mat-card-title>
+            <mat-card-subtitle><span *ngFor="let pos of word.pos">{{ pos.label }}</span></mat-card-subtitle>
+            <mat-card-content><dhpp-widget-kwic [instance]="word" [asPanel]="false" [limit]="3"></dhpp-widget-kwic></mat-card-content>
+        </mat-card>
+        <mat-paginator *ngIf="total > limit"
+            [length]="total"
+            [pageSize]="limit"
+            (page)="pageEventTrigger($any($event))">
+        </mat-paginator>
+    </p>
+    <ng-template #loading><mat-spinner></mat-spinner></ng-template>
+</expansion-panel-wrapper>

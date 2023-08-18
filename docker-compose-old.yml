@@ -1,0 +1,18 @@
+version: '3.3'
+
+services:
+  dhpp-mhdbdb:
+    image: dhpp-mhdbdb
+    build:
+      context: frontend
+      dockerfile: frontend/Dockerfile
+    environment:
+      NODE_ENV: production
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    ports:
+      - 80:80
+#    network_mode: host
+#networks:
+#  target_default:
+#    external: true

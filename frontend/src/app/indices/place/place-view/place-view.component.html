@@ -1,0 +1,20 @@
+<div *ngIf="isLoaded | async">
+    <div class="row" style="padding-bottom: 25px;">
+        <div class="col-12">
+            <button mat-mini-fab color="primary" (click)="previousPage()" aria-label="Zurück">
+                &larr;
+            </button>
+        </div>
+    </div>
+
+    <dhpp-place-element [instance]="instance"></dhpp-place-element>
+
+    <div class="row" style="padding-top: 0.5rem;">
+        <div class="col-12">
+            <mat-accordion [multi]="true" #accordion="matAccordion" [togglePosition]="'before'">
+            </mat-accordion>
+
+        </div>
+
+    </div>
+</div>

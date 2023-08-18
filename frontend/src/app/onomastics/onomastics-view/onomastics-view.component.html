@@ -1,0 +1,8 @@
+
+<!--  -->
+<div *ngIf="instance; else noInstanceSelected">
+    <dhpp-onomastics-element [instance]="instance"></dhpp-onomastics-element>
+</div>
+<ng-template #noInstanceSelected>
+    <div>Bitte wählen Sie eine Kategorie aus.</div>
+</ng-template>

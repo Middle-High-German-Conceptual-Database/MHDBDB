@@ -1,0 +1,13 @@
+<expansion-panel-wrapper [asPanel]="asPanel" [title]="title" [openHelpSubject]="openHelpSubject">
+    <span *ngIf="isLoaded | async; else loading">
+        <span *ngIf="metadata.sameAs.length <= 0"><em>Keine externen Daten gefunden</em></span>
+        <ul #view>
+            <li *ngFor="let sameAs of metadata.sameAs;">
+                <a href="{{sameAs}}" target="_blank">{{sameAs}}</a>
+            </li>
+        </ul>
+    </span>
+    <ng-template #loading>
+        <mat-spinner></mat-spinner>
+    </ng-template>
+</expansion-panel-wrapper>

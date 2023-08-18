@@ -1,0 +1,113 @@
+<header id="header">
+    <div class="header_wapper">
+        <div class="header-top-outer">
+            <div class="container">
+                <div class="header-top flxrow">
+                    <div class="h_left">
+                        <a href="#">mhdbdb@plus.ac.at</a>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+        <div class="mobile-header  container">
+            <div class="mb-header-sub flxrow">
+                <div class="mb-logo"><a href="#"><img src="/content/images/logo-1.png" alt=""></a></div>
+                <div class="menu-bar"><a href="javascript:void(0);"><i class="fas fa-bars"></i></a></div>
+            </div>
+        </div>
+        <div class="header-bot-main">
+            <div class="menu-close">
+                <a href="javascript:void(0);"><i class="fas fa-times"></i></a>
+            </div>
+            <div class="container">
+
+                <div class="header-middle flxrow">
+                    <div class="logos_blk flxrow">
+                        <span><a routerLink="/home"><img src="/content/images/logo-1.png" alt=""></a></span>
+
+                    </div>
+                    <div class="h_search">
+                        <!--<form [formGroup]="form" novalidate>
+                            <button (click)="startSearch()"><i class="fas fa-search"></i></button>
+                            <input type="text" class="input-text" formControlName="label">
+                        </form>-->
+                    </div>
+                </div>
+
+                <div class="header_bottom">
+                    <div class="main_nav">
+                        <ul>
+                            <li><a routerLink="/reference/list" routerLinkActive="active">Belegsuche</a></li>
+                            <li><a routerLink="/dictionary/list" routerLinkActive="active">Lemmata</a></li>
+                            <li><a routerLink="/concept/tree" routerLinkActive="active">Begriffssystem (Bedeutungen)</a></li>
+                            <li *ngIf="!isHomePage()"><a routerLink="/onomastics/tree" routerLinkActive="active">Namenssystem</a></li>
+                            <li *ngIf="!isHomePage()"><a routerLink="/onomastics/tree" routerLinkActive="active">Textreihen</a></li>
+                            <li *ngIf="!isHomePage()"><a routerLink="/work/list" routerLinkActive="active">Korpus</a></li>
+                            <li *ngIf="!isHomePage()" ngbDropdown>
+                                <a id="dropdownBasic1" ngbDropdownToggle>Indizes</a>
+                                <ul ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                                    <li ngbDropdownItem><a routerLink="/indices/place/list">Bibliografie</a></li>
+                                    <li ngbDropdownItem><a routerLink="/indices/place/list">Ereignisse</a></li>
+                                    <li ngbDropdownItem><a routerLink="/indices/place/list">Orte</a></li>
+                                    <li ngbDropdownItem><a routerLink="/indices/person/list">Personen</a></li>
+                                    <li ngbDropdownItem><a routerLink="/indices/person/list">Werke</a></li>
+                                </ul>
+                            </li>
+                            <li *ngIf="!isHomePage()" ngbDropdown>
+                                <a id="dropdownBasic2" ngbDropdownToggle>About</a>
+                                <ul ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                                    <li ngbDropdownItem><a routerLink="/project/api">APIs</a></li>
+                                    <li ngbDropdownItem><a routerLink="/project/datamodel">Datenmodell</a></li>
+                                    <li ngbDropdownItem><a routerLink="/project/dhplus">dhPLUS</a></li>
+                                    <li ngbDropdownItem><a
+                                            routerLink="/project/digitalisationguidelines">Digitalisierungsrichtlinien</a>
+                                    </li>
+                                    <li ngbDropdownItem><a routerLink="/project">Kontakt</a></li>
+                                    <li ngbDropdownItem><a routerLink="/project/licenses">Lizenzen</a></li>
+                                    <li ngbDropdownItem><a routerLink="/project/members">MitarbeiterInnen</a></li>
+                                    <li ngbDropdownItem><a routerLink="/project/newsletter">Newsletter</a></li>
+                                    <li ngbDropdownItem><a routerLink="/project/partners">Partnerprojekte</a></li>
+                                    <li ngbDropdownItem><a routerLink="/project/publications">Publikationen/Vorträge</a>
+                                    </li>
+                                    <li ngbDropdownItem><a routerLink="/project/about">Über die MHDBDB</a></li>
+                                    <li ngbDropdownItem><a routerLink="/project/advisoryboard">Wissenschaftlicher
+                                            Beirat</a></li>
+                                </ul>
+                            </li>
+                            <li *ngIf="!isHomePage()" ngbDropdown>
+                                <a id="dropdownBasic3" ngbDropdownToggle>Hilfe</a>
+                                <ul ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                                    <li ngbDropdownItem><a routerLink="/indices/person/list">FAQ</a></li>
+                                    <li ngbDropdownItem><a routerLink="/indices/person/list">Handbuch</a></li>
+                                    <li ngbDropdownItem><a routerLink="/indices/person/list">Tutorials</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                   <!-- <div class="user-icon"><a href="javascript:void(0)"><i class="fas fa-user"></i></a>
+                        <div class="login-hide">
+                            <div class="reg_text">Registrieren</div>
+                            <form>
+                                <div class="form_row">
+                                    <label>Name: </label>
+                                    <input type="text" class="input-text">
+                                </div>
+                                <div class="form_row">
+                                    <label>Passwort: </label>
+                                    <input type="text" class="input-text">
+                                </div>
+                            </form>
+                        </div>
+                    </div>-->
+                    <div class="h_left-mb">
+                        <a href="#">+43 662 123456</a> <a href="#">kontakt@mhdbdb.sbg.ac.at</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

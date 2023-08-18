@@ -1,0 +1,24 @@
+<div class="suche_blk_bottom no-pad" *ngIf="isLoaded">
+    <div class="suche-row flxrow">
+        <div class="name flxrow">
+            <a [routerLink]="['/work/view', instance.strippedId]" [state]="{ instance: instance, temp: instance }">
+                <i class="fas fa-book"></i>
+                <span class="fil-text">{{ instance.label }}</span>
+             </a>
+        </div>
+        <div class="right-icon">
+            <a href="#">
+                <i class="fas fa-archive"></i>
+            </a>
+            <a href="#">
+                <i class="fas fa-project-diagram"></i>
+            </a>
+            <a href="#">
+                <i class="fas fa-download"></i>
+            </a>
+            <a href="#">
+                <i class="fas fa-link"></i>
+            </a>
+        </div>
+    </div>
+</div>

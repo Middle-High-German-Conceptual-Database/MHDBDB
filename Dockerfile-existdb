@@ -1,0 +1,3 @@
+FROM existdb/existdb:4.7.1
+
+COPY existdb_autodeploy/*.xar /exist/autodeploy

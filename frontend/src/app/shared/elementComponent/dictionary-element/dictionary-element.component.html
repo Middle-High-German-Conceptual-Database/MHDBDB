@@ -1,0 +1,33 @@
+<div class="suche_blk_bottom no-pad" *ngIf="isLoaded">
+    <div class="suche-row flxrow">
+        <div class="name">
+            <a [routerLink]="['/dictionary/view/', instance.strippedId]" [state]="{ instance: instance }">
+                <i class="fas fa-scroll"></i>
+                <span class="fil-text">{{ instance.label }}</span>
+                <span *ngFor="let posEntry of instance.pos; let i = index">
+                    {{posEntry.label}} {{i === instance.pos.length -1 ? '' : ',&nbsp;' }}
+                </span>
+            </a>
+            <span *ngFor="let subTerm of instance.subTerms; let i = index">
+                {{i === 0 ? 'Wortbestandteile:&nbsp;' : ''}} <a [routerLink]="['/dictionary/view/', subTerm.strippedId]">{{subTerm.label}}</a> {{i === instance.subTerms.length -1 ? '' : ',&nbsp;' }}
+            </span>
+        </div>
+        <div>
+
+        </div>
+        <div class="right-icon">
+            <a href="#">
+                <i class="fas fa-archive"></i>
+            </a>
+            <a href="#">
+                <i class="fas fa-project-diagram"></i>
+            </a>
+            <a href="#">
+                <i class="fas fa-download"></i>
+            </a>
+            <a href="#">
+                <i class="fas fa-link"></i>
+            </a>
+        </div>
+    </div>
+</div>
