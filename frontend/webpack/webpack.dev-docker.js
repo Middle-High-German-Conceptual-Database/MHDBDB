@@ -34,7 +34,10 @@ module.exports = (options) => webpackMerge(commonConfig({
         ],
         target: `http${options.tls ? 's' : ''}://backend:8081`,
         secure: false,
-        changeOrigin: options.tls
+        changeOrigin: options.tls,
+        headers: {
+          Connection: 'keep-alive'
+        }
       },
     /*  {
         context: ['/repositories/dhPLUS'], // GraphDB

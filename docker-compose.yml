@@ -1,6 +1,7 @@
 version: '3'
 services:
   graphdb:
+    restart: always
     image: khaller/graphdb-free:10.3.0
     ports:
       - '7200:7200'
@@ -11,6 +12,7 @@ services:
       - ./graphdb:/opt/graphdb/home
       - ./graphdb-import:/root/graphdb-import
   backend:
+    restart: always
     build:
       context: backend
       dockerfile: Dockerfile
@@ -18,6 +20,7 @@ services:
       - '8081:8081'
     container_name: backend
   mhdbdb:
+    restart: always
     build:
       context: frontend
       dockerfile: Dockerfile
@@ -25,4 +28,4 @@ services:
       - '9000:9000'
     container_name: mhdbdb
     volumes:
-      - ./:/usr/src/app/app-ui
+      - ./frontend:/usr/src/app/app-ui
