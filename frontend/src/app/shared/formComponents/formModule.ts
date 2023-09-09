@@ -27,7 +27,8 @@ import {
   FormTokenPosComponent,
   FormTokenWordComponent,
   tokenFormService,
-  FormTokenNamenComponent
+  FormTokenNamenComponent,
+  FormTokenPositionComponent
 } from './formToken/formToken';
 import { FormWorkSearchComponent, FormWorkSearchHelpComponent } from 'app/shared/formComponents/formWorkSearch/formWorkSearch';
 import { FormLemmaSearchComponent, FormLemmaSearchHelpComponent } from 'app/shared/formComponents/formLemmaSearch/formLemmaSearch';
@@ -59,7 +60,8 @@ import { NgxSliderModule } from '@angular-slider/ngx-slider';
     FormAuthorComponent,
     FormAuthorHelpComponent,
     FormFilterComponent,
-    FormFilterHelpComponent
+    FormFilterHelpComponent,
+    FormTokenPositionComponent
     // CustomReactComponentWrapperComponent,
     // ReactWrapperComponent
   ],
@@ -84,6 +86,7 @@ import { NgxSliderModule } from '@angular-slider/ngx-slider';
     FormTokenContextComponent,
     FormTokenContextHelpComponent,
     FormTokenNamenComponent,
+    FormTokenPositionComponent,
     FormAuthorComponent,
     FormAuthorHelpComponent,
     FormFilterComponent,
@@ -124,6 +127,7 @@ import { NgxSliderModule } from '@angular-slider/ngx-slider';
     FormTokenContextComponent,
     FormTokenConceptsComponent,
     FormTokenNamenComponent,
+    FormTokenPositionComponent,
     FormAuthorComponent,
     FormFilterComponent
     // CustomReactComponentWrapperComponent,

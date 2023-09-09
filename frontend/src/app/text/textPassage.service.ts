@@ -28,11 +28,14 @@ export const contextRange: number[] = [1, 2, 3, 4, 5];
 
 export interface TokenFilterI {
   searchLabelInLemma: boolean;
+  isPositionActive: boolean;
   label?: string;
   pos?: string[];
   concepts?: string[];
   positionInLine?: number;
   connectorAnd: boolean;
+  vers?: string;
+  anfang?: string;
 }
 
 export interface TextPassageFilterI extends FilterI, FilterAuthorI, FilterCorpusI {
@@ -56,7 +59,10 @@ export const defaultTokenFilter: TokenFilterI = {
   label: '',
   pos: [],
   concepts: [],
-  connectorAnd: true
+  connectorAnd: true,
+  isPositionActive: false,
+  vers: '',
+  anfang: ''
 };
 
 export const defaultTextPassageQP: TextPassageQueryParameterI = {

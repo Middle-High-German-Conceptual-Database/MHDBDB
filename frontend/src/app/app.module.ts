@@ -30,6 +30,7 @@ import { filterReducer } from './store/filter.reducer';
 import { generalFilterReducer } from './store/general-filter.reducer';
 import { languageReducer } from './store/language.reducer';
 import { uiReducer } from './store/ui.reducer';
+import { referenceReducer } from './store/reference.reducer';
 import { DialogComponent } from './shared/dhpp-help-dialog.component';
 
 import { MarkdownModule } from 'ngx-markdown';
@@ -59,7 +60,8 @@ import { MarkdownDisplayComponent } from 'app/shared/markdown-display.component'
       filter: filterReducer,
       generalFilter: generalFilterReducer,
       language: languageReducer,
-      ui: uiReducer
+      ui: uiReducer,
+      reference: referenceReducer
     }),
     StoreDevtoolsModule.instrument({
       maxAge: 25 // Retains last 25 states

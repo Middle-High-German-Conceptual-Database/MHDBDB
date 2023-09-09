@@ -709,7 +709,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       });
 
       let orFilter = tempFilters.join(' || ');
-      filters.push(`filter(${orFilter})`);
+      // filters.push(`filter(${orFilter})`);
     }
 
     if (qp.isIdActive && qp.id) {
@@ -719,7 +719,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       bindings.push(`Bind (<${qp.electronicId}> as ?electronicId)`);
     }
     if (qp.isWorkIdActive && qp.workId) {
-      bindings.push(`Bind (<${qp.workId}> as ?workId)`);
+      // bindings.push(`Bind (<${qp.workId}> as ?workId)`);
     }
 
     let instanceSelect = `
@@ -793,25 +793,29 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                     {
     					        ?textId dhpluso:hasElectronicInstance ?electronicId .
                       ?electronicId rdf:type dhpluso:Text .
+                      ?electronicId rdfs:label ?label .
+                      BIND(?electronicId as ?id)
                     }
                     
-                    ?workId dhpluso:contribution/dhpluso:agent/rdfs:label ?authorLabel .
+                    {
+                      ?workId dhpluso:contribution/dhpluso:agent ?authorId .
+                      ?authorId rdfs:label ?authorLabel .
+                    }
 
                     ${words.join('\r\n')}
                     ${concepts.join('\r\n')}
                     ${onomastics.join('\r\n')}
                     ${poss.join('\r\n')}
 
-                    ?electronicId rdfs:label ?label .
-    					      filter(langmatches(lang(?label),'de')) 
-
-    					      BIND(?electronicId as ?id)
                     ${bindings.join('\r\n')}
                     ${filters.join('\r\n')}
 
+                    filter(langmatches(lang(?label),'de')) 
+                    filter(langmatches(lang(?authorLabel),'de')) 
+
                     }
                     ORDER BY ASC(?label)
-                    LIMIT 20
+    
 
             `;
 
@@ -851,6 +855,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       let element = results.find(element => element.id === item.id.value);
 
       element.authorLabel = item.authorLabel.value;
+      
       // words
       /* if ('wordId' in item && element && !element.words) {
         let formList: string[] = [item.wordId.value];

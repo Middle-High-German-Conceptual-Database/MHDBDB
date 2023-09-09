@@ -65,6 +65,7 @@ const _filterReducer = createReducer(
     return state;
   }),
   on(updateFilterById, (state, { filterId, newFilter }) => {
+    console.log('updateFilterById', filterId, newFilter);
     const index = state.filter.tokenFilters.findIndex(filter => filter.id === filterId);
     if (index >= 0) {
       const newTokenFilters = [...state.filter.tokenFilters];

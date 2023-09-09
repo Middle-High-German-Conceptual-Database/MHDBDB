@@ -38,6 +38,7 @@ import { MatRadioChange } from '@angular/material/radio';
 import { take } from 'rxjs/operators';
 import { selectFilterClassExtended } from 'app/store/general-filter.reducer';
 import { showDialog } from 'app/store/ui.actions';
+import * as referenceActions from '../../store/reference.actions';
 
 @Component({
   selector: 'dhpp-reference-list',
@@ -68,6 +69,8 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
 
   selectedFilter: TokenFilterI;
 
+  totalAnnotations: number = 0;
+  
   constructor(
     public router: Router,
     public route: ActivatedRoute,
@@ -148,7 +151,32 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
 
     _sq.query(sparql).then(data => {
       this.instances = this.service._jsonToObject(data.results.bindings);
+      this.store.dispatch(referenceActions.storeReferenceObject({ data }));
+      this.store.dispatch(referenceActions.storeInstances({ data: this.instances }));
+
+      console.log(this.instances);
+
+      this.totalAnnotations = this.countTotalAnnotationIds(this.instances);
+
+      // Filter data if generaFilter is set
+      if (this.generalFilter && this.generalFilter.isWorksActive) {
+        // filter this.instances.workId by this.generalFilter.works array
+        this.instances = this.instances.filter(instance => {
+          return this.generalFilter.works.includes(instance.workId);
+        });
+      }
     });
     this.isLoading = false;
   }
+
+  countTotalAnnotationIds(dataArray) {
+    let total = 0;
+    for (let item of dataArray) {
+      if (item.annotationIds) {
+        total += item.annotationIds.length;
+      }
+    }
+    return total;
+  }
+
 }

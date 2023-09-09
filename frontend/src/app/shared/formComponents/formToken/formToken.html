@@ -14,12 +14,16 @@
                 <dhpp-form-token-pos [filter]="filter" [tokenFilter]="filter"></dhpp-form-token-pos>
                 <dhpp-form-token-concepts [filter]="filter" [tokenFilter]="filter"></dhpp-form-token-concepts>
 
-                <mat-slide-toggle class="example-margin" color="primary" [checked]="advancedSearch" (change)="setAdvChecked($event)" style="margin-top: 25px;">
+                <mat-slide-toggle class="example-margin" color="primary" [checked]="advancedSearch"
+                    (change)="setAdvChecked($event)" style="margin-top: 25px;">
                     Erweiterte Suche
                 </mat-slide-toggle>
 
-                <dhpp-form-token-namen *ngIf="advancedSearch" [filter]="filter" [tokenFilter]="filter"></dhpp-form-token-namen>
+                <dhpp-form-token-namen *ngIf="advancedSearch" [filter]="filter"
+                    [tokenFilter]="filter"></dhpp-form-token-namen>
 
+                <dhpp-form-token-position *ngIf="advancedSearch" [filter]="filter"
+                    [tokenFilter]="filter"></dhpp-form-token-position>
 
             </mat-card-content>
             <!--<mat-card-actions>

@@ -26,7 +26,6 @@ export class DhppHeaderComponent implements OnInit, OnDestroy {
   }
 
   isHomePage() {
-    console.log(this.router.url);
     return this.router.url === '/' || this.router.url === '/home';
   }
 }

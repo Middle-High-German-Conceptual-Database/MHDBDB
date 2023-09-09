@@ -407,7 +407,7 @@ export class FormTokenNamenComponent implements OnInit, OnDestroy {
 
   public conceptList: Concept[];
   public form: FormGroup;
-  public filterConcepts: FormGroup;
+  public filterOnomastics: FormGroup;
   public conceptLabels: string[] = [];
   private subscription: Subscription;
 
@@ -419,14 +419,14 @@ export class FormTokenNamenComponent implements OnInit, OnDestroy {
   visible = true;
 
   // autocomplete concepts
-  conceptCtrl = new FormControl();
-  filteredConcepts: Observable<string[]>;
+  onomasticCtrl = new FormControl();
+  filteredOnomastics: Observable<string[]>;
 
   @ViewChild('conceptInput', { static: false }) conceptInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
 
   constructor(public service: tokenFormService, public conceptService: OnomasticsService, public store: Store) {
-    this.filteredConcepts = this.conceptCtrl.valueChanges.pipe(
+    this.filteredOnomastics = this.onomasticCtrl.valueChanges.pipe(
       startWith(null),
       map((concept: string | null) => (concept ? this._filterConcept(concept) : this.conceptLabels.slice()))
     );
@@ -438,24 +438,25 @@ export class FormTokenNamenComponent implements OnInit, OnDestroy {
   }
 
   get concepts() {
-    return <FormGroup>this.form.get('filterConcepts');
+    return <FormGroup>this.form.get('filterOnomastics');
   }
 
-  removeConcept(conceptLabel: string): void {
+  removeOnomastic(conceptLabel: string): void {
     this.concepts.removeControl(conceptLabel);
     this.concepts.updateValueAndValidity();
   }
 
-  selectedConcept(event: MatAutocompleteSelectedEvent): void {
+  selectedOnomastic(event: MatAutocompleteSelectedEvent): void {
     this.concepts.addControl(event.option.viewValue, new FormControl(true));
     this.conceptInput.nativeElement.value = '';
-    this.conceptCtrl.setValue(null);
+    this.onomasticCtrl.setValue(null);
   }
 
   initHtmlForm() {
-    this.filterConcepts = new FormGroup({});
+    this.filterOnomastics = new FormGroup({});
     this.form = new FormGroup({
-      filterConcepts: this.filterConcepts
+      isNamenActive: new FormControl(this.tokenFilter.isNamenActive),
+      filterOnomastics: this.filterOnomastics
     });
 
     // @todo add redux
@@ -494,5 +495,67 @@ export class FormTokenNamenComponent implements OnInit, OnDestroy {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+  }
+}
+
+ 
+@Component({
+  selector: 'dhpp-form-token-position',
+  templateUrl: './formTokenPosition.html'
+})
+export class FormTokenPositionComponent implements OnInit, OnDestroy {
+  @Input() tokenFilter;
+  @Input() filter: any;
+
+  form: FormGroup;
+  private destroy$ = new Subject<void>();
+
+  versList = [''];
+  anfangList = ['Anfang'];
+
+  constructor(public service: tokenFormService, public store: Store) {}
+
+  ngOnInit() {
+    this.tokenFilter = { ...this.tokenFilter } as TokenFilterI;
+
+    this.form = new FormGroup({
+      isPositionActive: new FormControl(this.tokenFilter.isPositionActive),
+      vers: new FormControl(this.tokenFilter.vers),
+      anfang: new FormControl(this.tokenFilter.anfang)
+    });
+
+    this.store
+      .pipe(
+        select(selectTokenFilterById, { id: this.filter.id }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(tokenFilter => {
+        this.form.disable({ emitEvent: false }); // disable form to prevent emitting events while patching values
+        this.form.patchValue(tokenFilter, { emitEvent: false });
+        this.form.enable({ emitEvent: false }); // re-enable form after patching values
+      });
+
+    this.form.valueChanges
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(value => {
+        const changes =
+          this.tokenFilter.isPositionActive !== value.isPositionActive ||
+          this.tokenFilter.vers !== value.vers ||
+          this.tokenFilter.anfang !== value.anfang;
+        if (changes) {
+          const updatedFilter = { ...this.tokenFilter, ...value };
+          this.store.dispatch(updateFilterById({ filterId: this.filter.id, newFilter: updatedFilter }));
+          this.service.nextQp();
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

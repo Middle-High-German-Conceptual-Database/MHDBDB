@@ -30,7 +30,7 @@ module.exports = (options) => webpackMerge(commonConfig({
           '/v2/api-docs',
           '/h2-console',
           '/auth',
-          '/repositories/dhPLUS'
+       
         ],
         target: `http${options.tls ? 's' : ''}://localhost:8081`,
         secure: false,
@@ -39,7 +39,7 @@ module.exports = (options) => webpackMerge(commonConfig({
           Connection: 'keep-alive'
         }
       },
-      /*{
+     {
         context: ['/repositories/dhPLUS'], // GraphDB
         target: `http${options.tls ? 's' : ''}://mhdbdb.softwarekomponist.at:7200`,
         secure: false,
@@ -48,7 +48,7 @@ module.exports = (options) => webpackMerge(commonConfig({
         headers: {
                    Connection: 'keep-alive'
             }
-      },*/
+      },
       {
         context: ['/services/rest/api'],
         target: `http${options.tls ? 's' : ''}://localhost:5000`,
