@@ -8,4 +8,4 @@ RUN npm install -g @angular/cli @angular-devkit/build-angular && npm install --f
 
 EXPOSE 9000
 
-CMD ["npm", "run", "start-docker"]
+CMD ["npm", "run", "start"]

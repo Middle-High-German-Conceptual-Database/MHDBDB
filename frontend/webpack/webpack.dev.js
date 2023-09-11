@@ -20,6 +20,7 @@ module.exports = (options) => webpackMerge(commonConfig({
   devtool: 'eval-source-map',
 
   devServer: {
+    disableHostCheck: true,
     contentBase: './build/resources/main/static/',
     proxy: [
       {
@@ -30,7 +31,6 @@ module.exports = (options) => webpackMerge(commonConfig({
           '/v2/api-docs',
           '/h2-console',
           '/auth',
-       
         ],
         target: `http${options.tls ? 's' : ''}://localhost:8081`,
         secure: false,

@@ -27,7 +27,11 @@ export class TextElementComponent extends BaseIndexElementDirective<WorkClass, W
 
   kwics: Kwic[] = [];
 
+  words: WordClass[] = [];
+
   total: number = 0;
+
+  showBelege: boolean = false;
 
   constructor(
     public router: Router,
@@ -44,6 +48,9 @@ export class TextElementComponent extends BaseIndexElementDirective<WorkClass, W
 
   ngOnInit(): void {
     super.ngOnInit();
+
+    console.log(this.instance);
+
     //console.log(this.instance);
 
     // this.loadSenses();
@@ -88,6 +95,12 @@ export class TextElementComponent extends BaseIndexElementDirective<WorkClass, W
         // console.warn(error)
       });
   }
+
+  public doBelege() {
+    this.words = this.instance.words;
+    this.showBelege = true;
+  }
+
 
   /*getWorkId(): string {
     return Utils.removeNameSpace(this.instance.workId);
