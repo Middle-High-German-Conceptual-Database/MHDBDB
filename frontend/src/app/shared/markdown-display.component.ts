@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 
 @Component({
   selector: 'app-markdown-display',
@@ -11,7 +11,16 @@ export class MarkdownDisplayComponent implements OnInit {
   constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    const filename = this.route.snapshot.params.filename;
-    this.markdownUrl = `/content/md/${filename}.md`;
+    // Subscribe to changes in route parameters using paramMap observable
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      const folder = params.get('folder');
+      const filename = params.get('filename');
+      const newFilename = filename?.replace(/%20/g, ' ');
+
+      if (folder && newFilename) {
+        this.markdownUrl = `/content/md/${folder}/${newFilename}.md`;
+      }
+    });
   }
+
 }

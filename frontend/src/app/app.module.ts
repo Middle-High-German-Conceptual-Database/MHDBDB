@@ -37,6 +37,7 @@ import { MarkdownModule } from 'ngx-markdown';
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MarkdownDisplayComponent } from 'app/shared/markdown-display.component';
+import { RefreshGuard } from './refresh-guard';
 
 @NgModule({
   imports: [
@@ -86,6 +87,6 @@ import { MarkdownDisplayComponent } from 'app/shared/markdown-display.component'
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  providers: []
+  providers: [RefreshGuard]
 })
 export class DhppbaseAppModule {}

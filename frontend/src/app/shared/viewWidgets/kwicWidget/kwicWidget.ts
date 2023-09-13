@@ -46,7 +46,13 @@ export class KwicWidgetComponent
   ngOnInit(): void {
     super.ngOnInit();
     if (this.instance) {
-      this.loadOccurrences();
+      // this.loadOccurrences();
+      this.textService.getKwic(this.word).then(kwic => {
+        if (kwic) {
+          this.kwics.push(kwic);
+        }
+      });
+
       this.isLoaded = Promise.resolve(true);
     }
   }
@@ -68,8 +74,11 @@ export class KwicWidgetComponent
 
   public loadOccurrences() {
     console.log(this.word);
+    console.log(this.limit);
+    console.log(this.offset);
+    console.log(this.instance);
     this.textService
-      .getAnnotations(this.limit, this.offset, this.word, undefined, 'tei:seg')
+      .getAnnotations(100, this.offset, this.word, undefined, 'tei:seg')
       .then(annotations => {
         this.isLoaded = Promise.resolve(true);
         this.total = annotations[1];
@@ -93,6 +102,14 @@ export class KwicWidgetComponent
   public moreOccurrences() {
     this.offset = this.offset + this.limit;
     this.loadOccurrences();
+
+    /* const annotationId = { id: this.word, strippedId: this.word } as MhdbdbIdEntity;
+    this.textService.getKwic(annotationId.id).then(kwic => {
+      if (kwic) {
+        this.kwics.push(kwic);
+      }
+    }); */
+
   }
 }
 
@@ -100,4 +117,4 @@ export class KwicWidgetComponent
   selector: 'dhpp-widget-kwic-help',
   templateUrl: './kwicWidgetHelp.html'
 })
-export class KwicWidgetHelpComponent {}
+export class KwicWidgetHelpComponent { }

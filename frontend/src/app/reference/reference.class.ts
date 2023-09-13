@@ -12,6 +12,7 @@ export class ElectronicText extends MhdbdbIdLabelEntity {
     public textId: string,
     public wordLabels: string[],
     public annotationIds: string[],
+    public rootIds: string[],
     public words: string[],
     public authorLabel: string
   ) {
@@ -22,6 +23,7 @@ export class ElectronicText extends MhdbdbIdLabelEntity {
     this.textId = textId;
     this.wordLabels = wordLabels;
     this.annotationIds = annotationIds;
+    this.rootIds = rootIds;
     this.words = words;
     this.authorId = authorId;
     this.authorLabel = authorLabel;

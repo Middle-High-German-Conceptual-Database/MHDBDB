@@ -27,7 +27,7 @@ export class TextElementComponent extends BaseIndexElementDirective<WorkClass, W
 
   kwics: Kwic[] = [];
 
-  words: WordClass[] = [];
+  annotations: [] = [];
 
   total: number = 0;
 
@@ -51,8 +51,7 @@ export class TextElementComponent extends BaseIndexElementDirective<WorkClass, W
 
     console.log(this.instance);
 
-    //console.log(this.instance);
-
+    
     // this.loadSenses();
     // this.loadOccurrences();
   }
@@ -60,7 +59,7 @@ export class TextElementComponent extends BaseIndexElementDirective<WorkClass, W
   loadSenses() {
     console.log(this.instance);
     if (this.instance) {
-      this.referenceService.getKwic('https://dh.plus.ac.at/mhdbdb/text/ADP#ADP_4815200_2').then(data => {
+      this.referenceService.getKwic(this.instance.rootId).then(data => {
         console.log(data);
       });
 
@@ -97,7 +96,7 @@ export class TextElementComponent extends BaseIndexElementDirective<WorkClass, W
   }
 
   public doBelege() {
-    this.words = this.instance.words;
+    this.annotations = this.instance.rootIds;
     this.showBelege = true;
   }
 

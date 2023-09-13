@@ -1,5 +1,5 @@
-<expansion-panel-wrapper [asPanel]="asPanel" [title]="title" [openHelpSubject]="openHelpSubject">
-    <span *ngIf="isLoaded | async; else loading">
+<!-- <expansion-panel-wrapper [asPanel]="asPanel" [title]="title" [openHelpSubject]="openHelpSubject"> -->
+    <div *ngIf="isLoaded | async; else loading" style="width: 100%;">
 <!--        <span *ngIf="total <= 0"><em>Wort nicht im Korpus</em></span>-->
         <ul #view>
             <li *ngFor="let kwic of kwics;">
@@ -11,7 +11,7 @@
             </li>
         </ul>
 
-        <div class="row" style="margin-top: 15px;">
+       <!--  <div class="row" style="margin-top: 15px;">
             <div class="col">
         <button *ngIf="total > 0 && offset + limit < total" (click)="moreOccurrences()"
                 class="mat-focus-indicator mat-mini-fab mat-button-base mat-accent" mat-mini-fab="">
@@ -21,10 +21,9 @@
 <span class="mat-button-focus-overlay"></span>
 </button>
                 </div>
-            </div>
-
-    </span>
+            </div> -->
+        </div>
     <ng-template #loading>
         <mat-spinner></mat-spinner>
     </ng-template>
-</expansion-panel-wrapper>
+<!-- </expansion-panel-wrapper> -->

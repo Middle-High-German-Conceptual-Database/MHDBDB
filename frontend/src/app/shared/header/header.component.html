@@ -46,44 +46,31 @@
                             <li><a routerLink="/concept/tree" routerLinkActive="active">Begriffssystem (Bedeutungen)</a></li>
                             <li *ngIf="!isHomePage()"><a routerLink="/onomastics/tree" routerLinkActive="active">Namenssystem</a></li>
                             <li *ngIf="!isHomePage()"><a routerLink="/onomastics/tree" routerLinkActive="active">Textreihen</a></li>
-                            <li *ngIf="!isHomePage()"><a routerLink="/work/list" routerLinkActive="active">Korpus</a></li>
                             <li *ngIf="!isHomePage()" ngbDropdown>
                                 <a id="dropdownBasic1" ngbDropdownToggle>Indizes</a>
                                 <ul ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                                    <li ngbDropdownItem><a routerLink="/indices/place/list">Bibliografie</a></li>
-                                    <li ngbDropdownItem><a routerLink="/indices/place/list">Ereignisse</a></li>
+                                   <!--  <li ngbDropdownItem><a routerLink="/indices/place/list">Bibliografie</a></li>
+                                    <li ngbDropdownItem><a routerLink="/indices/place/list">Ereignisse</a></li> -->
                                     <li ngbDropdownItem><a routerLink="/indices/place/list">Orte</a></li>
                                     <li ngbDropdownItem><a routerLink="/indices/person/list">Personen</a></li>
-                                    <li ngbDropdownItem><a routerLink="/indices/person/list">Werke</a></li>
+                                    <!-- <li ngbDropdownItem><a routerLink="/indices/person/list">Werke</a></li> -->
                                 </ul>
                             </li>
                             <li *ngIf="!isHomePage()" ngbDropdown>
                                 <a id="dropdownBasic2" ngbDropdownToggle>About</a>
                                 <ul ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                                    <li ngbDropdownItem><a routerLink="/project/api">APIs</a></li>
-                                    <li ngbDropdownItem><a routerLink="/project/datamodel">Datenmodell</a></li>
-                                    <li ngbDropdownItem><a routerLink="/project/dhplus">dhPLUS</a></li>
-                                    <li ngbDropdownItem><a
-                                            routerLink="/project/digitalisationguidelines">Digitalisierungsrichtlinien</a>
-                                    </li>
-                                    <li ngbDropdownItem><a routerLink="/project">Kontakt</a></li>
-                                    <li ngbDropdownItem><a routerLink="/project/licenses">Lizenzen</a></li>
-                                    <li ngbDropdownItem><a routerLink="/project/members">MitarbeiterInnen</a></li>
-                                    <li ngbDropdownItem><a routerLink="/project/newsletter">Newsletter</a></li>
-                                    <li ngbDropdownItem><a routerLink="/project/partners">Partnerprojekte</a></li>
-                                    <li ngbDropdownItem><a routerLink="/project/publications">Publikationen/Vorträge</a>
-                                    </li>
-                                    <li ngbDropdownItem><a routerLink="/project/about">Über die MHDBDB</a></li>
-                                    <li ngbDropdownItem><a routerLink="/project/advisoryboard">Wissenschaftlicher
-                                            Beirat</a></li>
+                                    <li ngbDropdownItem><a routerLink="/view/About/Daten">Daten</a></li>
+                                    <li ngbDropdownItem><a routerLink="/view/About/Geschichte der MHDBDB">Geschichte der MHDBDB</a></li>
+                                    <li ngbDropdownItem><a routerLink="/view/About/Kontakt und Impressum">Kontakt und Impressum</a></li>
+                                    <li ngbDropdownItem><a routerLink="/view/About/Publikationen">Publikationen</a></li>
+                                    <li ngbDropdownItem><a routerLink="/view/About/Team">Team</a></li>
                                 </ul>
                             </li>
                             <li *ngIf="!isHomePage()" ngbDropdown>
                                 <a id="dropdownBasic3" ngbDropdownToggle>Hilfe</a>
                                 <ul ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                                    <li ngbDropdownItem><a routerLink="/indices/person/list">FAQ</a></li>
-                                    <li ngbDropdownItem><a routerLink="/indices/person/list">Handbuch</a></li>
-                                    <li ngbDropdownItem><a routerLink="/indices/person/list">Tutorials</a></li>
+                                    <li ngbDropdownItem><a routerLink="/view/Hilfe/Abkürzungen">Abkürzungen</a></li>
+                                    <li ngbDropdownItem><a routerLink="/view/Hilfe/Showcases">Showcases</a></li>
                                 </ul>
                             </li>
                         </ul>

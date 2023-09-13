@@ -855,14 +855,16 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       let element = results.find(element => element.id === item.id.value);
 
       element.authorLabel = item.authorLabel.value;
+
+      // element.rootId = item.rootId.value;
       
       // words
-      /* if ('wordId' in item && element && !element.words) {
-        let formList: string[] = [item.wordId.value];
-        element.words = formList;
-      } else if ('wordId' in item && element && !element.words.find(form => form === item.wordId.value)) {
-        element.words.push(item.wordId.value);
-      } */
+      if ('rootId' in item && element && !element.rootIds) {
+        let formList: string[] = [item.rootId.value];
+        element.rootIds = formList;
+      } else if ('rootId' in item && element && !element.rootIds.find(form => form === item.rootId.value)) {
+        element.rootIds.push(item.rootId.value);
+      } 
 
       // words
       let wordIndex = 0;
