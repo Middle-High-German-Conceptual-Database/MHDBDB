@@ -31,8 +31,9 @@ module.exports = (options) => webpackMerge(commonConfig({
           '/v2/api-docs',
           '/h2-console',
           '/auth',
+          '/showTei',
         ],
-        target: `http${options.tls ? 's' : ''}://localhost:8081`,
+        target: `http${options.tls ? 's' : ''}://backend:8081`,
         secure: false,
         changeOrigin: options.tls,
         headers: {

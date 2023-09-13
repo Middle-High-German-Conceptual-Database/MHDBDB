@@ -116,6 +116,10 @@ module.exports = (options) => ({
         to: 'content'
       },
       {
+        from: './src/teibp/',
+        to: 'teibp'
+      },
+      {
         from: './src/favicon.ico',
         to: 'favicon.ico'
       },
