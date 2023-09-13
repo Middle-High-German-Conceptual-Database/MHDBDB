@@ -46,16 +46,13 @@
                             <li><a routerLink="/concept/tree" routerLinkActive="active">Begriffssystem (Bedeutungen)</a></li>
                             <li *ngIf="!isHomePage()"><a routerLink="/onomastics/tree" routerLinkActive="active">Namenssystem</a></li>
                             <li *ngIf="!isHomePage()"><a routerLink="/onomastics/tree" routerLinkActive="active">Textreihen</a></li>
-                            <li *ngIf="!isHomePage()" ngbDropdown>
+                            <!-- <li *ngIf="!isHomePage()" ngbDropdown>
                                 <a id="dropdownBasic1" ngbDropdownToggle>Indizes</a>
                                 <ul ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                                   <!--  <li ngbDropdownItem><a routerLink="/indices/place/list">Bibliografie</a></li>
-                                    <li ngbDropdownItem><a routerLink="/indices/place/list">Ereignisse</a></li> -->
                                     <li ngbDropdownItem><a routerLink="/indices/place/list">Orte</a></li>
                                     <li ngbDropdownItem><a routerLink="/indices/person/list">Personen</a></li>
-                                    <!-- <li ngbDropdownItem><a routerLink="/indices/person/list">Werke</a></li> -->
                                 </ul>
-                            </li>
+                            </li> -->
                             <li *ngIf="!isHomePage()" ngbDropdown>
                                 <a id="dropdownBasic2" ngbDropdownToggle>About</a>
                                 <ul ngbDropdownMenu aria-labelledby="dropdownBasic1">
