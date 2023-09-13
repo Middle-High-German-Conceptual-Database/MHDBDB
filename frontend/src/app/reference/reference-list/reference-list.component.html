@@ -66,13 +66,14 @@
 
             <div class="werke_row flxrow">
                 <div class="werke_row_inner">
+                    <button mat-stroked-button color="link" (click)="reset()"><i class="fas fa-undo-alt"></i>
+                        Zurücksetzen</button>
+                </div>
+                <div class="werke_row_inner" style="text-align: right;">
                     <button mat-stroked-button color="link" type="submit" (click)="search()"
                         (keydown.enter)="search()"><i class="fas fa-search"></i> Suchen
                     </button>
-                </div>
-                <div class="werke_row_inner">
-                    <button mat-stroked-button color="link" (click)="reset()"><i class="fas fa-undo-alt"></i>
-                        Zurücksetzen</button>
+                    
                 </div>
             </div>
 
@@ -82,7 +83,7 @@
 
     <div *ngIf="!isLoading" class="search-results">
 
-        <p>{{ totalAnnotations }} Mal gefunden</p>
+        <h3>{{ totalAnnotations }} Mal gefunden</h3>
 
         <div *ngFor="let instance of instances">
             <dhpp-text-element [instance]="instance" [qp]="qp"></dhpp-text-element>
