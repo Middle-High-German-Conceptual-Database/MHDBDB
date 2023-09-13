@@ -1,16 +1,10 @@
 package at.ac.plus.mhdbdb.backend;
 
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
-import org.springframework.oxm.Marshaller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.xml.MarshallingView;
 
-import javax.xml.transform.stream.StreamSource;
-import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 

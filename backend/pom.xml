@@ -91,11 +91,6 @@
             <artifactId>httpclient5</artifactId>
             <version>5.1.2</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-oxm</artifactId>
-            <version>5.3.10</version> <!-- Use the appropriate version for your Spring Boot project -->
-        </dependency>
        <!-- <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
