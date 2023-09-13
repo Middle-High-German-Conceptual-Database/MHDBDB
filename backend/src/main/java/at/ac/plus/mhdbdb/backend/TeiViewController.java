@@ -2,6 +2,7 @@ package at.ac.plus.mhdbdb.backend;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,11 +18,14 @@ public class TeiViewController {
 
     private static final Logger logger = LoggerFactory.getLogger(TeiViewController.class);
 
+    @Value("${app.dev.frontend.teiFolder}")
+    private String teiFolder;
+
     @GetMapping(value = "/showTei", produces = MediaType.APPLICATION_XML_VALUE)
     public String showTei(@RequestParam String id) {
         try {
             // Read the XML file from the server
-            String xmlFilePath = "${app.dev.frontend.teiFolder}/${id}.tei.xml"; // Update with the actual file path
+            String xmlFilePath = teiFolder + "/" + id + ".tei.xml"; // Update with the actual file path
             String xmlContent = new String(Files.readAllBytes(Paths.get(xmlFilePath)));
 
             logger.info("Open " + xmlFilePath);
