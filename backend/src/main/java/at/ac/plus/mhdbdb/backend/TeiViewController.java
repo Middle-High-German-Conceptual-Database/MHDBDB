@@ -31,7 +31,7 @@ public class TeiViewController {
             logger.info("Open " + xmlFilePath);
 
             // Add the <?xml-stylesheet?> declaration to the XML content
-            String modifiedXmlContent = "<?xml-stylesheet type=\"text/xsl\" href=\"/teibp/teibp.xsl\"?>\n" + xmlContent;
+            String modifiedXmlContent = "<?xml-stylesheet type=\"text/xsl\" href=\"/teibp/content/teibp.xsl\"?>\n" + xmlContent;
 
             return modifiedXmlContent;
         } catch (Exception e) {
