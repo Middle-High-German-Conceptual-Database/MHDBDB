@@ -38,6 +38,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MarkdownDisplayComponent } from 'app/shared/markdown-display.component';
 import { RefreshGuard } from './refresh-guard';
+import { DhppWelcomeDialog } from './app.welcome-dialog';
 
 @NgModule({
   imports: [
@@ -83,7 +84,8 @@ import { RefreshGuard } from './refresh-guard';
     DhppHeaderComponent,
     ScrollToTopComponent,
     DialogComponent,
-    MarkdownDisplayComponent
+    MarkdownDisplayComponent,
+    DhppWelcomeDialog
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

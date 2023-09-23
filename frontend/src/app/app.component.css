@@ -1,8 +1,1 @@
-.container-fluid {
-  padding: 25px;
-}
-.cdk-overlay-pane {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+.container-fluid{padding:25px}.cdk-overlay-pane{display:flex;align-items:center;justify-content:center}.modal{display:none;position:fixed;z-index:1;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgba(0,0,0,.4)}.modal-content{position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);background-color:#fefefe;padding:20px;border:1px solid #888;width:80%;max-width:500px;box-shadow:0 4px 8px 0 rgba(0,0,0,.2),0 6px 20px 0 rgba(0,0,0,.19)}.close{color:#aaa;float:right;font-size:28px;font-weight:bold}.close:hover,.close:focus{color:#000;text-decoration:none;cursor:pointer}

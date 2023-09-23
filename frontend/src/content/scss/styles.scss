@@ -62,3 +62,10 @@ h5 {
   font-size: 0.8rem !important;
   font-weight: 200 !important;
 }
+
+
+.mat-tab-body-content {
+  height: 100%;
+  overflow: auto;
+  margin: 10px;
+}

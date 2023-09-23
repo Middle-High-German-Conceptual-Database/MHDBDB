@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
 <html>
+
 <head>
     <base href="/" />
     <meta charset="utf-8">
@@ -28,12 +29,33 @@
     <!--[if lt IE 9]>
         <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
+
+    <!-- The Modal -->
+    <div class="modal" id="myModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Herzlich Willkommen!</h3>
+            </br>
+            <p>Findet ihr euch in unserer neuen Oberfläche zurecht?</p>
+            </br>
+            <p>Wir wollen eure Meinung zum neuen Design. Dazu braucht ihr nur etwa 30 Minuten Zeit 
+            und könnt uns Feedback geben. </p>
+            </br>
+            <span><a href="https://umfrage.sbg.ac.at/index.php/783321?lang=de" target="_blank">https://umfrage.sbg.ac.at/index.php/783321?lang=de</a></span>
+            </br>
+            <p>Optionale Leitfragen zum Erkunden findet ihr hier: </p>
+            <span><a href="https://ep.mafiasi.de/p/UAT_MHDBDB" target="_blank">https://ep.mafiasi.de/p/UAT_MHDBDB</a></span>
+            </br>
+            <p>Vielen Dank und viel Spaß mit der neuen MHDBDB!</p>
+        </div>
+    </div>
+
     <dhpp-app-root class="main_wrapper">
         <div class="app-loading">
             <div class="lds-css ng-scope">
             </div>
         </div>
-        </dhpp-app-root>
+    </dhpp-app-root>
     <noscript>
         <h1>You must enable javascript to view this page.</h1>
     </noscript>
@@ -50,6 +72,23 @@
             }
         </script>
     -->
+
+    <script>
+        var modal = document.getElementById('myModal');
+
+        var span = document.getElementsByClassName("close")[0];
+
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+
 </body>
 
 </html>
