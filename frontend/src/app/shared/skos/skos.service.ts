@@ -37,6 +37,7 @@ export abstract class SkosConceptService<
 > extends MhdbdbIdLabelEntityService<P, F, O, E> implements SkosConceptServiceI<P, F, O, E> {
   protected _concepts: SkosConceptI[];
   protected _topConcepts: SkosConceptI[];
+  protected _allConcepts: SkosConceptI[];
   protected _rootConcept: string = undefined;
   public get concepts(): SkosConceptI[] {
     return this._concepts;
@@ -44,12 +45,34 @@ export abstract class SkosConceptService<
   public get topConcepts(): SkosConceptI[] {
     return this._topConcepts;
   }
+  public get allConcepts(): SkosConceptI[] {
+    return this._allConcepts;
+  }
   public get rootConcept(): string {
     return this._rootConcept;
   }
 
   constructor(public store: Store) {
     super(store);
+  }
+
+  getRealAllConcepts(): Promise<SkosConceptI[]> {
+    let qp: P = this.defaultQp;
+    console.log(qp);
+    qp.limit = undefined;
+    const query = this._sparqlAllQuery(qp);
+    return new Promise<SkosConceptI[]>(resolve => {
+      if (!this._allConcepts) {
+        this._sq.query(query).then(data => {
+          if (data && data['results'] && data['results']['bindings']) {
+            this._allConcepts = this._jsonToObject(data['results']['bindings']);
+            resolve(this._allConcepts);
+          }
+        });
+      } else {
+        resolve(this._allConcepts);
+      }
+    });
   }
 
   getAllConcepts(): Promise<SkosConceptI[]> {
@@ -101,8 +124,8 @@ export abstract class SkosConceptService<
     return new Promise<SkosConceptI[]>(resolve => {
       this._sq.query(query).then(data => {
         if (data && data['results'] && data['results']['bindings']) {
-          this._topConcepts = this._jsonToObject(data['results']['bindings']);
-          resolve(this._topConcepts);
+          this._concepts = this._jsonToObject(data['results']['bindings']);
+          resolve(this._concepts);
         }
       });
     });
@@ -147,6 +170,68 @@ export abstract class SkosConceptService<
             ${broader}
             ${scheme}
             ${topConcepts}
+            ?id skos:prefLabel ?label .
+            ${filters.join('\n')}
+            OPTIONAL {
+                ?id skos:broader ?broaderId .
+                FILTER NOT EXISTS {
+                    ?broaderId owl:deprecated ?bdp .
+                }
+            }
+            OPTIONAL {
+                ?narrowerId skos:broader ?id .
+                FILTER NOT EXISTS {
+                    ?narrowerId owl:deprecated ?ndp .
+                }
+            }
+
+            FILTER NOT EXISTS {
+                ?id owl:deprecated ?dp .
+            }
+
+        }
+        ${this._sparqlOrder(qp.order, qp.desc)}
+        ${this._sparqlLimitOffset(qp.limit, qp.offset)}
+        `;
+  }
+
+  protected _sparqlAllQuery(qp: P): string {
+    // filters
+    let filters = [];
+    if ('label' in qp.filter && qp.filter.label != '') {
+      filters.push(`filter(regex(str(?label), "${this._labelFilterGenerator(qp.filter.label)}", "i"))`);
+    }
+
+    let broader = '';
+    if ('broader' in qp.filter && qp.filter.broader != '') {
+      if (qp.filter.broader.startsWith('http:') || qp.filter.broader.startsWith('https:')) {
+        broader = `?id skos:broader <${qp.filter.broader}> .`;
+      } else {
+        broader = `?id skos:broader ${qp.filter.broader} .`;
+      }
+    }
+
+    let scheme = '';
+    if ('scheme' in qp.filter && qp.filter.scheme != '') {
+      scheme = `?id skos:inScheme ${qp.filter.scheme} .`;
+    }
+
+    let topConcepts = '';
+    if ('topConcepts' in qp.filter && qp.filter.topConcepts && !('broader' in qp.filter && qp.filter.broader)) {
+      topConcepts = `${qp.filter.scheme} skos:hasTopConcept ?id.`;
+    }
+
+    return `
+        SELECT DISTINCT ?id ?label ?broaderId ?narrowerId
+        WHERE {
+            # Bindings
+            ${this._sparqlGenerateBinding(qp.filter.id)}
+            Bind('${qp.lang}' AS ?lang)
+
+            # ID + Label
+            ?id a skos:Concept .
+
+            ${scheme}
             ?id skos:prefLabel ?label .
             ${filters.join('\n')}
             OPTIONAL {

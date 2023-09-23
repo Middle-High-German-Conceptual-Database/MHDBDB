@@ -5,28 +5,39 @@
         <div class="begriffs-left_inner">
             <mat-tab-group class="tab-content" id="pills-tabContent" dynamicHeight>
                 <mat-tab label="Baum">
-                    <mat-tree class="tab-pane tab-links tab-content" [dataSource]="dataSource" [treeControl]="treeControl">
+                    <mat-tree class="tab-pane tab-links tab-content" [dataSource]="dataSource"
+                        [treeControl]="treeControl">
                         <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
                             <li><button style="width: 25px; height: 25px; " disabled>
-                                    <fa-icon icon="caret-right">
-                                    </fa-icon>
                                 </button>
                                 <a (click)="selectTreeNode(node)">{{node.item.label}}</a>
                             </li>
                         </mat-tree-node>
                         <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
-                            <li><button style="width: 25px; height: 25px; " [attr.aria-label]="'toggle ' + node.item.label" matTreeNodeToggle>
-                                    <fa-icon icon="caret-right">
-                                    </fa-icon>
+                            <li><button style="width: 25px; height: 25px; "
+                                    [attr.aria-label]="'toggle ' + node.item.label" matTreeNodeToggle>
+                                    <i class="fa-solid fa-caret-right"></i>
                                 </button>
                                 <a (click)="selectTreeNode(node)">{{node.item.label}}</a>
                             </li>
-                            <mat-progress-bar *ngIf="node.isLoading" mode="indeterminate" class="example-tree-progress-bar">
+                            <mat-progress-bar *ngIf="node.isLoading" mode="indeterminate"
+                                class="example-tree-progress-bar">
                             </mat-progress-bar>
                         </mat-tree-node>
                     </mat-tree>
                 </mat-tab>
-<!--                <mat-tab label="Liste"> Liste nicht implementiert. </mat-tab>-->
+                <mat-tab label="Liste">
+                    <mat-form-field class="example-full-width" *ngIf="allConcepts">
+                        <mat-label>Filter nach Label</mat-label>
+                        <input matInput [formControl]="listSearch">
+                    </mat-form-field>
+                    <mat-list>
+                        <mat-list-item *ngFor="let item of $listSearch|async"
+                            [selected]="listSearchControl.value &&listSearchControl.value?.indexOf(item.label)>=0">
+                            <a (click)="selectConcept(item)">{{item.label}}</a>
+                        </mat-list-item >
+                    </mat-list>
+                </mat-tab>
             </mat-tab-group>
         </div>
     </div>

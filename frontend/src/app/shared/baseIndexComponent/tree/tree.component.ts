@@ -205,7 +205,7 @@ export class DynamicDataSource<qT extends skosQueryParameterMap<f, o>, f extends
 
 @Directive()
 export abstract class BaseIndexTreeDirective<qT extends skosQueryParameterMap<f, o>, f extends skosFilterMap, o extends skosOptionsMap, c extends SkosConcept, s extends SkosConceptService<qT, f, o, c>> implements OnInit, OnChanges {
-    treeControl: FlatTreeControl<DynamicFlatNode>;    
+    treeControl: FlatTreeControl<DynamicFlatNode>;
 
     dataSource: DynamicDataSource<qT, f, o, c, s>;
 
@@ -217,10 +217,11 @@ export abstract class BaseIndexTreeDirective<qT extends skosQueryParameterMap<f,
     hasChild = (_: number, _nodeData: DynamicFlatNode) => _nodeData.expandable;
 
     public concept: SkosConceptI
-    
-    
+
+
     // list
-    allConcepts:SkosConceptI[]
+    allConcepts: SkosConceptI[]
+    realAllConcepts: SkosConceptI[]
 
     listSearch = new FormControl();
     listSearchControl = new FormControl();
@@ -228,13 +229,13 @@ export abstract class BaseIndexTreeDirective<qT extends skosQueryParameterMap<f,
         startWith(null),
         debounceTime(200),
         switchMap((res: string) => {
-            if (!res) return of(this.allConcepts);            
+            if (!res) return of(this.realAllConcepts);
             return of(
-                this.allConcepts.filter(x => x.label.indexOf(res) >= 0)
+                this.realAllConcepts.filter(x => x.label.toLowerCase().indexOf(res.toLowerCase()) >= 0)
             );
         })
     );
-    
+
 
     constructor(
         public router: Router,
@@ -252,18 +253,23 @@ export abstract class BaseIndexTreeDirective<qT extends skosQueryParameterMap<f,
     }
 
     ngOnChanges(): void {
-        this.database = new DynamicDatabase<qT, f, o, c, s>(this.service)
         this.treeControl = new FlatTreeControl<DynamicFlatNode>(this.getLevel, this.isExpandable);
+        this.database = new DynamicDatabase<qT, f, o, c, s>(this.service)
         this.dataSource = new DynamicDataSource<qT, f, o, c, s>(this.treeControl, this.database);
         this.database.initialData().then(data => {
-            this.dataSource.data = data
+            this.dataSource.data = data;
         })
+
+        this.service.getRealAllConcepts().then(data => {
+            this.realAllConcepts = data;
+        })
+
         this.service.getAllConcepts().then(data => {
-            this.allConcepts = data
+            this.allConcepts = data;
         })
     }
 
-    selectTreeNode(node: DynamicFlatNode) {        
+    selectTreeNode(node: DynamicFlatNode) {
         this.concept = node.item;
     }
 

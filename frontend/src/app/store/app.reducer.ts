@@ -1,15 +1,17 @@
 import { createReducer, on } from '@ngrx/store';
-import { increment, decrement, reset } from './app.actions';
+import { increment, decrement, reset, updateLastTreeItem } from './app.actions';
 
-export const initialState = 0;
+export const initialState = {
+  lastTreeItem: ''
+};
 
-const _counterReducer = createReducer(
+const _appReducer = createReducer(
   initialState,
-  on(increment, state => state + 1),
-  on(decrement, state => state - 1),
-  on(reset, state => 0)
+  on(updateLastTreeItem, (state, { lastTreeItem }) => ({ ...state, lastTreeItem}))
 );
 
 export function appReducer(state, action) {
-  return _counterReducer(state, action);
+  return _appReducer(state, action);
 }
+
+export const selectLastTreeItem = (state: any) => state.app.lastTreeItem;
