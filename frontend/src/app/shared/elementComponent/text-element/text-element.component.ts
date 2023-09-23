@@ -100,6 +100,10 @@ export class TextElementComponent extends BaseIndexElementDirective<WorkClass, W
     this.showBelege = true;
   }
 
+  public hideBelege() {
+    this.showBelege = false;
+  }
+
 
   /*getWorkId(): string {
     return Utils.removeNameSpace(this.instance.workId);

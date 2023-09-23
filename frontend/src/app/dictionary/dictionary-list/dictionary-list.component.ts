@@ -35,4 +35,8 @@ export class DictionaryListComponent extends BaseIndexListDirective<DictionaryQu
     ) {
         super(router, route, locationService, http, service, history)
     }
+
+    search() {
+       // this.isLoading = true;
+    }
 }

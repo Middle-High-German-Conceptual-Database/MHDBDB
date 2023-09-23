@@ -24,6 +24,7 @@ import {
   updateSeries
 } from 'app/store/general-filter.actions';
 import { Options } from '@angular-slider/ngx-slider';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'dhpp-form-filter',
@@ -81,6 +82,8 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
   // autocomplete concepts
   conceptCtrl = new FormControl();
   filteredConcepts: Observable<string[]>;
+
+  advancedSearch = false;
 
   @ViewChild('conceptInput', { static: false }) conceptInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
@@ -228,6 +231,10 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
     this.destroy$.complete();
   }
 
+  setAdvChecked(e: MatSlideToggleChange) {
+    this.advancedSearch = e.checked;
+  }
+  
   private _filterConcept(value: string): string[] {
     const filterValue = value.toLowerCase();
     return this.conceptLabels.filter(concept => concept.toLowerCase().indexOf(filterValue) === 0);

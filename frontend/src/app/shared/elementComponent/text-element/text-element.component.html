@@ -7,8 +7,8 @@
              </a>
         </div>
 
-        <div class="name flxrow" (click)="doBelege()">
-            {{ instance.annotationIds.length }} Belege gefunden
+        <div class="name flxrow">
+            <span style="font-size: 14pt; margin-right: 15px; ">{{ instance.annotationIds.length }} Belege gefunden</span> <i *ngIf="showBelege" style="font-size: 25px;" class="fas fa-chevron-up" (click)="hideBelege()"></i> <i *ngIf="!showBelege" style="font-size: 25px;" class="fas fa-chevron-down" (click)="doBelege()"></i>
         </div>
 
         <div class="right-icon">

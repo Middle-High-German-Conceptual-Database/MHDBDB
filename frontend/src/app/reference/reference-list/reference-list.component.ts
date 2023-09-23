@@ -71,6 +71,8 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
 
   totalAnnotations: number = 0;
   
+  isRLoading = false;
+
   constructor(
     public router: Router,
     public route: ActivatedRoute,
@@ -93,6 +95,8 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
     this.generalFilter$.subscribe(f => {
       this.generalFilter = f;
     });
+
+    this.isLoading = false;
   }
 
   openDialog() {
@@ -133,7 +137,7 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
 
   ngOnInit() {
     super.ngOnInit();
-    this.isLoading = false;
+    this.isRLoading = false;
 
     // this.loadSenses()
   }
@@ -141,11 +145,11 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
   reset() {
     this.textInstances = [];
     this.store.dispatch(reset());
-    this.isLoading = false;
+    this.isRLoading = false;
   }
 
   search() {
-    this.isLoading = true;
+    this.isRLoading = true;
     const sparql = this.service.sparqlQuery({ ...this.generalFilter, filter: this.filter }, false);
     const _sq = new SparqlQuery();
 
@@ -153,8 +157,6 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
       this.instances = this.service._jsonToObject(data.results.bindings);
       this.store.dispatch(referenceActions.storeReferenceObject({ data }));
       this.store.dispatch(referenceActions.storeInstances({ data: this.instances }));
-
-      console.log(this.instances);
 
       this.totalAnnotations = this.countTotalAnnotationIds(this.instances);
 
@@ -165,8 +167,9 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
           return this.generalFilter.works.includes(instance.workId);
         });
       }
+      this.isRLoading = false;
+      this.isLoading = false;
     });
-    this.isLoading = false;
   }
 
   countTotalAnnotationIds(dataArray) {
