@@ -20,17 +20,18 @@ module.exports = (options) => webpackMerge(commonConfig({
   devtool: 'eval-source-map',
 
   devServer: {
+    disableHostCheck: true,
     contentBase: './build/resources/main/static/',
-    proxy: [{
+    proxy: [
+      {
         context: [
           '/api',
-          //       '/services',
           '/management',
           '/swagger-resources',
           '/v2/api-docs',
           '/h2-console',
           '/auth',
-          '/repositories/dhPLUS'
+          '/showTei',
         ],
         target: `http${options.tls ? 's' : ''}://backend:8081`,
         secure: false,
@@ -39,16 +40,16 @@ module.exports = (options) => webpackMerge(commonConfig({
           Connection: 'keep-alive'
         }
       },
-    /*  {
+     {
         context: ['/repositories/dhPLUS'], // GraphDB
-        target: `http${options.tls ? 's' : ''}://graphdb:7200`,
+        target: `http${options.tls ? 's' : ''}://mhdbdb.softwarekomponist.at:7200`,
         secure: false,
         changeOrigin: options.tls,
         logLevel: 'debug',
         headers: {
-          Connection: 'keep-alive'
-        }
-      },*/
+                   Connection: 'keep-alive'
+            }
+      },
       {
         context: ['/services/rest/api'],
         target: `http${options.tls ? 's' : ''}://localhost:5000`,
@@ -65,7 +66,7 @@ module.exports = (options) => webpackMerge(commonConfig({
       },
       {
         context: ['/services/xq/api'],
-        target: `http${options.tls ? 's' : ''}://dhplus-gateway:8088`,
+        target: `http${options.tls ? 's' : ''}://localhost:8088`,
         pathRewrite: {
           '^/services/xq/api': ''
         },
@@ -74,7 +75,7 @@ module.exports = (options) => webpackMerge(commonConfig({
       },
       {
         context: ['/services/**'],
-        target: `http${options.tls ? 's' : ''}://dhplus-gateway:8080`,
+        target: `http${options.tls ? 's' : ''}://localhost:8080`,
         secure: false,
         changeOrigin: options.tls
       }
@@ -163,7 +164,7 @@ module.exports = (options) => webpackMerge(commonConfig({
     }),
     new FriendlyErrorsWebpackPlugin(),
     new ForkTsCheckerWebpackPlugin(),
-/*     new BrowserSyncPlugin({
+    new BrowserSyncPlugin({
       https: options.tls,
       host: 'localhost',
       port: 9000,
@@ -180,7 +181,7 @@ module.exports = (options) => webpackMerge(commonConfig({
       }
     }, {
       reload: false
-    }), */
+    }),
     new webpack.ContextReplacementPlugin(
       /angular(\\|\/)core(\\|\/)/,
       path.resolve(__dirname, './src/')

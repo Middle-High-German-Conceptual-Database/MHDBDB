@@ -4,11 +4,14 @@
             <a [routerLink]="['/work/view', instance.strippedId]" [state]="{ instance: instance }">
                 <i class="fas fa-book"></i>
                 <span class="fil-text">{{ instance.label }} ({{ instance.authorLabel }})</span>
-             </a>
+            </a>
         </div>
 
         <div class="name flxrow">
-            <span style="font-size: 14pt; margin-right: 15px; ">{{ instance.annotationIds.length }} Belege gefunden</span> <i *ngIf="showBelege" style="font-size: 25px;" class="fas fa-chevron-up" (click)="hideBelege()"></i> <i *ngIf="!showBelege" style="font-size: 25px;" class="fas fa-chevron-down" (click)="doBelege()"></i>
+            <span style="font-size: 14pt; margin-right: 15px; ">{{ instance.annotationIds.length }} Belege
+                gefunden</span> <i *ngIf="showBelege" style="font-size: 25px;" class="fas fa-chevron-up"
+                (click)="hideBelege()"></i> <i *ngIf="!showBelege" style="font-size: 25px;" class="fas fa-chevron-down"
+                (click)="doBelege()"></i>
         </div>
 
         <div class="right-icon">
@@ -27,13 +30,14 @@
         </div>
     </div>
 
-     <div *ngIf="showBelege" class="suche-row flxrow" style="align-items: flex-start; justify-content: flex-start;">
+    <div *ngIf="showBelege" class="suche-row" style="align-items: flex-start; justify-content: flex-start;">
         <h4>Belege</h4>
-        <div class="name flxrow" style="margin-left: 25px;">
-            <div *ngFor="let sense of annotations;">
+        <div *ngFor="let sense of annotations;">
+            <div class="name" style="margin-left: 25px;">
                 <dhpp-widget-kwic [word]="sense" [instance]="sense" [asPanel]="false" [limit]="3"></dhpp-widget-kwic>
             </div>
         </div>
-    </div> 
+    </div>
+</div>
 
 </div>

@@ -1,15 +1,13 @@
 <!-- <expansion-panel-wrapper [asPanel]="asPanel" [title]="title" [openHelpSubject]="openHelpSubject"> -->
     <div *ngIf="isLoaded | async; else loading" style="width: 100%;">
 <!--        <span *ngIf="total <= 0"><em>Wort nicht im Korpus</em></span>-->
-        <ul #view>
-            <li *ngFor="let kwic of kwics;">
+        <div style="width: 100%;" *ngFor="let kwic of kwics;">
                 ...
                 {{joinTokens(kwic.left)}}
                 <mark>{{ kwic.center.content }}</mark>
                 {{joinTokens(kwic.right)}}
                 ...
-            </li>
-        </ul>
+        </div>
 
        <!--  <div class="row" style="margin-top: 15px;">
             <div class="col">
