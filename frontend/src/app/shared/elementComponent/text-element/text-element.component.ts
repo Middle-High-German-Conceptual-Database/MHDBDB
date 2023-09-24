@@ -56,6 +56,10 @@ export class TextElementComponent extends BaseIndexElementDirective<WorkClass, W
     // this.loadOccurrences();
   }
 
+  navigateToTEI(): void {
+    this.router.navigate(['/tei', { id: 'ABG' }]);
+  }
+
   loadSenses() {
     console.log(this.instance);
     if (this.instance) {

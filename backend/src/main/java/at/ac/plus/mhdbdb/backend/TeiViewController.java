@@ -30,8 +30,21 @@ public class TeiViewController {
 
             logger.info("Open " + xmlFilePath);
 
-            // Add the <?xml-stylesheet?> declaration to the XML content
-            String modifiedXmlContent = "<?xml-stylesheet type=\"text/xsl\" href=\"/teibp/content/teibp.xsl\"?>\n" + xmlContent;
+            // Split the XML content by new lines
+            String[] lines = xmlContent.split("\n", 2);
+
+            // Insert the <?xml-stylesheet?> declaration after the first line of the XML
+            // content
+            String modifiedXmlContent;
+            if (lines.length >= 2) {
+                modifiedXmlContent = lines[0] + "\n"
+                        + "<?xml-stylesheet type=\"text/xsl\" href=\"/content/teibp.xsl\"?>\n" + lines[1];
+            } else {
+                // If there's only one line (or none), append the stylesheet declaration
+                // directly
+                modifiedXmlContent = xmlContent
+                        + "<?xml-stylesheet type=\"text/xsl\" href=\"/content/teibp.xsl\"?>\n";
+            }
 
             return modifiedXmlContent;
         } catch (Exception e) {

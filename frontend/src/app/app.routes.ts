@@ -2,12 +2,13 @@ import { Routes } from '@angular/router';
 
 import { AppHomeComponent } from 'app/home/home.component';
 import { MarkdownDisplayComponent } from 'app/shared/markdown-display.component';
-import { RefreshGuard } from './refresh-guard';
+import { TeiWidgetComponent } from './shared/viewWidgets/teiWidget/teiWidget';
 
 export const routes: Routes = [
   { path: '', component: AppHomeComponent },
   { path: 'home', component: AppHomeComponent },
   { path: 'view/:folder/:filename', component: MarkdownDisplayComponent, data: {}, runGuardsAndResolvers: 'always'  },
+  { path: 'tei/:id', component: TeiWidgetComponent, data: {}, runGuardsAndResolvers: 'always'  },
   {
     path: 'reference',
     loadChildren: () => import('./reference/reference.module').then(m => m.ReferenceModule),

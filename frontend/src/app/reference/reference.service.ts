@@ -19,6 +19,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { selectLanguage } from 'app/store/language.reducer';
 import { Store, select } from '@ngrx/store';
 import { BehaviorSubject } from 'rxjs';
+import { Utils } from 'app/shared/utils';
 
 export interface TextQueryParameterI extends QueryParameterI<TextFilterI, TextOptionsI> {}
 
@@ -855,6 +856,8 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       let element = results.find(element => element.id === item.id.value);
 
       element.authorLabel = item.authorLabel.value;
+      element.textId = Utils.removeNameSpace(item.textId.value);
+      element.workId = item.workId.value;
 
       // element.rootId = item.rootId.value;
       

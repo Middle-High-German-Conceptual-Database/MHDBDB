@@ -40,6 +40,9 @@ import { MarkdownDisplayComponent } from 'app/shared/markdown-display.component'
 import { RefreshGuard } from './refresh-guard';
 import { DhppWelcomeDialog } from './app.welcome-dialog';
 
+import { SafeUrlPipe } from './safe-url.pipe';
+import { TeiWidgetComponent } from './shared/viewWidgets/teiWidget/teiWidget';
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -85,7 +88,9 @@ import { DhppWelcomeDialog } from './app.welcome-dialog';
     ScrollToTopComponent,
     DialogComponent,
     MarkdownDisplayComponent,
-    DhppWelcomeDialog
+    DhppWelcomeDialog,
+    TeiWidgetComponent,
+    SafeUrlPipe
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

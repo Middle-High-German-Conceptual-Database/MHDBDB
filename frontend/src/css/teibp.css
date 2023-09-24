@@ -1,6 +1,5 @@
 /* imports */
 /* @import url("shell.css"); */
-@import url('http://fonts.googleapis.com/css?family=Arvo:400,700,400italic,700italic|Gentium+Book+Basic:400,400italic,700,700italic');
 /* namespaces */
 /* @namespace "http://www.tei-c.org/ns/1.0"; */
 /* @namespace with prefix, as below, throws and error in less. */
@@ -97,9 +96,9 @@
   margin-left: 2em;
   margin-right: 4em;
   padding: 2.5em;
-  font-family: "Gentium Book Basic", Cochin, Georgia, Serif;
+  font-family: "Roboto", Cochin, Georgia, Serif;
   font-size: 14pt;
-  background-color: #EBEBEB;
+  background-color: white;
   color: #292929;
   width: 33em;
 }
@@ -1838,9 +1837,9 @@ html {
   margin-left: 2em;
   margin-right: 4em;
   padding: 2.5em;
-  font-family: "Gentium Book Basic", Cochin, Georgia, Serif;
+  font-family: "Roboto", Cochin, Georgia, Serif;
   font-size: 14pt;
-  background-color: #EBEBEB;
+  background-color: white;
   color: #292929;
   width: 33em;
 }
