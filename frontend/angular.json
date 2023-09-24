@@ -20,7 +20,7 @@
             "tsConfig": "tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": ["src/styles.css"],
-            "scripts": [],
+            "scripts": ["node_modules/marked/marked.min.js"],
             "aot": true
           },
           "configurations": {
@@ -66,7 +66,8 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "browserTarget": "dhppapp:build",
-            "disableHostCheck": true
+            "disableHostCheck": true,
+            "scripts": ["node_modules/marked/marked.min.js"]
           },
           "configurations": {
             "production": {

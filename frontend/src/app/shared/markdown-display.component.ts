@@ -3,7 +3,8 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 
 @Component({
   selector: 'app-markdown-display',
-  templateUrl: './markdown-display.component.html'
+  templateUrl: './markdown-display.component.html',
+  styleUrls: ['./markdown-display.component.scss']
 })
 export class MarkdownDisplayComponent implements OnInit {
   markdownUrl: string;

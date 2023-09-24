@@ -1,10 +1,5 @@
 <section class="container_wrapper">
     <div class="container">
-        <div class="werke_page">
-            <div *ngIf="markdownUrl" markdown [src]="markdownUrl"></div>
-        </div>
+        <div class="mdview" *ngIf="markdownUrl" markdown [src]="markdownUrl"></div>
     </div>
 </section>
-
-
-
