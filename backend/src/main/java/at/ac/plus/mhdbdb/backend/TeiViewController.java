@@ -24,6 +24,7 @@ import javax.xml.transform.Transformer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.ProcessingInstruction;
 
 @RestController
 @CrossOrigin(origins = { "${app.dev.frontend.local}", "${app.dev.frontend.remote}", "${app.dev.frontend.remote2}" })
@@ -34,53 +35,35 @@ public class TeiViewController {
     @Value("${app.dev.frontend.teiFolder}")
     private String teiFolder;
 
-    // XSLT Helper File
     @Value("${app.dev.frontend.additionalXmlPath}")
     private String additionalXmlPath;
-
+    
     @GetMapping(value = "/showTei", produces = MediaType.APPLICATION_XML_VALUE)
     public String showTei(@RequestParam String id) {
         try {
+              // Read and parse the main XML file
+        String xmlFilePath = teiFolder + "/" + id + ".tei.xml";
+        Document mainDoc = loadXmlDocument(xmlFilePath);
 
-            // Read the XML file from the server
-            String xmlFilePath = teiFolder + "/" + id + ".tei.xml"; // Update with the actual file path
-            logger.info("Open " + xmlFilePath);
+        // Add the XML processing instruction
+        ProcessingInstruction pi = mainDoc.createProcessingInstruction("xml-stylesheet", "type=\"text/xsl\" href=\"/content/teibp.xsl\"");
+        mainDoc.insertBefore(pi, mainDoc.getDocumentElement());
 
-            Document mainDoc = loadXmlDocument(xmlFilePath);
+        // Read and parse the additional XML file
+        Document additionalDoc = loadXmlDocument(additionalXmlPath);
 
-            // Read and parse the additional XML file
-            Document additionalDoc = loadXmlDocument(additionalXmlPath);
+        // Append the content of the additional XML to the teiHeader of the main XML
+        Node teiHeader = mainDoc.getElementsByTagName("tei:teiHeader").item(0);
+        Node importedNode = mainDoc.importNode(additionalDoc.getDocumentElement(), true);
+        teiHeader.appendChild(importedNode);
 
-            // Append the content of the additional XML to the teiHeader of the main XML
-            Node teiHeader = mainDoc.getElementsByTagName("tei:teiHeader").item(0);
-            Node importedNode = mainDoc.importNode(additionalDoc.getDocumentElement(), true);
-            teiHeader.appendChild(importedNode);
+        // Serialize the modified XML back to string
+        TransformerFactory tf = TransformerFactory.newInstance();
+        Transformer transformer = tf.newTransformer();
+        StringWriter writer = new StringWriter();
+        transformer.transform(new DOMSource(mainDoc), new StreamResult(writer));
 
-            // Serialize the modified XML back to string
-            TransformerFactory tf = TransformerFactory.newInstance();
-            Transformer transformer = tf.newTransformer();
-            StringWriter writer = new StringWriter();
-            transformer.transform(new DOMSource(mainDoc), new StreamResult(writer));
-
-            String xmlContent = writer.getBuffer().toString();
-
-            // Split the XML content by new lines
-            String[] lines = xmlContent.split("\n", 2);
-
-            // Insert the <?xml-stylesheet?> declaration after the first line of the XML
-            // content
-            String modifiedXmlContent;
-            if (lines.length >= 2) {
-                modifiedXmlContent = lines[0] + "\n"
-                        + "<?xml-stylesheet type=\"text/xsl\" href=\"/content/teibp.xsl\"?>\n" + lines[1];
-            } else {
-                // If there's only one line (or none), append the stylesheet declaration
-                // directly
-                modifiedXmlContent = xmlContent
-                        + "<?xml-stylesheet type=\"text/xsl\" href=\"/content/teibp.xsl\"?>\n";
-            }
-
-            return modifiedXmlContent;
+        return writer.getBuffer().toString();
         } catch (Exception e) {
             e.printStackTrace();
             // Handle exceptions accordingly
