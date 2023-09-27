@@ -1,5 +1,7 @@
 
-![[Katharina_05.jpg]]
+<img src="https://www.plus.ac.at/wp-content/uploads/2021/02/Katharina_05.jpg" width="240">
+
+
 **Mag. Dr. Katharina Zeppezauer-Wachauer, MA**  
 Koordinatorin
 
@@ -10,7 +12,7 @@ E-Mail: katharina.wachauer@plus.ac.at
 
 ---
 
-![Bild von AvB](https://www.plus.ac.at/wp-content/uploads/2023/07/AvB%C2%A9anjapaap_PRINT10.jpg)
+<img src="https://www.plus.ac.at/wp-content/uploads/2023/07/AvB%C2%A9anjapaap_PRINT10.jpg" width="240">
 
 **Dr. Alan Lena van Beek, MA**  
 Wissenschaftliche*r Mitarbeiter*in
@@ -25,7 +27,7 @@ E-Mail: alanlena.vanbeek@plus.ac.at
 
 ---
 
-![Foto Oleksii Sapov](https://www.plus.ac.at/wp-content/uploads/2022/08/sapov.jpg)
+<img src="https://www.plus.ac.at/wp-content/uploads/2022/08/sapov.jpg" width="240">
 
 **Oleksii Sapov, MA (Projekt Wenzelsbibel)**  
 Wissenschaftlicher Mitarbeiter
@@ -37,7 +39,7 @@ E-Mail: oleksii.sapov@plus.ac.at
 
 ---
 
-![em.Univ.-Prof.Dr. Klaus M. Schmidt](https://www.plus.ac.at/wp-content/uploads/2021/02/klaus.jpg "em.Univ.-Prof.Dr. Klaus M. Schmidt")
+<img src="https://www.plus.ac.at/wp-content/uploads/2021/02/klaus.jpg" alt="em.Univ.-Prof.Dr. Klaus M. Schmidt" width="240">
 
 **em.Univ.-Prof.Dr. Klaus M. Schmidt**  
 Urheber, Beirat und Mitwirkender (extern)
