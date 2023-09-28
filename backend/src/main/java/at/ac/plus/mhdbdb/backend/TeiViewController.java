@@ -22,7 +22,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.ProcessingInstruction;
 
@@ -37,7 +36,7 @@ public class TeiViewController {
 
     @Value("${app.dev.frontend.additionalXmlPath}")
     private String additionalXmlPath;
-    
+
     @GetMapping(value = "/showTei", produces = MediaType.APPLICATION_XML_VALUE)
     public String showTei(@RequestParam String id) {
         try {
@@ -64,6 +63,23 @@ public class TeiViewController {
         transformer.transform(new DOMSource(mainDoc), new StreamResult(writer));
 
         return writer.getBuffer().toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Handle exceptions accordingly
+            return null; // Replace with appropriate error handling
+        }
+    }
+
+    @GetMapping(value = "/showTeiAsHtml", produces = MediaType.TEXT_HTML_VALUE)
+    public String showTeiAsHtml(@RequestParam String id) {
+        try {
+              // Read and parse the main XML file
+        String xmlFilePath = teiFolder + "/" + id + ".tei.xml.html";
+    
+        // open file from xmlFilePath into string variable
+        String content = new String(Files.readAllBytes(Paths.get(xmlFilePath)));
+
+        return content;
         } catch (Exception e) {
             e.printStackTrace();
             // Handle exceptions accordingly

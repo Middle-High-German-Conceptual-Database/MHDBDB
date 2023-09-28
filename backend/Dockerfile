@@ -1,7 +1,7 @@
 FROM eclipse-temurin:17-jre
 
 RUN apt-get update && apt-get install -y \
-    curl git make gcc \
+    curl git make gcc ant \
     && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir /opt/teic
