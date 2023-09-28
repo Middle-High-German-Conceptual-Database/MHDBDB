@@ -326,7 +326,7 @@
 			<xsl:apply-templates select="//tei:rendition" mode="rendition2style" />
 		</style>
 	</xsl:template>
-
+	
 	<!-- tag usage support -->
 
 	<xsl:template name="tagUsage2style">
@@ -377,6 +377,16 @@
 
 	<xsl:template match="tei:rendition[@xml:id and @scheme = 'css']" mode="rendition2style">
 		<xsl:value-of select="concat('[rendition~=&quot;#',@xml:id,'&quot;]')" />
+		<xsl:if
+			test="@scope">
+			<xsl:value-of select="concat(':',@scope)" />
+		</xsl:if>
+		<xsl:value-of
+			select="concat('{ ',normalize-space(.),'}&#x000A;')" />
+	</xsl:template>
+
+	<xsl:template match="tei:rendition[@xml:id and @scheme = 'css']" mode="rendition2style">
+		<xsl:value-of select="concat('[rend~=&quot;',@xml:id,'&quot;]')" />
 		<xsl:if
 			test="@scope">
 			<xsl:value-of select="concat(':',@scope)" />
