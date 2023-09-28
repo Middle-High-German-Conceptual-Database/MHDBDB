@@ -22,6 +22,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.ProcessingInstruction;
 
@@ -79,6 +80,8 @@ public class TeiViewController {
         Document mainDoc = loadXmlDocument(xmlFilePath);
 
         // Add the XML processing instruction
+        // <link xmlns="http://www.w3.org/1999/xhtml" id="maincss" rel="stylesheet" type="text/css" href="../css/teibp.css" />
+        // <link xmlns="http://www.w3.org/1999/xhtml" id="customcss" rel="stylesheet" type="text/css" href="../css/custom.css" />
         ProcessingInstruction pi = mainDoc.createProcessingInstruction("xml-stylesheet", "type=\"text/xsl\" href=\"/content/teibp.xsl\"");
         mainDoc.insertBefore(pi, mainDoc.getDocumentElement());
 
@@ -108,14 +111,51 @@ public class TeiViewController {
         Process process = Runtime.getRuntime().exec(command);
         process.waitFor();
 
-        // open file from htmlFilePath into string variable
-        String content = new String(Files.readAllBytes(Paths.get(temporaryTeiFilePath + ".html")));
-        
+        // Step 1: Load the XHTML Document
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document doc = builder.parse(temporaryTeiFilePath + ".html");
+
+        // Step 2: Modify the Document
+        // Get the head element
+        Node head = doc.getElementsByTagName("head").item(0);
+
+        if (head == null) {
+            throw new IllegalArgumentException("No head element found in the XHTML document");
+        }
+
+        // Create and append the first link element
+        Element link1 = doc.createElement("link");
+        link1.setAttribute("xmlns", "http://www.w3.org/1999/xhtml");
+        link1.setAttribute("id", "maincss");
+        link1.setAttribute("rel", "stylesheet");
+        link1.setAttribute("type", "text/css");
+        link1.setAttribute("href", "/content/css/teibp.css");
+        head.appendChild(link1);
+
+        // Create and append the second link element
+        Element link2 = doc.createElement("link");
+        link2.setAttribute("xmlns", "http://www.w3.org/1999/xhtml");
+        link2.setAttribute("id", "customcss");
+        link2.setAttribute("rel", "stylesheet");
+        link2.setAttribute("type", "text/css");
+        link2.setAttribute("href", "/content/css/custom.css");
+        head.appendChild(link2);
+
+        // Step 3: Serialize the Modified Document
+        TransformerFactory tfa = TransformerFactory.newInstance();
+        Transformer transformera = tfa.newTransformer();
+        StringWriter writera = new StringWriter();
+        transformera.transform(new DOMSource(doc), new StreamResult(writer));
+
+        // Get the modified XHTML as a String
+        String modifiedXhtml = writera.getBuffer().toString();
+
         // delete temporary file
         File file = new File(temporaryTeiFilePath + ".html");
         file.delete();
 
-        return content;
+        return modifiedXhtml;
         } catch (Exception e) {
             e.printStackTrace();
             // Handle exceptions accordingly
