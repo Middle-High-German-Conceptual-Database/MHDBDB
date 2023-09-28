@@ -76,6 +76,7 @@ public class TeiViewController {
               // Read and parse the main XML file
         String xmlFilePath = teiFolder + "/" + id + ".tei.xml.html";
     
+        
         // open file from xmlFilePath into string variable
         String content = new String(Files.readAllBytes(Paths.get(xmlFilePath)));
 

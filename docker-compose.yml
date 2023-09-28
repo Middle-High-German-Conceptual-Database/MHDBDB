@@ -28,7 +28,7 @@ services:
       - '8081:8081'
     container_name: backend
     volumes:
-      - ./tei:/tei
+      - ../tei1:/tei
   mhdbdb:
     restart: always
     build:

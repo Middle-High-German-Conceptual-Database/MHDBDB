@@ -32,6 +32,7 @@ module.exports = (options) => webpackMerge(commonConfig({
           '/h2-console',
           '/auth',
           '/showTei',
+          '/showTeiAsHtml',
         ],
         target: `http${options.tls ? 's' : ''}://localhost:8081`,
         secure: false,
