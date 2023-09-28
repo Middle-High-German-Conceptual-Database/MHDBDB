@@ -74,11 +74,46 @@ public class TeiViewController {
     public String showTeiAsHtml(@RequestParam String id) {
         try {
               // Read and parse the main XML file
-        String xmlFilePath = teiFolder + "/" + id + ".tei.xml.html";
+        String xmlFilePath = teiFolder + "/" + id + ".tei.xml";
     
+        Document mainDoc = loadXmlDocument(xmlFilePath);
+
+        // Add the XML processing instruction
+        ProcessingInstruction pi = mainDoc.createProcessingInstruction("xml-stylesheet", "type=\"text/xsl\" href=\"/content/teibp.xsl\"");
+        mainDoc.insertBefore(pi, mainDoc.getDocumentElement());
+
+        // Read and parse the additional XML file
+        Document additionalDoc = loadXmlDocument(additionalXmlPath);
+
+        // Append the content of the additional XML to the teiHeader of the main XML
+        Node teiHeader = mainDoc.getElementsByTagName("tei:teiHeader").item(0);
+        Node importedNode = mainDoc.importNode(additionalDoc.getDocumentElement(), true);
+        teiHeader.appendChild(importedNode);
+
+        // Serialize the modified XML back to string
+        TransformerFactory tf = TransformerFactory.newInstance();
+        Transformer transformer = tf.newTransformer();
+        StringWriter writer = new StringWriter();
+        transformer.transform(new DOMSource(mainDoc), new StreamResult(writer));
+
+        String temporaryTeiFile = writer.getBuffer().toString();
         
-        // open file from xmlFilePath into string variable
-        String content = new String(Files.readAllBytes(Paths.get(xmlFilePath)));
+        // save temporaryTeiFile to temporary file with uuid as name with .xml ending
+        String idX = java.util.UUID.randomUUID().toString();
+        String temporaryTeiFilePath = teiFolder + "/" + idX + ".tei.temp.xml";
+        Files.write(Paths.get(temporaryTeiFilePath), temporaryTeiFile.getBytes());
+
+        // execute program tei2html with temporaryTeiFilePath as argument
+        String command = "teitohtml " + temporaryTeiFilePath;
+        Process process = Runtime.getRuntime().exec(command);
+        process.waitFor();
+
+        // open file from htmlFilePath into string variable
+        String content = new String(Files.readAllBytes(Paths.get(temporaryTeiFilePath + ".html")));
+        
+        // delete temporary file
+        File file = new File(temporaryTeiFilePath + ".html");
+        file.delete();
 
         return content;
         } catch (Exception e) {
