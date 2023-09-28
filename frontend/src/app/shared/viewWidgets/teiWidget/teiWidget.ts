@@ -9,7 +9,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class TeiWidgetComponent implements OnInit {
     public title: string = 'TEI';
-    public url: string = '/showTei?id=demo'; // Default URL
+    public url: string = '/showTeiAsHtml?id=demo'; // Default URL
   
     constructor(
       public router: Router,
@@ -24,7 +24,7 @@ export class TeiWidgetComponent implements OnInit {
         const id = params.get('id');
         if (id) {
           // Modify the url based on the id. This is just an example, modify as per your requirements.
-          this.url = `/showTei?id=${id}`;
+          this.url = `/showTeiAsHtml?id=${id}`;
         }
       });
     }

@@ -107,14 +107,11 @@ public class TeiViewController {
         Files.write(Paths.get(temporaryTeiFilePath), temporaryTeiFile.getBytes());
 
         // execute program tei2html with temporaryTeiFilePath as argument
-        String command = "teitohtml " + temporaryTeiFilePath;
+        String command = "/Users/danielschlager/GitHub/tei-stylesheets/bin/teitohtml " + temporaryTeiFilePath;
         Process process = Runtime.getRuntime().exec(command);
         process.waitFor();
 
-        // Step 1: Load the XHTML Document
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        Document doc = builder.parse(temporaryTeiFilePath + ".html");
+        Document doc = loadXmlDocument(temporaryTeiFilePath + ".html");
 
         // Step 2: Modify the Document
         // Get the head element
@@ -130,7 +127,7 @@ public class TeiViewController {
         link1.setAttribute("id", "maincss");
         link1.setAttribute("rel", "stylesheet");
         link1.setAttribute("type", "text/css");
-        link1.setAttribute("href", "/content/css/teibp.css");
+        link1.setAttribute("href", "/css/teibp.css");
         head.appendChild(link1);
 
         // Create and append the second link element
@@ -139,14 +136,14 @@ public class TeiViewController {
         link2.setAttribute("id", "customcss");
         link2.setAttribute("rel", "stylesheet");
         link2.setAttribute("type", "text/css");
-        link2.setAttribute("href", "/content/css/custom.css");
+        link2.setAttribute("href", "/css/custom.css");
         head.appendChild(link2);
 
         // Step 3: Serialize the Modified Document
         TransformerFactory tfa = TransformerFactory.newInstance();
         Transformer transformera = tfa.newTransformer();
         StringWriter writera = new StringWriter();
-        transformera.transform(new DOMSource(doc), new StreamResult(writer));
+        transformera.transform(new DOMSource(doc), new StreamResult(writera));
 
         // Get the modified XHTML as a String
         String modifiedXhtml = writera.getBuffer().toString();
