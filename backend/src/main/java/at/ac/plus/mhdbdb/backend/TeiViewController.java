@@ -107,7 +107,8 @@ public class TeiViewController {
         Files.write(Paths.get(temporaryTeiFilePath), temporaryTeiFile.getBytes());
 
         // execute program tei2html with temporaryTeiFilePath as argument
-        String command = "/Users/danielschlager/GitHub/tei-stylesheets/bin/teitohtml " + temporaryTeiFilePath;
+        String command = "teitohtml " + temporaryTeiFilePath;
+        // String command = "/Users/danielschlager/GitHub/tei-stylesheets/bin/teitohtml " + temporaryTeiFilePath;
         Process process = Runtime.getRuntime().exec(command);
         process.waitFor();
 
