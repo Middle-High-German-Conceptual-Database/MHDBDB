@@ -1,6 +1,3 @@
-[[Tutorial]]
-#daten
-
 
 ## Wie ist das Korpus aufgebaut? 
 ### Korpuskonturierung, Korpustypologie 
@@ -19,7 +16,6 @@ Der zeitliche Rahmen des Korpus umfasst nicht nur den Zeitraum von 1050 bis 1350
 Das Korpus wird linguistisch aufbereitet, indem eine Tokenisierung und Lemmatisierung der Texte erfolgt. Es werden auch teilweise Disambiguierungen vorgenommen, um Mehrdeutigkeiten aufzulösen. Zudem erfolgt eine Annotation der Daten.
 
 
-
 ## Urheberrecht und Lizenzen
 
 „Die Geburt des Lesers ist zu bezahlen mit dem Tod des Autors.“ (Barthes, Roland: Der Tod des Autors. In: Texte zur Theorie der Autorschaft. Hrsg. von Fotis Jannidis u.a. Stuttgart: Reclam 2000. S. 193.)
@@ -36,14 +32,7 @@ Beispiel: Vlastimil Brom (Hg.): Di tutsch kronik von Behem lant (2012).
 
 ## In welchem Format liegen die Daten vor?
 
-Die E-Texte wurden ursprünglich in basalem, strukturangebendem TEI-XML kodiert (Strophe, Vers, Überschrift). Alle Dateien sind tokenisiert, d.h. alle Tokens sind mit einem Element "seg" mit eindeutiger ID ausgezeichnet. Von dort wird mittels Stand-off-Markup auf sämtliche Annotationen/Forschungsdaten/Metadaten im RDF-Format verwiesen.
-Kontrollierte Vokabularien (Begriffssystem, Namenssystem, Textreihentypologie) wurden als SKOS-Vokabulare realisiert. 
-Die Lemmata sind nach den Vorgaben des OntoLex-Lemon-Lexicography-Modules kodiert.
-Die Vernetzung zwischen RDF- und TEI-Daten erfolgt mittels Web Annotation Vocabulary nach der Empfehlung des W3-Konsortiums.
-Sämtliche Annotationen können zur weiteren Verwendung unter "Korpus" als TEI/RDF heruntergeladen werden. Wo das Urheberrecht es erlaubt, stehen die E-Texte zusätzlich als PDF-Dateien zur Verfügung.
-
-*Grafik einfügen zur Übersicht?
-
+Die E-Texte wurden ursprünglich in basalem, strukturangebendem TEI-XML kodiert (Strophe, Vers, Überschrift). Alle Dateien sind tokenisiert, d.h. alle Tokens sind mit einem Element "seg" mit eindeutiger ID ausgezeichnet. Von dort wird mittels Stand-off-Markup auf sämtliche Annotationen/Forschungsdaten/Metadaten im RDF-Format verwiesen. Kontrollierte Vokabularien (Begriffssystem, Namenssystem, Textreihentypologie) wurden als SKOS-Vokabulare realisiert. Die Lemmata sind nach den Vorgaben des OntoLex-Lemon-Lexicography-Modules kodiert. Die Vernetzung zwischen RDF- und TEI-Daten erfolgt mittels Web Annotation Vocabulary nach der Empfehlung des W3-Konsortiums. Sämtliche Annotationen können zur weiteren Verwendung unter "Korpus" als TEI/RDF heruntergeladen werden. Wo das Urheberrecht es erlaubt, stehen die E-Texte zusätzlich als PDF-Dateien zur Verfügung.
 
 ## Kann man die Daten herunterladen?
 
@@ -59,7 +48,6 @@ Die Texte sind weitestgehend mit **part-of-speech-Tagging (POS-Tagging)** verseh
 
 ![[Pasted image 20230601132752.png]] ![Screenshot aus der Belegsuche]
 
-*Beispiel vor Release prüfen*
 
 Die POS-Annotationen folgen den Vorgaben des [OntoLex-Lemon-Lexicography-Modules](https://www.w3.org/2019/09/lexicog/) des W3C. 
 
