@@ -3,7 +3,7 @@
         <div class="name flxrow">
             <a [routerLink]="['/work/view', instance.strippedId]" [state]="{ instance: instance }">
                 <i class="fas fa-book"></i>
-                <span class="fil-text">{{ instance.label }} ({{ instance.authorLabel }})</span>
+                <span class="fil-text">{{ instance.label }} ({{ instance.authorLabel }}) {{ instance.textId }}</span>
             </a>
         </div>
 
