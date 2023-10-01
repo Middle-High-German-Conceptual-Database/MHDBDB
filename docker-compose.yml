@@ -10,15 +10,15 @@ services:
     restart: unless-stopped
   graphdb:
     restart: always
-    image: khaller/graphdb-free:10.3.0
+    image: ontotext/graphdb:10.3.3
     ports:
       - '7200:7200'
     container_name: graphdb
     environment:
-      - GDB_HEAP_SIZE=15G
+      - GDB_HEAP_SIZE=24G
     volumes:
-      - ./graphdb:/opt/graphdb/home
-      - ./graphdb-import:/root/graphdb-import
+      - ./graphdb-home:/opt/graphdb/home
+      - ./graphdb-init:/repository.init
   backend:
     restart: always
     build:

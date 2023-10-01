@@ -161,5 +161,6 @@ src/main/webapp/app/shared/ng-jhipster/package.json
 
 graphdb
 graphdb-import
+graphdb-home
 
 
