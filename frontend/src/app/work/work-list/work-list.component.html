@@ -28,9 +28,9 @@
 
     <div class="search-results" infinite-scroll [infiniteScrollDistance]="2" [infiniteScrollUpDistance]="1.5"
          [infiniteScrollThrottle]="500" (scrolled)="onScrollDown()">
-        <div>{{ total }} Werke gefunden</div>
+        <h3>{{ total }} Werke gefunden</h3>
         <div *ngFor="let instance of instances">
-            <dhpp-work-element [instance]="instance"></dhpp-work-element>
+            <dhpp-work-element [instance]="instance" [qp]="qp"></dhpp-work-element>
         </div>
         <span *ngIf="total > instances.length">Scrollen für mehr Resultate</span>
         <mat-spinner *ngIf="isLoadingNext"></mat-spinner>

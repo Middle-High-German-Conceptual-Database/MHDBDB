@@ -12,3 +12,20 @@
   padding-left: 1rem;
   padding-right: 1rem;
 }
+
+.suche-row {
+  align-items: center;
+  border: #bcbcbc solid 0px !important;
+  margin: 10px 0 0 0;
+  padding: 5px 0 5px 15px;
+}
+
+.suche_blk_bottom {
+  border: #bcbcbc solid 1px;
+}
+
+.suche-row .name .smaller .far, .suche-row .name .smaller .fas {
+  margin: 15px 18px 0 0;
+  font-size: 20px !important;
+  color: #3a3a3aff;
+}

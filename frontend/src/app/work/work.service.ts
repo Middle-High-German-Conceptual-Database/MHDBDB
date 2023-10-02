@@ -18,6 +18,7 @@ import { WordClass } from 'app/dictionary/dictionary.class';
 import { DatePrecision } from 'app/shared/baseIndexComponent/baseindexcomponent.class';
 import { Store, select } from '@ngrx/store';
 import { selectLanguage } from 'app/store/language.reducer';
+import { Utils } from 'app/shared/utils';
 
 export interface WorkQueryParameterI extends QueryParameterI<WorkFilterI, WorkOptionsI> {}
 
@@ -426,26 +427,14 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
   _jsonToObject(bindings: any): WorkClass[] {
     let results: WorkClass[] = super._jsonToObject(bindings) as WorkClass[];
 
-    /* bindings.forEach(
+    bindings.forEach(
       item => {
         let element = results.find(element => element.id === item.id.value)
-        if (element && !element.authors) {
-          const authorElem = new Person(
-            item.authorId.value,
-            item.authorLabel.value,
-          )
-          let authorList: Person[] = []
-          authorList.push(authorElem)
-          element.authors = authorList
-        } else if (element && element.authors.find(authorElem => authorElem.id === item.authorId.value)) {
-          const authorElem = new Person(
-            item.authorId.value,
-            item.authorLabel.value,
-          )
-          element.authors.push(authorElem)
-        }
+        element.authorLabel = item.authorLabel.value;
+        element.textId = Utils.removeNameSpaceFromTextUri(item.text.value);
+        element.workId = item.id.value;
       }
-    ); */
+    ); 
     return results;
   }
 
@@ -455,7 +444,12 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
                                 ?text a dhpluso:Text .
                                 ?electronic dhpluso:instanceOf ?text ;
                                     a dhpluso:Electronic .
+                                    {
+                                      ?id dhpluso:contribution/dhpluso:agent ?authorId .
+                                      ?authorId rdfs:label ?authorLabel .
+                                    }
                                 ?id rdfs:label ?label .
+                                filter(langMatches( lang(?authorLabel), "${qp.lang}" ))
                                 filter(langMatches( lang(?label), "${qp.lang}" ))
                                 FILTER regex(?label, "${qp.filter.label}", "i")
                                 `;
@@ -466,10 +460,11 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
     let instanceSelect = '';
 
     instanceSelect = `
-                SELECT DISTINCT ?id ?label
+                SELECT DISTINCT ?id ?label ?text ?authorLabel
                 WHERE {
                     ${labelQuery}
                 }
+                ORDER BY ASC(?label)
             `;
 
     let q = '';

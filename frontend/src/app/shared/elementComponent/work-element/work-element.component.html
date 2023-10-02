@@ -3,21 +3,18 @@
         <div class="name flxrow">
             <a [routerLink]="['/work/view', instance.strippedId]" [state]="{ instance: instance, temp: instance }">
                 <i class="fas fa-book"></i>
-                <span class="fil-text">{{ instance.label }}</span>
+                <span class="fil-text">{{ instance.label }} ({{ instance.authorLabel }}) {{ instance.textId }}</span>
              </a>
         </div>
-        <div class="right-icon">
-            <a href="#">
-                <i class="fas fa-archive"></i>
-            </a>
-            <a href="#">
-                <i class="fas fa-project-diagram"></i>
+        <div class="flxrow right-icon">
+            <a [routerLink]="['/tei', instance.textId]">
+                <i class="fa-solid fa-scroll"></i>
             </a>
             <a href="#">
                 <i class="fas fa-download"></i>
             </a>
             <a href="#">
-                <i class="fas fa-link"></i>
+                <i style="color: green;" class="fa-solid fa-circle"></i>
             </a>
         </div>
     </div>
