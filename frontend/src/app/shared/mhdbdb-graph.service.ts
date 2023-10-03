@@ -128,7 +128,7 @@ export const classFilter: LabeledClassfilterI[] = [
   }
 ];
 
-export interface FilterClassExtendedI extends FilterClassI, FilterSeriesI, FilterWorksI, FilterLabelI, FilterConceptsI {}
+export interface FilterClassExtendedI extends FilterClassI, FilterSeriesI, FilterWorksI, FilterLabelI, FilterConceptsI, FilterAuthorI {}
 
 export interface FilterClassI extends FilterI {
   classFilter?: classFilterT[];

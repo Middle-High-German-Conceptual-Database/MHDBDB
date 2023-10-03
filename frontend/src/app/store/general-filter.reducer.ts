@@ -9,7 +9,8 @@ import {
   setWorksActive,
   setAuthorActive,
   updateWorks,
-  updateSeries
+  updateSeries,
+  updateAuthors,
 } from './general-filter.actions';
 
 import { FilterClassExtendedI } from 'app/shared/mhdbdb-graph.service';
@@ -23,7 +24,8 @@ export const defaultFilterClassExtended = {
   isWorksActive: false,
   isAuthorActive: false,
   works: [],
-  series: []
+  series: [],
+  authors: [],
 };
 
 export const initialState: FilterClassExtendedI = defaultFilterClassExtended;
@@ -38,7 +40,8 @@ const _generalFilterReducer = createReducer(
   on(setWorksActive, (state, { isWorksActive }) => ({ ...state, isWorksActive })),
   on(setAuthorActive, (state, { isAuthorActive }) => ({ ...state, isAuthorActive })),
   on(updateWorks, (state, { works }) => ({ ...state, works })),
-  on(updateSeries, (state, { series }) => ({ ...state, series }))
+  on(updateSeries, (state, { series }) => ({ ...state, series })),
+  on(updateAuthors, (state, { authors }) => ({ ...state, authors }))
 );
 
 export function generalFilterReducer(state: FilterClassExtendedI | undefined, action: Action) {
@@ -80,6 +83,11 @@ export const selectIsWorksActive = createSelector(
 export const selectWorks = createSelector(
   selectFilterClassExtended,
   filterClassExtended => filterClassExtended.works
+);
+
+export const selectAuthors = createSelector(
+  selectFilterClassExtended,
+  filterClassExtended => filterClassExtended.authors
 );
 
 export const selectIsAuthorActive = createSelector(

@@ -15,6 +15,11 @@ export const setWorksActive = createAction('[Filter] Set Works Active', props<{ 
 
 export const setAuthorActive = createAction('[Filter] Set Author Active', props<{ isAuthorActive: boolean }>());
 
+export const updateAuthors = createAction(
+  '[Filter] Update Authors',
+  props<{ authors: any[] }>() // replace any with the correct type
+);
+
 export const updateWorks = createAction(
   '[Filter] Update Works',
   props<{ works: any[] }>() // replace any with the correct type

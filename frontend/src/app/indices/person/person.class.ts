@@ -1,4 +1,15 @@
 import { BirthI, DatePrecision, DeathI, MhdbdbIdLabelEntity as MhdbdbEntityIdLabel } from '../../shared/baseIndexComponent/baseindexcomponent.class';
+
+
+export class PersonClass extends MhdbdbEntityIdLabel  {
+    constructor(
+        public id: string,
+        public label: string
+    ) {
+        super(id, label)
+    }
+}
+
 export class Person extends MhdbdbEntityIdLabel implements BirthI, DeathI  {
     public placeOfBirthId: string;
     public placeOfBirthLabel: string;

@@ -44,7 +44,6 @@ export class PersonService extends MhdbdbIdLabelEntityService<PersonQueryParamet
   }
 
   _sparqlQuery(qp: PersonQueryParameterI, countResults: boolean = false): string {
-    console.warn(NAMEDGRAPHS.get('default'));
     // filters
     let filters = [];
 
@@ -55,7 +54,7 @@ export class PersonService extends MhdbdbIdLabelEntityService<PersonQueryParamet
 
     // label query
     let labelQuery = '';
-    if (qp.filter.isLabelActive) {
+    if (true) { // if (qp.filter.isLabelActive) {
       if (qp.filter.id || qp.option.useLucene === false || !('label' in qp.filter && qp.filter.label != '')) {
         labelQuery = instanceSelector;
       } else {

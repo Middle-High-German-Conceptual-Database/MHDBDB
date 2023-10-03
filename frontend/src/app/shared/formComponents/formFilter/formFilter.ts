@@ -21,10 +21,13 @@ import {
   updateLabel,
   setAuthorActive,
   updateWorks,
-  updateSeries
+  updateSeries,
+  updateAuthors
 } from 'app/store/general-filter.actions';
 import { Options } from '@angular-slider/ngx-slider';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { PersonQueryParameterI, PersonService } from 'app/indices/person/person.service';
+import { Person, PersonClass } from 'app/indices/person/person.class';
 
 @Component({
   selector: 'dhpp-form-filter',
@@ -36,25 +39,31 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
   form: FormGroup;
   private destroy$ = new Subject<void>();
 
+  filterAuthors;
   filterConcepts;
   filterSeries;
   filterWorks;
 
   filterMap;
 
+  
+  authorList: PersonClass[] = [];
   workList: WorkClass[] = [];
   seriesList: SeriesClass[] = [];
   seriesChildList: SeriesClass[] = [];
+  authorLabels: string[] = [];
   conceptLabels: string[] = [];
   workLabels: string[] = [];
   seriesLabels: string[] = [];
   filterWorksTemp = [];
   filterSeriesTemp = [];
+  filterAuthorsTemp = [];
 
   filterSeriesGroup: any[] = [];
 
   filterSeriesCheckboxes: FormGroup;
   filterWorksCheckboxes: FormGroup;
+  filterAuthorsCheckboxes: FormGroup;
 
   labelAuthorTimeSearch = 'Lebensdaten AutorIn';
 
@@ -79,6 +88,9 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
   workCtrl = new FormControl();
   filteredWorks: Observable<WorkClass[]>;
 
+  authorCtrl = new FormControl();
+  filteredAuthors: Observable<PersonClass[]>;
+
   // autocomplete concepts
   conceptCtrl = new FormControl();
   filteredConcepts: Observable<string[]>;
@@ -89,11 +101,13 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
   @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
 
   @ViewChild('workInput', { static: false }) workInput: ElementRef<HTMLInputElement>;
+  @ViewChild('authorInput', { static: false }) authorInput: ElementRef<HTMLInputElement>;
 
   constructor(
     public historyService: HistoryService<qT, f, o, instanceClass>,
     public help: MatDialog,
     public workService: WorkService,
+    public personService: PersonService,
     public store: Store
   ) {
     // Autocomplete for concepts field
@@ -106,6 +120,12 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
       startWith(null),
       map((work: string | null) => (work ? this._filterWork(work) : this.workList.slice()))
     );
+
+    this.filteredAuthors = this.authorCtrl.valueChanges.pipe(
+      startWith(null),
+      map((work: string | null) => (work ? this._filterAuthor(work) : this.authorList.slice()))
+    );
+
   }
 
   ngOnInit() {
@@ -132,6 +152,35 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
       });
     });
 
+    const qp = {
+      "order": "label",
+      "desc": false,
+      "offset": 0,
+      "limit": 1000,
+      "lang": "de",
+      "namedGraphs": "https://dh.plus.ac.at/mhdbdb/namedGraph/mhdbdbMeta",
+      "filter": {
+          "scheme": "mhdbdbi:nameSystem",
+          "topConcepts": true
+      },
+      "option": {
+          "useLucene": false
+      }
+  } as PersonQueryParameterI;
+
+    this.filterAuthors = new FormGroup({});
+    this.personService.getInstances(qp).then(data => {
+      console.log(data);
+      this.authorList = data;
+      this.authorList.forEach(work => {
+        this.authorLabels.push(`${work.label.trim()}`);
+        if (this.filterMap && this.filterMap.authors && this.filterMap.authors.includes(work.id)) {
+          // Use work id as control name instead of label
+          this.filterAuthors.addControl(work.id, new FormControl(true));
+        }
+      });
+    });
+
     this.form = new FormGroup({
       label: new FormControl(this.filterMap.label),
       isLabelActive: new FormControl(this.filterMap.isLabelActive),
@@ -140,6 +189,7 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
       isWorksActive: new FormControl(this.filterMap.isWorksActive),
       isAuthorActive: new FormControl(this.filterMap.isAuthorActive),
       filterWorks: this.filterWorks,
+      filterAuthors: this.filterAuthors,
       series: new FormControl([]),
       filterSeriesCheckboxes: this.filterSeriesCheckboxes
     });
@@ -162,6 +212,14 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
             return work ? work.label : '';
           });
         }
+
+        if (tokenFilter.authors) {
+          modifiedFilter.authors = tokenFilter.authors.map(id => {
+            let work = this.authorList.find(work => work.id == id);
+            return work ? work.label : '';
+          });
+        }
+
         if (tokenFilter.series) {
           modifiedFilter.series = tokenFilter.series.map(id => {
             let series = this.seriesList.find(series => series.id == id);
@@ -178,7 +236,7 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
 
     this.form.valueChanges
       .pipe(
-        debounceTime(500),
+        debounceTime(1500),
         distinctUntilChanged(),
         takeUntil(this.destroy$)
       )
@@ -204,6 +262,7 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
         }
 
         const tempFilterWorksArray = Object.keys(value.filterWorks);
+        const tempFilterAuthorsArray = Object.keys(value.filterAuthors);
 
         if (Array.isArray(tempFilterWorksArray) && tempFilterWorksArray.length > 0) {
           this.filterWorksTemp = [];
@@ -212,6 +271,15 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
             this.filterWorksTemp.push(v);
           });
           this.store.dispatch(updateWorks({ works: this.filterWorksTemp }));
+        }
+
+        if (Array.isArray(tempFilterAuthorsArray) && tempFilterAuthorsArray.length > 0) {
+          this.filterAuthorsTemp = [];
+          tempFilterAuthorsArray.map(v => {
+            // const e = this.workList.find(element => element.label === v);
+            this.filterAuthorsTemp.push(v);
+          });
+          this.store.dispatch(updateAuthors({ authors: this.filterAuthorsTemp }));
         }
 
         if (Array.isArray(value.series) && value.series.length > 0) {
@@ -245,6 +313,11 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
     return this.workList.filter(work => work.label.toLowerCase().indexOf(filterValue) === 0);
   }
 
+  private _filterAuthor(value: string): PersonClass[] {
+    const filterValue = value.toLowerCase();
+    return this.authorList.filter(work => work.label.toLowerCase().indexOf(filterValue) === 0);
+  }
+
   get concepts() {
     return <FormGroup>this.form.get('filterConcepts');
   }
@@ -257,9 +330,18 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
     return <FormGroup>this.form.get('filterWorks');
   }
 
+  get authors() {
+    return <FormGroup>this.form.get('filterAuthors');
+  }
+
   removeWork(workId: string): void {
     this.works.removeControl(workId);
     this.works.updateValueAndValidity();
+  }
+
+  findAuthorById(id: string): string {
+    const workItem = this.authorList.find(work => work.id === id);
+    return workItem ? `${workItem.label}` : id;
   }
 
   findLabelById(id: string): string {
@@ -279,6 +361,20 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
   removeConcept(conceptLabel: string): void {
     this.concepts.removeControl(conceptLabel);
     this.concepts.updateValueAndValidity();
+  }
+
+  selectedAuthor(event: MatAutocompleteSelectedEvent): void {
+    const work = this.authorList.find(w => w.label === event.option.viewValue);
+    if (work) {
+      this.authors.addControl(work.id, new FormControl(true));
+      this.authorInput.nativeElement.value = '';
+      this.authorCtrl.setValue(null);
+    }
+  }
+
+  removeAuthor(conceptLabel: string): void {
+    this.authors.removeControl(conceptLabel);
+    this.authors.updateValueAndValidity();
   }
 
   selectedConcept(event: MatAutocompleteSelectedEvent): void {
