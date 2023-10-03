@@ -29,14 +29,14 @@
                 </ul>
             </div>
         </div>
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-3">
                 Lebensdaten Autor*in
             </div>
             <div class="col-9">
                 um 1200
             </div>
-        </div>
+        </div> -->
         <div class="row">
             <div class="col-3">
                 Linked Open Data (LOD)
@@ -80,15 +80,18 @@
     <div class="container">
         <div class="row" *ngFor="let instance of metadata.instances | slice:0:1;">
             <div class="col-3">
-                <a href="{{instance}}" target="_blank">{{ metadata.label }}</a>
+                <a [routerLink]="['/tei', instance | textId]" target="_blank">{{ metadata.label }} {{ instance | textId }}</a>
             </div>
-            <div class="col-2">
-               <!-- <a href="">
-                    <fa-icon [icon]="faPrint"></fa-icon>
-                </a>
-                <a href="">
-                    <fa-icon [icon]="faLink"></fa-icon>
-                </a>-->
+            <div class="col-3">
+                    <a [routerLink]="['/tei', instance | textId]">
+                        <i class="fa-solid fa-scroll"></i>
+                    </a>
+                    <a href="#">
+                        <i class="fas fa-download"></i>
+                    </a>
+                    <a href="#">
+                        <i style="color: green;" class="fa-solid fa-circle"></i>
+                    </a>
             </div>
         </div>
     </div>

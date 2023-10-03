@@ -83,15 +83,17 @@
 
     <div *ngIf="isRLoading"><mat-spinner></mat-spinner></div>
 
-    <div *ngIf="!isLoading" class="search-results">
+    <div *ngIf="!isLoading" class="search-results" infinite-scroll [infiniteScrollDistance]="2" [infiniteScrollUpDistance]="1.5"
+    [infiniteScrollThrottle]="500" (scrolled)="onScrollDown()">
 
-        <h3>{{ totalAnnotations }} Mal gefunden</h3>
+        <h3>{{ totalAnnotations }} Belege gefunden</h3>
 
         <div *ngFor="let instance of instances">
             <dhpp-text-element [instance]="instance" [qp]="qp"></dhpp-text-element>
 
         </div>
-        <!-- <mat-spinner *ngIf="isLoadingNext"></mat-spinner> -->
+        <span *ngIf="total > instances.length">Scrollen für mehr Resultate</span>
+        <mat-spinner *ngIf="isLoadingNext"></mat-spinner>
     </div>
     
 </form>
