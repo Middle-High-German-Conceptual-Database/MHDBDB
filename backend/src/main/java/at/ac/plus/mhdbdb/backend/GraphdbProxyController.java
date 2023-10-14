@@ -51,8 +51,8 @@ public class GraphdbProxyController {
 
         // Log the request URI and method
         logger.info("Request URI: " + request.getRequestURI());
-        logger.info("Request Method: " + request.getMethod());
-        logger.info("Request Body: " + body);
+        // logger.info("Request Method: " + request.getMethod());
+        // logger.info("Request Body: " + body);
 
         // Get headers from the original request and add them to the outgoing request
         HttpHeaders headers = new HttpHeaders();
@@ -63,24 +63,24 @@ public class GraphdbProxyController {
             headers.add(headerName, headerValue);
 
             // Log the headers
-            logger.info("Header: " + headerName + " Value: " + headerValue);
+            // logger.info("Header: " + headerName + " Value: " + headerValue);
         }
 
         // Forward the request to the target host
         HttpEntity<String> entity = new HttpEntity<>(body, headers);
 
-        logger.info("Sending request with body: " + body);
+        // logger.info("Sending request with body: " + body);
 
         ResponseEntity<String> response = null;
 
         try {
             response = restTemplate.exchange(requestUrl, HttpMethod.valueOf(request.getMethod()), entity, String.class);
         } catch (HttpClientErrorException e) {
-            logger.error("HTTP Client Error: " + e.getResponseBodyAsString());
+            // logger.error("HTTP Client Error: " + e.getResponseBodyAsString());
             // Handle the error and return the error response
             return ResponseEntity.status(e.getStatusCode()).body(e.getResponseBodyAsString());
         } catch (Exception e) {
-            logger.error("Unexpected error: " + e.getMessage());
+            // logger.error("Unexpected error: " + e.getMessage());
             // Return a generic error response
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
         }
@@ -90,7 +90,7 @@ public class GraphdbProxyController {
         try {
             responseBody = new ObjectMapper().readValue(response.getBody(), Object.class);
         } catch (JsonProcessingException e) {
-            logger.error("Error parsing response body to JSON", e);
+            // logger.error("Error parsing response body to JSON", e);
             responseBody = Collections.singletonMap("error", "Failed to parse response body");
         }
 
