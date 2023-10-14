@@ -2,6 +2,7 @@ version: '3'
 services:
   nginx:
     image: nginx:latest
+    container_name: nginx
     ports:
       - 7200:7200
     volumes:
@@ -35,7 +36,7 @@ services:
     image: ontotext/graphdb:10.3.3
     ports:
       - '7202:7202'
-    container_name: graphdb
+    container_name: graphdb2
     environment:
       - GDB_HEAP_SIZE=24G
     volumes:
