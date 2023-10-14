@@ -33,7 +33,7 @@ module.exports = (options) => webpackMerge(commonConfig({
           '/auth',
           '/showTei',
           '/showTeiAsHtml',
-          '/repositories/dhPLUS'
+          '/loading',
         ],
         target: `http${options.tls ? 's' : ''}://backend:8081`,
         secure: false,
@@ -42,7 +42,7 @@ module.exports = (options) => webpackMerge(commonConfig({
           Connection: 'keep-alive'
         }
       },
-     /* {
+      {
         context: ['/repositories/dhPLUS'], // GraphDB
         target: `http${options.tls ? 's' : ''}://graphdb:7200`,
         secure: false,
@@ -51,7 +51,7 @@ module.exports = (options) => webpackMerge(commonConfig({
         headers: {
                    Connection: 'keep-alive'
             }
-      }, */
+      }, 
       {
         context: ['/services/rest/api'],
         target: `http${options.tls ? 's' : ''}://localhost:5000`,
