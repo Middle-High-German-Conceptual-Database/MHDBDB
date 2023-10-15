@@ -1,2 +1,5 @@
 /* Place project-specific CSS here */
 
+p::first-letter {
+    text-transform: uppercase !important;
+}

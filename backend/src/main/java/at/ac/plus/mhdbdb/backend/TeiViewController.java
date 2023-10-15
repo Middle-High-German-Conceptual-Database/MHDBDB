@@ -103,7 +103,7 @@ public class TeiViewController {
             // type="text/css" href="../css/custom.css" />
             ProcessingInstruction pi = mainDoc.createProcessingInstruction("xml-stylesheet",
                     "type=\"text/xsl\" href=\"/content/teibp.xsl\"");
-            mainDoc.insertBefore(pi, mainDoc.getDocumentElement());
+            // mainDoc.insertBefore(pi, mainDoc.getDocumentElement());
 
             // Read and parse the additional XML file
             Document additionalDoc = loadXmlDocument(additionalXmlPath);
@@ -153,8 +153,8 @@ public class TeiViewController {
             Files.write(Paths.get(temporaryTeiFilePath), temporaryTeiFile.getBytes());
 
             // execute program tei2html with temporaryTeiFilePath as argument
-            String command = "teitohtml " + temporaryTeiFilePath;
-            // String command = "/Users/danielschlager/GitHub/tei-stylesheets/bin/teitohtml " + temporaryTeiFilePath;
+            // String command = "teitohtml " + temporaryTeiFilePath;
+            String command = "/Users/danielschlager/GitHub/tei-stylesheets/bin/teitohtml " + temporaryTeiFilePath;
             Process process = Runtime.getRuntime().exec(command);
             process.waitFor();
 
@@ -177,7 +177,7 @@ public class TeiViewController {
             link1.setAttribute("rel", "stylesheet");
             link1.setAttribute("type", "text/css");
             link1.setAttribute("href", "/css/teibp.css");
-            head.appendChild(link1);
+            // head.appendChild(link1);
 
             // Create and append the second link element
             Element link2 = doc.createElement("link");
