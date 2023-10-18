@@ -1,17 +1,5 @@
 version: '3'
 services:
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    ports:
-      - 7200:7200
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./logs:/var/log/nginx
-    depends_on:
-      - graphdb
-      - graphdb2
-    restart: unless-stopped
   portainer:
     image: portainer/portainer-ce:latest
     ports:
@@ -24,7 +12,7 @@ services:
     restart: always
     image: ontotext/graphdb:10.3.3
     ports:
-      - '7201:7201'
+      - '7200:7200'
     container_name: graphdb
     environment:
       - GDB_HEAP_SIZE=24G
