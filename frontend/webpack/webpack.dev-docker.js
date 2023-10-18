@@ -166,7 +166,7 @@ module.exports = (options) => webpackMerge(commonConfig({
     }),
     new FriendlyErrorsWebpackPlugin(),
     new ForkTsCheckerWebpackPlugin(),
-    /* new BrowserSyncPlugin({
+    new BrowserSyncPlugin({
       https: options.tls,
       host: 'localhost',
       port: 9000,
@@ -183,7 +183,7 @@ module.exports = (options) => webpackMerge(commonConfig({
       }
     }, {
       reload: false
-    }), */
+    }), 
     new webpack.ContextReplacementPlugin(
       /angular(\\|\/)core(\\|\/)/,
       path.resolve(__dirname, './src/')
@@ -192,10 +192,10 @@ module.exports = (options) => webpackMerge(commonConfig({
     new webpack.WatchIgnorePlugin([
       utils.root('src/test'),
     ]),
-    /* new WebpackNotifierPlugin({
+    new WebpackNotifierPlugin({
       title: 'JHipster',
       contentImage: path.join(__dirname, 'logo-jhipster.png')
-    }) */
+    }) 
   ].filter(Boolean),
   mode: 'development'
 });
