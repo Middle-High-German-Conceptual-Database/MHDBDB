@@ -37,7 +37,7 @@ Die E-Texte wurden ursprünglich in basalem, strukturangebendem TEI-XML kodiert 
 ## Kann man die Daten herunterladen?
 
 Sämtliche Annotationen können zur weiteren Verwendung "Korpus" als TEI/RDF heruntergeladen werden. Wo das Urheberrecht es erlaubt, stehen die E-Texte zusätzlich als PDF-Dateien zur Verfügung.
-![[Pasted image 20230601133241.png]]
+![](Pasted image20230601133241.png)
 ![Screenshot der MHDBDB E-Texte, Beispiel Wigalois]
 
 ## Wie sind die Daten annotiert? 
@@ -46,7 +46,8 @@ Sämtliche Annotationen können zur weiteren Verwendung "Korpus" als TEI/RDF her
 ### POS-Tagging 
 Die Texte sind weitestgehend mit **part-of-speech-Tagging (POS-Tagging)** versehen. Darunter versteht man die Zuordnung von Wörtern und Satzzeichen eines Textes zu Wortarten (englisch part of speech). https://de.wikipedia.org/wiki/Part-of-speech-Tagging Dies ermöglicht unter anderem, nur nach bestimmten Wortarten zu suchen. So kann man bei der Belegsuche etwa angeben, z.B. wenn man nicht alle Ergebnisse zu "minne" sehen möchte, kann man "Minne + Eigenname" angeben und bekommt dann Stellen angezeigt, an denen "Frau Minne" auftaucht. 
 
-![[Pasted image 20230601132752.png]] ![Screenshot aus der Belegsuche]
+![](Pastedimage20230601132752.png)
+![Screenshot aus der Belegsuche]
 
 
 Die POS-Annotationen folgen den Vorgaben des [OntoLex-Lemon-Lexicography-Modules](https://www.w3.org/2019/09/lexicog/) des W3C. 
@@ -75,8 +76,6 @@ Die Texte werden weiterhin einer oder mehreren Textreihen (Gattungen) der Textre
 
 So ist es möglich, beispielsweise nur nach Belegen in der Gattung bzw. Textreihe "Artusroman" zu suchen. Dabei ist die Differenzierung in der Facettensuche abwärts-kompatibel ist, d.h. alle Hauptkategorien liefern auch alle Ergebnisse in unteren Kategorien. Beispiel: „Großepik“ liefert z.B. Belege aus „Heldenepos“, „Höfischer Roman“, „Prosaroman“, „Schwankroman“, „Textzyklus mit Rahmenerzählung“ sowie allen Kindern dieser Kategorien. 
 
-*screenshot einfügen*
-
 Darüber hinaus ist die Systematik polyhierarchisch, es gibt also häufig verschiedene übergeordnete Parent-Kategorien. Beispiel: Die Textreihe „Vaterunser“ hat als übergeordnete Datensätze „Erstlesetexte“, „Gebet“, „Geistliches Meisterlied“ sowie „Liturgie“. 
 
 ### Metadaten 
@@ -101,7 +100,8 @@ Sämtliche Metadaten der MHDBDB sind ans Semantic Web bzw. an Normdaten angebund
 ![Metadaten der MHDBDB in Relation zueinander]
 Abb.: MHDBDB Main Ontology 
 
-Die Zusammenhänge der Annotationen sind in der MHDBDB Main Ontology abgebildet, die auch auf GitHub verfügbar ist. [GITHUB LINK fehlt noch + LINK ZU WIDOCO]
+### Ontologien 
+Die Zusammenhänge der Annotationen sind in der MHDBDB Main Ontology abgebildet, die auch auf GitHub verfügbar ist (s. Ontologien)
 
 
 ### Zitiervorschlag  

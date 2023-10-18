@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
@@ -136,7 +137,7 @@ public class TeiViewController {
             Node sourceDescP = (Node) xPath.evaluate("/TEI/teiHeader/fileDesc/sourceDesc/p",
                     mainDoc, XPathConstants.NODE);
             if (sourceDescP != null) {
-                sourceDescP.setTextContent(inputMap.get("sourceDescContent"));
+                 sourceDescP.setTextContent(inputMap.get("sourceDescContent"));
             }
 
             // Serialize the modified XML back to string
@@ -147,39 +148,48 @@ public class TeiViewController {
 
             String temporaryTeiFile = writer.getBuffer().toString();
 
+            // logger.info(temporaryTeiFile);
+
             // save temporaryTeiFile to temporary file with uuid as name with .xml ending
             String idX = java.util.UUID.randomUUID().toString();
             String temporaryTeiFilePath = teiFolder + "/" + idX + ".tei.temp.xml";
+            String teiConverter = teiFolder + "/tei2html.xsl";
             Files.write(Paths.get(temporaryTeiFilePath), temporaryTeiFile.getBytes());
 
             // execute program tei2html with temporaryTeiFilePath as argument
             // String command = "teitohtml " + temporaryTeiFilePath;
-            String command = "/Users/danielschlager/GitHub/tei-stylesheets/bin/teitohtml " + temporaryTeiFilePath;
-            Process process = Runtime.getRuntime().exec(command);
+            String command = "xsltproc " + teiConverter + " " + temporaryTeiFilePath + " > " + temporaryTeiFilePath + ".html";
+            logger.info(command);
+                
+            /* Process process = Runtime.getRuntime().exec(command);
             process.waitFor();
+            int exitValue = process.exitValue();
+            System.out.println("Exit value: " + exitValue);
 
             logger.info(temporaryTeiFilePath);
+*/
 
-            Document doc = loadXmlDocument(temporaryTeiFilePath + ".html");
+            ProcessBuilder pb = new ProcessBuilder("xsltproc", teiConverter, temporaryTeiFilePath);
+            pb.redirectOutput(new File(temporaryTeiFilePath + ".html"));
+            Process process = pb.start();
+            process.waitFor();
 
-            // Step 2: Modify the Document
-            // Get the head element
-            Node head = doc.getElementsByTagName("head").item(0);
+            // Document doc = loadXmlDocument(temporaryTeiFilePath + ".html");
+
+            /* Node head = doc.getElementsByTagName("head").item(0);
 
             if (head == null) {
                 throw new IllegalArgumentException("No head element found in the XHTML document");
             }
 
-            // Create and append the first link element
             Element link1 = doc.createElement("link");
             link1.setAttribute("xmlns", "http://www.w3.org/1999/xhtml");
             link1.setAttribute("id", "maincss");
             link1.setAttribute("rel", "stylesheet");
             link1.setAttribute("type", "text/css");
             link1.setAttribute("href", "/css/teibp.css");
-            // head.appendChild(link1);
+            head.appendChild(link1);
 
-            // Create and append the second link element
             Element link2 = doc.createElement("link");
             link2.setAttribute("xmlns", "http://www.w3.org/1999/xhtml");
             link2.setAttribute("id", "customcss");
@@ -188,20 +198,19 @@ public class TeiViewController {
             link2.setAttribute("href", "/css/custom.css");
             head.appendChild(link2);
 
-            // Step 3: Serialize the Modified Document
             TransformerFactory tfa = TransformerFactory.newInstance();
             Transformer transformera = tfa.newTransformer();
             StringWriter writera = new StringWriter();
             transformera.transform(new DOMSource(doc), new StreamResult(writera));
 
-            // Get the modified XHTML as a String
-            String modifiedXhtml = writera.getBuffer().toString();
+            String modifiedXhtml = writera.getBuffer().toString(); */
 
-            // delete temporary file
+            
+            String htmlContent = new String(Files.readAllBytes(Paths.get(temporaryTeiFilePath + ".html")), StandardCharsets.UTF_8);
             File file = new File(temporaryTeiFilePath + ".html");
-            // file.delete();
+            file.delete();
 
-            return modifiedXhtml;
+            return htmlContent;
         } catch (Exception e) {
             e.printStackTrace();
             // Handle exceptions accordingly

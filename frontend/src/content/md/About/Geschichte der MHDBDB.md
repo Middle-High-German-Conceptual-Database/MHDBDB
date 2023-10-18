@@ -17,6 +17,7 @@
 
 
 Mehr zur Geschichte der MHDBDB: 
+
  - Zeppezauer-Wachauer, Katharina (2022): 50 Jahre Mittelhochdeutsche Begriffsdatenbank (MHDBDB). Eine Jubiläums-Zeitreise zwischen Lochkarten, Pixel-Drachen, relationaler Datenbank und Graphdaten, in: Beiträge zur mediävistischen Erzählforschung, Digitale Mediävistik. Perspektiven der Digital Humanities für die Altgermanistik, Themenheft 12, 2022, S. 161–186.  [https://doi.org/10.25619/BmE20223203](https://doi.org/10.25619/BmE20223203) 
 - Hinkelmanns, Peter; Zeppezauer-Wachauer, Katharina. 2021. _Mittelhochdeutsche Begriffsdatenbank (MHDBDB)_. In: KONDE Weißbuch. Hrsg. v. Helmut W. Klug unter Mitarbeit von Selina Galka und Elisabeth Steiner im HRSM Projekt "Kompetenznetzwerk Digitale Edition". Aufgerufen am: 19.7.2023. Handle: hdl.handle.net/11471/562.50.52. PID: o:konde.52
 - Zeppezauer-Wachauer, Katharina (2022). Die Mittelhochdeutsche Begriffsdatenbank (MHDBDB): Rückschau auf 50 Jahre digitale Mediävistik. in M. Bender, & J. Katharina (Hrsg.), _Digitales Forschen: Daten - Werkzeuge - Methoden_ (S. 135-141). (Mitteilungen des Deutschen Germanistenverbands; Band 2, Nr. Jg. 69). V&R Unipress. https://doi.org/10.14220/mdge.2022.69.2.135

@@ -1,18 +1,3 @@
-[[Tutorial]]
-- Was ist die MHDBDB? 
-- Welche Werke sind Teil des Korpus?
-- In welcher Form sind die Texte aufbereitet?
-- Was ist ein Begriff?
-- Wie ist das Begriffssystem aufgebaut?
-- Was ist ein Lemma?
-- Einfache Suche
-- Erweiterte Suchen
-	- Kontextoptionen
-	- Kookkurrenz 
-- LOD
-
-
-
 # Was ist die MHDBDB?
 Die Mittelhochdeutsche Begriffsdatenbank (kurz: MHDBDB) ist ein Recherchetool für das Mittelhochdeutsche. Kernelemente der Datenbank sind eine komplexe Suchmaschine und ein Wörterbuch, in dem mittels eines Begriffssystems Bedeutungen von korpusbasierten Wortartikeln erschlossen werden. Die einzelnen Vorkommensformen im Korpus werden auf diese Wortartikel und die im Kontext gültige Bedeutung bezogen. User können somit nicht nur nach Wörtern, Zeichenketten und Begriffen suchen, sondern auch wesentlich komplexere Fragestellungen auswerten. Darüber hinaus gibt es weitere Annotationsebenen wie beispielsweise grammatikalische Daten oder Metadaten.
 
@@ -21,12 +6,11 @@ Die Mittelhochdeutsche Begriffsdatenbank (kurz: MHDBDB) ist ein Recherchetool f�
  
 # In welcher Form sind die Texte aufbereitet?
 Das Korpus umfasst derzeit über 10,6 Millionen Tokens in fast 29.000 Wortartikeln.
-Die einzelnen Vorkommensformen im Korpus (Tokens) werden auf diese Lemmata und die im Kontext gültige Bedeutung sowie auf weitere Annotationsebenen wie beispielsweise grammatikalische Daten (POS) oder Metadaten bezogen. [[Daten]]
-
+Die einzelnen Vorkommensformen im Korpus (Tokens) werden auf diese Lemmata und die im Kontext gültige Bedeutung sowie auf weitere Annotationsebenen wie beispielsweise grammatikalische Daten (POS) oder Metadaten bezogen. [Daten (#/view/About/Daten)]
 
 # Wie ist die Datenbank entstanden? 
 
-Die ersten elektronischen Grundlagen des mittelhochdeutschen Begriffswörterbuchs entstanden 1972 aus Klaus M. Schmidts Dissertation und wurden damals noch auf Lochkarten erstellt. Die Projekte "Namen in deutschen literarischen Texten des Mittelalters" und das "Begriffswörterbuch der mittelhochdeutschen Literatur"  wurden 1992 zusammengeführt.  Die MHDBDB wurde 1995 erstmals online über das Internet verfügbar gemacht.     - Weitere Informationen zur Geschichte der MHDBDB sind hier zu finden. [[Geschichte der MHDBDB]] 
+Die ersten elektronischen Grundlagen des mittelhochdeutschen Begriffswörterbuchs entstanden 1972 aus Klaus M. Schmidts Dissertation und wurden damals noch auf Lochkarten erstellt. Die Projekte "Namen in deutschen literarischen Texten des Mittelalters" und das "Begriffswörterbuch der mittelhochdeutschen Literatur"  wurden 1992 zusammengeführt.  Die MHDBDB wurde 1995 erstmals online über das Internet verfügbar gemacht.     - Weitere Informationen zur Geschichte der MHDBDB sind hier zu finden. [[Geschichte der MHDBDB]] #/view/About/Geschichte%20der%20MHDBDB
 
 # Was ist ein Lemma?
 
@@ -38,7 +22,7 @@ Ein Lemma ist die Grundform eines Wortes, und bedeutet die Wortform, unter der m
 # Was ist ein Begriff?
 
 „Begriff“ bedeutet die Gesamtheit wesentlicher Merkmaler einer Sache oder einer Gruppe von Erscheinungen, die zu einer gedanklichen Einheit zusammengefasst sind. Z.B. ist der Jupiter ein "Planet" und wird in der MHDBDB unter dem Begriff "Himmel/Atmosphäre/Himmelskörper" gefasst. 
-"Begriffe" werden in sog. onomasiologischen Wörterbüchern aufbereitet. Prominente Beispiele sind Dornseiff, Wehrle-Eggers und Hallig-Wartburg (auf HW basiert das Begriffssystem der MHDBDB. Vgl. [[Daten]] 
+"Begriffe" werden in sog. onomasiologischen Wörterbüchern aufbereitet. Prominente Beispiele sind Dornseiff, Wehrle-Eggers und Hallig-Wartburg (auf letzterem basiert das Begriffssystem der MHDBDB. 
 Bei onomasiologischen Begriffswörterbüchern handelt es sich um Hilfsmittel für Untersuchungen etwa im Bereich der Stilistik, Narratologie, Wortschätze oder zu Sprachgeschichte und Bedeutungswandel.
 
 
@@ -66,8 +50,6 @@ Einstellen von Kontext: Wieviele Zeilen, Verse oder Wörter sollen um den jeweil
 
 ![[Pasted image 20230601131619.png]]
 ![Einstellen von Kontext: Wieviele Zeilen, Verse oder Wörter sollen um den jeweiligen Suchbegriff herum angezeigt werden? ]
-Klicken auf "Suche"
-
 
 
 # Erweiterte Suchen
@@ -105,6 +87,7 @@ Wissensliteratur und Gebrauchsliteratur
 ![[Pasted image 20230601132032.png]]
 
 ![Screenshot der Werkanzeige des Wigalois mit Linked Open Data]
+
 In der Werkansicht werden verknüpfte offene Datensätze angezeigt. Diese werden auch "linked open data" (kurz LOD) genannt. https://de.wikipedia.org/wiki/Linked_Open_Data 
 
 Man kann direkt weiterklicken zu:
@@ -119,4 +102,4 @@ Wikidata
 
 ![Link zu Wikdata, Eintrag Wigalois]
 
-Die MHDBDB wird  in Zukunft mit noch mehr Linked Open Data angereichert. Alle Annotationen sind bereits jetzt ans Semantic Web angebunden. Vgl. [[Daten]]
+Die MHDBDB wird  in Zukunft mit noch mehr Linked Open Data angereichert. Alle Annotationen sind bereits jetzt ans Semantic Web angebunden. 
