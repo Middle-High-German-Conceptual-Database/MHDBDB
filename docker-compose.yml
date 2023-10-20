@@ -40,15 +40,15 @@ services:
     container_name: backend
     volumes:
       - ../tei1:/tei
-  mhdbdb:
-    restart: always
-    build:
-      context: frontend
-      dockerfile: Dockerfile
+  nginx:
+    image: nginx:latest
+    container_name: nginx
     ports:
-      - '9000:9000'
-    container_name: mhdbdb
+      - 9000:9000
     volumes:
-      - ./frontend:/usr/src/app/app-ui
+      - ./frontend/nginx/conf.d/default.conf:/etc/nginx/nginx.conf
+      - ./frontend/build/resources/main/static:/usr/share/nginx/html
+      - ./logs:/var/log/nginx
+    restart: unless-stopped
 volumes:
   data:
