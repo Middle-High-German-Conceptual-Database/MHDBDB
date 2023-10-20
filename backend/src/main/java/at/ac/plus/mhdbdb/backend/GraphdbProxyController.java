@@ -51,7 +51,7 @@ public class GraphdbProxyController {
 
         // Log the request URI and method
         logger.info("Request URI: " + request.getRequestURI());
-        // logger.info("Request Method: " + request.getMethod());
+        logger.info("Request Method: " + request.getMethod());
         // logger.info("Request Body: " + body);
 
         // Get headers from the original request and add them to the outgoing request
@@ -63,13 +63,13 @@ public class GraphdbProxyController {
             headers.add(headerName, headerValue);
 
             // Log the headers
-            // logger.info("Header: " + headerName + " Value: " + headerValue);
+            logger.info("Header: " + headerName + " Value: " + headerValue);
         }
 
         // Forward the request to the target host
         HttpEntity<String> entity = new HttpEntity<>(body, headers);
 
-        // logger.info("Sending request with body: " + body);
+        logger.info("Sending request with body: " + body);
 
         ResponseEntity<String> response = null;
 
