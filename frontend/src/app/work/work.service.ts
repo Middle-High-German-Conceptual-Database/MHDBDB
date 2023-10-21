@@ -431,6 +431,7 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
       item => {
         let element = results.find(element => element.id === item.id.value)
         element.authorLabel = item.authorLabel.value;
+        element.authorId = item.authorId.value;
         element.textId = Utils.removeNameSpaceFromTextUri(item.text.value);
         element.workId = item.id.value;
       }
@@ -440,31 +441,31 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
 
   protected _sparqlQuery(qp: WorkQueryParameterI, countResults: boolean): string {
 
-    console.log(qp);
-
     let authorFilter = `{
-      ?id dhpluso:contribution/dhpluso:agent ?authorId .
-      ?authorId rdfs:label ?authorLabel .
+      ?id dhpluso:contribution/dhpluso:agent ?authorIdA .
+      ?authorIdA rdfs:label ?authorLabelA .
     }`;
     if (qp.filter.isAuthorIdsActive && qp.filter.authorIds.length > 0) {
       const authorIds = qp.filter.authorIds.map(id => `<${id}>`).join(' ');
       authorFilter = `{
-        ?id dhpluso:contribution/dhpluso:agent ?authorId .
-        ?authorId rdfs:label ?authorLabel .
-        VALUES ?authorId { ${authorIds} }
+        ?id dhpluso:contribution/dhpluso:agent ?authorIdA .
+        ?authorIdA rdfs:label ?authorLabelA .
+        VALUES ?authorIdA { ${authorIds} } 
     }`;
     }
 
     let instanceSelector = `?id a dhpluso:Text ;
-                                    dhpluso:hasExpression ?text .
-                                ?text a dhpluso:Text .
-                                ?electronic dhpluso:instanceOf ?text ;
+                                    dhpluso:hasExpression ?textA .
+                                ?textA a dhpluso:Text .
+                                ?electronic dhpluso:instanceOf ?textA ;
                                     a dhpluso:Electronic .
                                    ${authorFilter}
-                                ?id rdfs:label ?label .
-                                filter(langMatches( lang(?authorLabel), "${qp.lang}" ))
-                                filter(langMatches( lang(?label), "${qp.lang}" ))
-                                FILTER regex(?label, "${qp.filter.label}", "i")
+
+                                ?id rdfs:label ?labelA .
+                                
+                                filter(langMatches( lang(?authorLabelA), "${qp.lang}" ))
+                                filter(langMatches( lang(?labelA), "${qp.lang}" ))
+                                FILTER regex(?labelA, "${qp.filter.label}", "i")
                                 `;
 
     let labelQuery = '';
@@ -473,10 +474,11 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
     let instanceSelect = '';
 
     instanceSelect = `
-                SELECT DISTINCT ?id ?label ?text ?authorLabel
+                SELECT DISTINCT ?id (SAMPLE(?labelA) as ?label) (SAMPLE(?textA) AS ?text) (SAMPLE(?authorLabelA) AS ?authorLabel) (SAMPLE(?authorIdA) AS ?authorId)
                 WHERE {
                     ${labelQuery}
                 }
+                GROUP BY ?id
                 ORDER BY ASC(?label)
             `;
 
@@ -484,7 +486,6 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
     if (countResults) {
       q = `
                 SELECT (count(*) as ?count)
-                ${this._sparqlNamedGraph(qp.namedGraphs)}
                 where {
                     {
                         ${instanceSelect}

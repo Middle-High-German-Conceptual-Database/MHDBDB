@@ -64,6 +64,8 @@ export class WorkListComponent extends BaseIndexListDirective<WorkQueryParameter
     reset() {
         this.store.dispatch(reset());
         this.isLoading = false;
+        this.qp.filter.label = '';
+        this.qp.filter.isLabelActive = true;
         this.qp.filter.isAuthorIdsActive = false;
         this.qp.filter.authorIds = [];
         this.search();

@@ -2,9 +2,10 @@ import { Person } from '../indices/person/person.class';
 import { AuthorsI, DateOfCreationI, DatePrecision, MhdbdbIdLabelEntity } from 'app/shared/baseIndexComponent/baseindexcomponent.class';
 
 export class WorkClass extends MhdbdbIdLabelEntity {
-  constructor(public id: string, public label: string, public authorLabel: string, public textId: string, public workId: string) 
+  constructor(public id: string, public label: string, public authorId: string, public authorLabel: string, public textId: string, public workId: string) 
   {
     super(id, label);
+    this.authorId = authorId;
     this.authorLabel = authorLabel;
     this.textId = textId;
     this.workId = workId;
@@ -55,7 +56,7 @@ export class WorkMetadataClass extends WorkClass implements AuthorsI, DateOfCrea
     sameAs: any[],
     authorSameAs: any[]
   ) {
-    super(id, label, '', '', '');
+    super(id, label, '', '', '', '');
     this.sameAs = sameAs;
     this.authors = authors;
     this.authorSameAs = authorSameAs;
