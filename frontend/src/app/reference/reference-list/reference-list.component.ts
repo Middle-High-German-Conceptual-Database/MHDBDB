@@ -21,7 +21,7 @@ import { WorkQueryParameterI } from 'app/work/work.service';
 import { Utils } from 'app/shared/utils';
 import { PoS } from 'app/shared/pos/pos.class';
 import { Store, select } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
 import {
   addTokenFilter,
   removeFilter,
@@ -74,7 +74,9 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
 
   selectedFilter: TokenFilterI;
 
-  totalAnnotations: number = 0;
+  totalAnnotations: number = -1;
+
+  timeIsOver = false;
 
   isRLoading = false;
 
@@ -162,52 +164,70 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
   handlePageEvent(event: PageEvent) {
     this.limit = event.pageSize;
     this.offset = event.pageIndex * event.pageSize;
-    this.search();
+    this.search(true);
   }
 
   reset() {
     this.textInstances = [];
     this.store.dispatch(reset());
     this.isRLoading = false;
+    this.instances = [];
+    this.totalAnnotations = -1;
+    this.isLoading = false;
   }
 
-  search() {
+  search(fromScroll: boolean) {
     this.isRLoading = true;
+    this.instances = [];
+
+    setTimeout(() => {
+      if (this.totalAnnotations == -1) {
+        this.timeIsOver = true;
+      } else {
+        this.timeIsOver = false;
+      }
+    }, 10000); 
+
     const _sq = new SparqlQuery(this.store);
-
-    const countResults = this.service.sparqlQuery({ ...this.generalFilter, filter: this.filter }, true);
-    _sq.query(countResults).then(data => {
-      this.totalAnnotations = data.results.bindings[0].count.value;
-
-      const sparql = this.service.sparqlQuery({ ...this.generalFilter, filter: this.filter }, false);
-      _sq.query(sparql).then(data => {
-        this.instances = this.service._jsonToObject(data.results.bindings);
-        this.store.dispatch(referenceActions.storeReferenceObject({ data }));
-        this.store.dispatch(referenceActions.storeInstances({ data: this.instances }));
-
-        // this.totalAnnotations = this.countTotalAnnotationIds(this.instances);
-
-        // Filter data if generaFilter is set
-        if (this.generalFilter && this.generalFilter.isWorksActive) {
-          // filter this.instances.workId by this.generalFilter.works array
-          this.instances = this.instances.filter(instance => {
-            return this.generalFilter.works.includes(instance.workId);
-          });
-        }
-        this.isRLoading = false;
-        this.isLoading = false;
+  
+    if (this.totalAnnotations == -1 || fromScroll == false) {
+      const countResults = this.service.sparqlQuery({ ...this.generalFilter, filter: this.filter }, true);
+      _sq.query(countResults).then(data => {
+        this.totalAnnotations = data.results.bindings[0].count.value;
+        this.executeQuery();
       });
-      // calculate new limit
-      // this.limit = this.total / 100;
-    });
-
-
+    } else {
+      this.executeQuery();
+    }
   }
+  
+  executeQuery() {
+    this.limit = this.totalAnnotations > 2500 ? 2500 : this.totalAnnotations;
+  
+    const sparql = this.service.sparqlQuery({ ...this.generalFilter, filter: this.filter, limit: this.limit, offset: this.offset }, false);
+    const _sq = new SparqlQuery(this.store); // If SparqlQuery instance is needed here, if not, you can remove it
+    _sq.query(sparql).then(data => {
+      this.instances = this.service._jsonToObject(data.results.bindings);
+      this.store.dispatch(referenceActions.storeReferenceObject({ data }));
+      this.store.dispatch(referenceActions.storeInstances({ data: this.instances }));
+  
+      // Filter data if generaFilter is set
+      if (this.generalFilter && this.generalFilter.isWorksActive) {
+        // filter this.instances.workId by this.generalFilter.works array
+        this.instances = this.instances.filter(instance => {
+          return this.generalFilter.works.includes(instance.workId);
+        });
+      }
+      this.isRLoading = false;
+      this.isLoading = false;
+    });
+  }
+  
 
 
   onScrollDown() {
     this.offset += this.limit;
-    this.search();
+    this.search(true);
   }
 
   countTotalAnnotationIds(dataArray) {

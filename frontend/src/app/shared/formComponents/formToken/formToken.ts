@@ -70,7 +70,7 @@ export class FormTokenComponent implements OnInit, OnDestroy {
     public TextPassageService: TextPassageService,
     public service: tokenFormService,
     public store: Store
-  ) {}
+  ) { }
 
   openHelp() {
     const dialogRef = this.help.open(FormTokenHelpComponent);
@@ -172,7 +172,7 @@ export class FormTokenComponent implements OnInit, OnDestroy {
   selector: 'dhpp-form-token-help',
   templateUrl: './formTokenHelp.html'
 })
-export class FormTokenHelpComponent {}
+export class FormTokenHelpComponent { }
 
 @Component({
   selector: 'dhpp-form-token-word',
@@ -183,10 +183,12 @@ export class FormTokenWordComponent {
   @Input() filter: any;
   @ViewChild('myInput') myInput: ElementRef;
 
+  // @Output() labelValue = new EventEmitter<string>();
   form: FormGroup;
+
   private destroy$ = new Subject<void>();
 
-  constructor(public service: tokenFormService, public store: Store) {}
+  constructor(public service: tokenFormService, public store: Store) { }
 
   ngOnInit() {
     this.tokenFilter = { ...this.tokenFilter } as TokenFilterI;
@@ -197,7 +199,7 @@ export class FormTokenWordComponent {
       searchExactForm: new FormControl(this.tokenFilter.searchExactForm)
     });
 
-    this.store
+   this.store
     .pipe(
       select(selectTokenFilterById, { id: this.filter.id }),
       takeUntil(this.destroy$)
@@ -205,14 +207,9 @@ export class FormTokenWordComponent {
     .subscribe(tokenFilter => {
       if (JSON.stringify(tokenFilter) !== JSON.stringify(this.form.value)) {
         this.form.patchValue(tokenFilter, { emitEvent: false });
-        
-        // Refocus the input after a slight delay
-        setTimeout(() => {
-         // this.myInput.nativeElement.focus();
-        });
       }
-    });
-
+    }); 
+    
     this.form.valueChanges
       .pipe(
         debounceTime(1500),
@@ -221,15 +218,13 @@ export class FormTokenWordComponent {
       )
       .subscribe(value => {
         const changes =
-          this.tokenFilter.label !== value.label ||
-          this.tokenFilter.searchLabelInLemma !== value.searchLabelInLemma ||
-          this.tokenFilter.searchExactForm !== value.searchExactForm;
+          this.tokenFilter.label !== value.label;
         if (changes) {
           const updatedFilter = { ...this.tokenFilter, ...value };
           this.store.dispatch(updateFilterById({ filterId: this.filter.id, newFilter: updatedFilter }));
           this.service.nextQp();
         }
-      });
+      }); 
   }
 
   ngOnDestroy(): void {
@@ -255,7 +250,7 @@ export class FormTokenPosComponent implements OnInit, OnDestroy {
   private formValueChangesSubscription$: Subscription;
   private destroy$ = new Subject<void>();
 
-  constructor(public service: tokenFormService, public posService: PosService, public store: Store) {}
+  constructor(public service: tokenFormService, public posService: PosService, public store: Store) { }
 
   ngOnInit() {
     this.tokenFilter = { ...this.tokenFilter } as TokenFilterI;
@@ -505,7 +500,7 @@ export class FormTokenNamenComponent implements OnInit, OnDestroy {
   }
 }
 
- 
+
 @Component({
   selector: 'dhpp-form-token-position',
   templateUrl: './formTokenPosition.html'
@@ -520,7 +515,7 @@ export class FormTokenPositionComponent implements OnInit, OnDestroy {
   versList = [''];
   anfangList = ['Anfang'];
 
-  constructor(public service: tokenFormService, public store: Store) {}
+  constructor(public service: tokenFormService, public store: Store) { }
 
   ngOnInit() {
     this.tokenFilter = { ...this.tokenFilter } as TokenFilterI;
