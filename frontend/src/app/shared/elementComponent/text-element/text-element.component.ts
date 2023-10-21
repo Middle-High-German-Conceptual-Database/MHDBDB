@@ -48,12 +48,6 @@ export class TextElementComponent extends BaseIndexElementDirective<WorkClass, W
 
   ngOnInit(): void {
     super.ngOnInit();
-
-    console.log(this.instance);
-
-    
-    // this.loadSenses();
-    // this.loadOccurrences();
   }
 
   navigateToTEI(): void {
@@ -76,7 +70,6 @@ export class TextElementComponent extends BaseIndexElementDirective<WorkClass, W
   }
 
   public loadOccurrences() {
-    console.log(this.instance);
     this.textService
       .getAnnotations(0, 10, this.instance.rootId, undefined, 'tei:seg')
       .then(annotations => {
@@ -84,7 +77,6 @@ export class TextElementComponent extends BaseIndexElementDirective<WorkClass, W
         if (annotations[1] > 0) {
           annotations[0].forEach(annotation => {
             this.textService.getKwic(annotation.target).then(kwic => {
-              console.log(kwic);
               if (kwic) {
                 this.kwics.push(kwic);
               }

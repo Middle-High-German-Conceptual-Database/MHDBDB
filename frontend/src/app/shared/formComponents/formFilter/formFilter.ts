@@ -1,4 +1,4 @@
-import { Component, ElementRef, Injectable, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Injectable, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { HistoryService } from '../../historyService';
@@ -28,6 +28,7 @@ import { Options } from '@angular-slider/ngx-slider';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { PersonQueryParameterI, PersonService } from 'app/indices/person/person.service';
 import { Person, PersonClass } from 'app/indices/person/person.class';
+import { defaultTextQP } from 'app/reference/reference.service';
 
 @Component({
   selector: 'dhpp-form-filter',
@@ -46,6 +47,7 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
 
   filterMap;
 
+  @Input() workFilter = "true";
   
   authorList: PersonClass[] = [];
   workList: WorkClass[] = [];
@@ -166,11 +168,11 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
       "option": {
           "useLucene": false
       }
-  } as PersonQueryParameterI;
+  } as PersonQueryParameterI; 
+
 
     this.filterAuthors = new FormGroup({});
     this.personService.getInstances(qp).then(data => {
-      console.log(data);
       this.authorList = data;
       this.authorList.forEach(work => {
         this.authorLabels.push(`${work.label.trim()}`);

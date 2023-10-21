@@ -11,6 +11,7 @@ import {
   updateWorks,
   updateSeries,
   updateAuthors,
+  reset,
 } from './general-filter.actions';
 
 import { FilterClassExtendedI } from 'app/shared/mhdbdb-graph.service';
@@ -32,6 +33,7 @@ export const initialState: FilterClassExtendedI = defaultFilterClassExtended;
 
 const _generalFilterReducer = createReducer(
   initialState,
+  on(reset, state => ({ ...initialState })),
   on(updateLabel, (state, { label }) => ({ ...state, label })),
   on(setLabelActive, (state, { isLabelActive }) => ({ ...state, isLabelActive })),
   on(setClassFilterActive, (state, { isClassFilterActive }) => ({ ...state, isClassFilterActive })),

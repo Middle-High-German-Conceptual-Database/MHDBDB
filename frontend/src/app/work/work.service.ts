@@ -439,15 +439,28 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
   }
 
   protected _sparqlQuery(qp: WorkQueryParameterI, countResults: boolean): string {
+
+    console.log(qp);
+
+    let authorFilter = `{
+      ?id dhpluso:contribution/dhpluso:agent ?authorId .
+      ?authorId rdfs:label ?authorLabel .
+    }`;
+    if (qp.filter.isAuthorIdsActive && qp.filter.authorIds.length > 0) {
+      const authorIds = qp.filter.authorIds.map(id => `<${id}>`).join(' ');
+      authorFilter = `{
+        ?id dhpluso:contribution/dhpluso:agent ?authorId .
+        ?authorId rdfs:label ?authorLabel .
+        VALUES ?authorId { ${authorIds} }
+    }`;
+    }
+
     let instanceSelector = `?id a dhpluso:Text ;
                                     dhpluso:hasExpression ?text .
                                 ?text a dhpluso:Text .
                                 ?electronic dhpluso:instanceOf ?text ;
                                     a dhpluso:Electronic .
-                                    {
-                                      ?id dhpluso:contribution/dhpluso:agent ?authorId .
-                                      ?authorId rdfs:label ?authorLabel .
-                                    }
+                                   ${authorFilter}
                                 ?id rdfs:label ?label .
                                 filter(langMatches( lang(?authorLabel), "${qp.lang}" ))
                                 filter(langMatches( lang(?label), "${qp.lang}" ))

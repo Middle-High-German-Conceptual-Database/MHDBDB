@@ -1,6 +1,8 @@
 // filter.actions.ts
 import { createAction, props } from '@ngrx/store';
 
+export const reset = createAction('[Counter Component] Reset');
+
 export const updateLabel = createAction('[Filter] Update Label', props<{ label: string }>());
 
 export const setLabelActive = createAction('[Filter] Set Label Active', props<{ isLabelActive: boolean }>());

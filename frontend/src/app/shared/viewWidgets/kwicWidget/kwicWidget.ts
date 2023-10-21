@@ -51,9 +51,10 @@ export class KwicWidgetComponent
         if (kwic) {
           this.kwics.push(kwic);
         }
+        this.isLoaded = Promise.resolve(true);
       });
 
-      this.isLoaded = Promise.resolve(true);
+      
     }
   }
 
@@ -73,10 +74,6 @@ export class KwicWidgetComponent
   }
 
   public loadOccurrences() {
-    console.log(this.word);
-    console.log(this.limit);
-    console.log(this.offset);
-    console.log(this.instance);
     this.textService
       .getAnnotations(100, this.offset, this.word, undefined, 'tei:seg')
       .then(annotations => {

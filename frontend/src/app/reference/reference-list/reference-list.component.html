@@ -88,14 +88,14 @@
         <div *ngIf="isRLoading">
             <mat-spinner></mat-spinner>
 
-            <h3 *ngIf="timeIsOver">Diese Suchanfrage kann möglicherweise etwas länger dauern...</h3>
+            <h3 style="margin-top: 15px; margin-bottom: 15px" *ngIf="timeIsOver">Diese Suchanfrage kann möglicherweise etwas länger dauern...</h3>
             <!-- <mat-progress-bar mode="determinate" [value]="downloadProgress"></mat-progress-bar> -->
         </div>
 
         <div *ngIf="!isLoading && totalAnnotations > -1" class="search-results">
             <h3>{{ totalAnnotations }} Belege gefunden</h3>
 
-            <p *ngIf="totalAnnotations > 2500">Für diese Suchanfrage gibt es sehr viele Belege. Bitte verwenden Sie die Blätterfunktion unterhalb der Ergebnisliste, um die weiteren Belege anzuzeigen.</p>
+            <p style="margin-top: 15px; margin-bottom: 15px" *ngIf="totalAnnotations > 2500">Für diese Suchanfrage gibt es sehr viele Belege. Bitte verwenden Sie die Blätterfunktion unterhalb der Ergebnisliste, um die weiteren Belege anzuzeigen.</p>
 
             <div *ngFor="let instance of instances">
                 <dhpp-text-element [instance]="instance" [qp]="qp"></dhpp-text-element>
