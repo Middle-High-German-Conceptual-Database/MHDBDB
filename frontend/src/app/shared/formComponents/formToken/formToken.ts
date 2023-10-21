@@ -4,7 +4,7 @@ import { FormControl, FormGroup, FormGroupDirective } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, startWith, takeUntil } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, startWith, takeUntil, throttleTime } from 'rxjs/operators';
 import { Concept } from '../../../concept/concept.class';
 import { ConceptService } from '../../../concept/concept.service';
 import { TextPassage } from '../../../text/text.class';
@@ -207,13 +207,15 @@ export class FormTokenWordComponent {
     .subscribe(tokenFilter => {
       if (JSON.stringify(tokenFilter) !== JSON.stringify(this.form.value)) {
         this.form.patchValue(tokenFilter, { emitEvent: false });
+        this.focusOnInput();
+
       }
     }); 
     
     this.form.valueChanges
       .pipe(
-        debounceTime(1500),
         distinctUntilChanged(),
+        debounceTime(1500),
         takeUntil(this.destroy$)
       )
       .subscribe(value => {
@@ -231,6 +233,10 @@ export class FormTokenWordComponent {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  focusOnInput(): void {
+    this.myInput.nativeElement.focus();
+}
 
 }
 
