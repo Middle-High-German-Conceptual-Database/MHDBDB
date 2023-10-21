@@ -36,6 +36,11 @@ export class WorkMetadataClass extends WorkClass implements AuthorsI, DateOfCrea
   public sameAs: any[];
 
   public instances: any[];
+  public instanceLabels: string[];
+
+  public expressions: any[];
+  public expressionLabels: string[];
+
   public dateOfCreation: DatePrecision;
 
   public authorLabel: string;

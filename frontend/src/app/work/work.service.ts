@@ -60,7 +60,7 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
 
   async getWorkMetadata(workId: string): Promise<[(WorkMetadataClass[]), number]> {
     const query = `
-    select distinct ?id ?label ?sameAs ?dateOfCreation ?authorId ?authorSameAs ?authorLabel ?instance ?genreForm ?genreFormMainParent where {
+    select distinct ?id ?label ?sameAs ?dateOfCreation ?authorId ?authorSameAs ?authorLabel ?instance ?instanceLabel ?expression ?expressionLabel ?genreForm ?genreFormMainParent where {
             Bind(mhdbdbi:${workId} AS ?id) .
             ?id rdfs:label ?label .
             ?id owl:sameAs ?sameAs .
@@ -68,7 +68,14 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
             ?id dhpluso:contribution/dhpluso:agent ?authorId .
             ?id dhpluso:contribution/dhpluso:agent/rdfs:label ?authorLabel .
             ?id dhpluso:contribution/dhpluso:agent/owl:sameAs ?authorSameAs .
+            
             ?id dhpluso:hasExpression/dhpluso:hasInstance ?instance .
+            ?instance rdfs:label ?instanceLabel .
+
+            OPTIONAL { 
+              ?id dhpluso:hasExpression ?expression . 
+              ?expression rdfs:label ?expressionLabel .
+            }
 
             OPTIONAL { ?id dhpluso:genreForm/skos:prefLabel ?genreForm . }
             OPTIONAL { ?id dhpluso:genreFormMainparent/skos:prefLabel ?genreFormMainParent . }
@@ -375,6 +382,30 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
         element.instances = broaderList;
       } else if ('instance' in row && element && !element.instances.includes(row.instance.value)) {
         element.instances.push(row.instance.value);
+      }
+
+      if ('instanceLabel' in row && element && !element.instanceLabels) {
+        let broaderList: string[] = [];
+        broaderList.push(row.instanceLabel.value);
+        element.instanceLabels = broaderList;
+      } else if ('instanceLabel' in row && element && !element.instanceLabels.includes(row.instanceLabel.value)) {
+        element.instanceLabels.push(row.instanceLabel.value);
+      }
+
+      if ('expression' in row && element && !element.expressions) {
+        let broaderList: string[] = [];
+        broaderList.push(row.expression.value);
+        element.expressions = broaderList;
+      } else if ('expression' in row && element && !element.expressions.includes(row.expression.value)) {
+        element.expressions.push(row.expression.value);
+      }
+
+      if ('expressionLabel' in row && element && !element.expressionLabels) {
+        let broaderList: string[] = [];
+        broaderList.push(row.expressionLabel.value);
+        element.expressionLabels = broaderList;
+      } else if ('expressionLabel' in row && element && !element.expressionLabels.includes(row.expressionLabel.value)) {
+        element.expressionLabels.push(row.expressionLabel.value);
       }
 
       if ('dateOfCreation' in row && element && !element.dateOfCreation) {

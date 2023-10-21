@@ -78,9 +78,34 @@
     </div>
 
     <div class="container">
-        <div class="row" *ngFor="let instance of metadata.instances | slice:0:1;">
+        <div class="row" *ngFor="let instance of metadata.instances; index as i">
             <div class="col-3">
-                <a [routerLink]="['/tei', instance | textId]" target="_blank">{{ metadata.label }} {{ instance | textId }}</a>
+                <a [routerLink]="['/tei', instance | textId]" target="_blank">{{ metadata.instanceLabels[i] }} {{ instance | textId }}</a>
+            </div>
+            <div class="col-3">
+                    <a [routerLink]="['/tei', instance | textId]">
+                        <i class="fa-solid fa-scroll"></i>
+                    </a>
+                    <a href="#">
+                        <i class="fas fa-download"></i>
+                    </a>
+                    <a href="#">
+                        <i style="color: green;" class="fa-solid fa-circle"></i>
+                    </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="padding-top: 25px">
+        <div class="col">
+            <h2>Edition(en) in der MHDBDB</h2>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row" *ngFor="let instance of metadata.expressions; index as i">
+            <div class="col-3">
+                <a [routerLink]="['/tei', instance | textId]" target="_blank">{{ metadata.expressionLabels[i] }} {{ instance | textId }}</a>
             </div>
             <div class="col-3">
                     <a [routerLink]="['/tei', instance | textId]">
