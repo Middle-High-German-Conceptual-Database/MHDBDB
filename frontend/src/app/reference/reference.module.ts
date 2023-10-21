@@ -26,6 +26,8 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MHDBDBViewWidgetsModule } from 'app/shared/viewWidgets/viewWidgetsModule';
 import { MHDBDBFormModule } from 'app/shared/formComponents/formModule';
 import { ElementComponentModule } from 'app/shared/elementComponent/elementComponentModule';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatPaginatorModule} from '@angular/material/paginator';
 
 const ENTITY_STATES = [...textRoutes];
 
@@ -50,12 +52,14 @@ const ENTITY_STATES = [...textRoutes];
     MatAutocompleteModule,
     MatListModule,
     MatInputModule,
+    MatPaginatorModule,
     MatSlideToggleModule,
     MatExpansionModule,
     MatButtonModule,
     MatToolbarModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    MatProgressBarModule,
     RouterModule.forChild(ENTITY_STATES),
     MatTabsModule,
     MatRadioModule,

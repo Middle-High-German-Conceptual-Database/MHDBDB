@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ListHistoryEntry } from '../../shared/history.class';
 import { HistoryService } from '../../shared/historyService';
@@ -39,6 +39,8 @@ import { take } from 'rxjs/operators';
 import { selectFilterClassExtended } from 'app/store/general-filter.reducer';
 import { showDialog } from 'app/store/ui.actions';
 import * as referenceActions from '../../store/reference.actions';
+import { selectDownloadProgress } from 'app/store/ui.reducer';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'dhpp-reference-list',
@@ -61,17 +63,26 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
   tokenFilters$: Observable<TokenFilterI[]>;
   filters$: Observable<any>;
   generalFilter$: Observable<any>;
+  uiFilter$: Observable<any>;
 
   filter: any;
   generalFilter: any;
+
+  downloadProgress: 0;
 
   relation: string = 'and';
 
   selectedFilter: TokenFilterI;
 
   totalAnnotations: number = 0;
-  
+
   isRLoading = false;
+
+  total = 0;
+  limit = 100;
+  offset = 0;
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(
     public router: Router,
@@ -87,6 +98,7 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
     this.tokenFilters$ = this.store.pipe(select(selectTokenFilters));
     this.filters$ = this.store.pipe(select(selectFilter));
     this.generalFilter$ = this.store.pipe(select(selectFilterClassExtended));
+    this.uiFilter$ = this.store.pipe(select(selectDownloadProgress));
 
     this.filters$.subscribe(f => {
       this.filter = f;
@@ -95,6 +107,12 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
     this.generalFilter$.subscribe(f => {
       this.generalFilter = f;
     });
+
+    this.uiFilter$.subscribe(f => {
+      this.downloadProgress = f;
+    });
+
+
 
     this.isLoading = false;
   }
@@ -138,8 +156,13 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
   ngOnInit() {
     super.ngOnInit();
     this.isRLoading = false;
-
     // this.loadSenses()
+  }
+
+  handlePageEvent(event: PageEvent) {
+    this.limit = event.pageSize;
+    this.offset = event.pageIndex * event.pageSize;
+    this.search();
   }
 
   reset() {
@@ -150,26 +173,41 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
 
   search() {
     this.isRLoading = true;
-    const sparql = this.service.sparqlQuery({ ...this.generalFilter, filter: this.filter }, false);
-    const _sq = new SparqlQuery();
+    const _sq = new SparqlQuery(this.store);
 
-    _sq.query(sparql).then(data => {
-      this.instances = this.service._jsonToObject(data.results.bindings);
-      this.store.dispatch(referenceActions.storeReferenceObject({ data }));
-      this.store.dispatch(referenceActions.storeInstances({ data: this.instances }));
+    const countResults = this.service.sparqlQuery({ ...this.generalFilter, filter: this.filter }, true);
+    _sq.query(countResults).then(data => {
+      this.totalAnnotations = data.results.bindings[0].count.value;
 
-      this.totalAnnotations = this.countTotalAnnotationIds(this.instances);
+      const sparql = this.service.sparqlQuery({ ...this.generalFilter, filter: this.filter }, false);
+      _sq.query(sparql).then(data => {
+        this.instances = this.service._jsonToObject(data.results.bindings);
+        this.store.dispatch(referenceActions.storeReferenceObject({ data }));
+        this.store.dispatch(referenceActions.storeInstances({ data: this.instances }));
 
-      // Filter data if generaFilter is set
-      if (this.generalFilter && this.generalFilter.isWorksActive) {
-        // filter this.instances.workId by this.generalFilter.works array
-        this.instances = this.instances.filter(instance => {
-          return this.generalFilter.works.includes(instance.workId);
-        });
-      }
-      this.isRLoading = false;
-      this.isLoading = false;
+        // this.totalAnnotations = this.countTotalAnnotationIds(this.instances);
+
+        // Filter data if generaFilter is set
+        if (this.generalFilter && this.generalFilter.isWorksActive) {
+          // filter this.instances.workId by this.generalFilter.works array
+          this.instances = this.instances.filter(instance => {
+            return this.generalFilter.works.includes(instance.workId);
+          });
+        }
+        this.isRLoading = false;
+        this.isLoading = false;
+      });
+      // calculate new limit
+      // this.limit = this.total / 100;
     });
+
+
+  }
+
+
+  onScrollDown() {
+    this.offset += this.limit;
+    this.search();
   }
 
   countTotalAnnotationIds(dataArray) {

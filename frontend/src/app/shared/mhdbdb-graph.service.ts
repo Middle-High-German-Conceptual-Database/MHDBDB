@@ -3,6 +3,7 @@ import { Store, select } from '@ngrx/store';
 import { NAMESPACES, SERVER_API_SPARQL_URL } from 'app/app.constants';
 import { MhdbdbEntity, MhdbdbIdLabelEntity } from './baseIndexComponent/baseindexcomponent.class';
 import { Utils } from './utils';
+import { setProgress, resetProgress } from '../store/ui.actions'; // Make sure to update the path appropriately
 
 ////////////////////
 // Interfaces
@@ -19,7 +20,7 @@ export interface QueryParameterI<f extends FilterI, o extends OptionsI> {
   option: o;
 }
 
-export interface FilterI {}
+export interface FilterI { }
 
 export interface FilterIdI extends FilterI {
   id?: string;
@@ -128,7 +129,7 @@ export const classFilter: LabeledClassfilterI[] = [
   }
 ];
 
-export interface FilterClassExtendedI extends FilterClassI, FilterSeriesI, FilterWorksI, FilterLabelI, FilterConceptsI, FilterAuthorI {}
+export interface FilterClassExtendedI extends FilterClassI, FilterSeriesI, FilterWorksI, FilterLabelI, FilterConceptsI, FilterAuthorI { }
 
 export interface FilterClassI extends FilterI {
   classFilter?: classFilterT[];
@@ -140,7 +141,7 @@ export interface FilterSeriesI extends FilterI {
   isSeriesFilterActive: boolean;
 }
 
-export interface FilterIdLabelI extends FilterIdI, FilterLabelI {}
+export interface FilterIdLabelI extends FilterIdI, FilterLabelI { }
 
 export interface OptionsI {
   useLucene?: boolean;
@@ -172,6 +173,9 @@ export interface SparqlBindingI {
  * @class SparqlQuery
  */
 export class SparqlQuery {
+
+  constructor(private store: Store) {}
+
   /**
    * Generate sparql prefix declaration from NAMESPACES
    *
@@ -188,6 +192,50 @@ export class SparqlQuery {
     return prefixes.join('\n');
   }
 
+  postWithProgress(url: string, data: string, headers: {[key: string]: string}): Promise<SparqlQueryResultI> {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', url);
+
+      // Set headers
+      for (let key in headers) {
+        xhr.setRequestHeader(key, headers[key]);
+      }
+
+      // Tracking download progress
+      xhr.onprogress = (event) => {
+        if (event.lengthComputable) {
+          const percentComplete = Math.round((event.loaded / event.total) * 100);
+          console.log(`Downloaded: ${percentComplete}%`);
+
+          // Dispatch action to update progress in the Redux store
+          this.store.dispatch(setProgress({ progress: percentComplete }));
+        }
+      };
+
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          // Reset the progress once the download is complete
+          // this.store.dispatch(resetProgress());
+          resolve(JSON.parse(xhr.responseText));
+        } else {
+          // Reset the progress in case of an error
+          this.store.dispatch(resetProgress());
+          reject(new Error(xhr.statusText));
+        }
+      };
+
+      xhr.onerror = () => {
+        // Reset the progress in case of a network error
+        this.store.dispatch(resetProgress());
+        reject(new Error("Network error"));
+      };
+
+      xhr.send(data);
+    });
+  }
+
+
   /**
    * Query MHDBDB Sparql Endpoint
    *
@@ -203,21 +251,43 @@ export class SparqlQuery {
     headers.append('Content-Type', 'application/sparql-query');
     headers.append('Authorization', 'Basic ' + btoa('mhdbdb:2ffgMEdTo#HD'));
 
-    return fetch(SERVER_API_SPARQL_URL, {
-      method: 'POST',
-      body: q,
-      redirect: 'follow',
-      headers
-    })
-      .then(function(response) {
-        return response.json();
-      })
-      .catch(function(error) {
+    let headersa = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/sparql-query',
+      'Authorization': 'Basic ' + btoa('mhdbdb:2ffgMEdTo#HD')
+    };
+
+    // Create a new promise that rejects after 60s
+    const timeout = new Promise<SparqlQueryResultI>((resolve, reject) => {
+      const id = setTimeout(() => {
+        clearTimeout(id);
+        reject(new Error('Query timed out after 60 seconds'));
+      }, 60000);
+    });
+
+    // Use Promise.race to race the fetch against the timeout
+    return Promise.race([
+      this.postWithProgress(SERVER_API_SPARQL_URL, q, headersa),
+      timeout
+    ])
+      .catch(function (error) {
         console.warn('Something went wrong: ', error);
         console.warn(queryString);
+
+        // Handle the timeout error specifically
+        if (error.message === 'Query timed out after 60 seconds') {
+          // Throw an error of the right type (or handle it differently if you wish)
+          throw new Error('The query operation was timed out after 60 seconds.');
+        } else {
+          // Handle other errors
+          throw error;
+        }
       });
   }
+
 }
+
+
 
 /**
  * Interface for MHDBDB Graph Services
@@ -256,7 +326,7 @@ export abstract class MhdbdbGraphService<P extends QueryParameterI<F, O>, F exte
   ////////////////////
   // Variables, Getter
   ////////////////////
-  protected _sq = new SparqlQuery();
+  protected _sq = new SparqlQuery(this.store);
 
   protected abstract _defaultQp: P;
 
@@ -284,7 +354,7 @@ export abstract class MhdbdbGraphService<P extends QueryParameterI<F, O>, F exte
   // Constructor
   ////////////////////
 
-  constructor(public store: Store) {}
+  constructor(public store: Store) { }
 
   ////////////////////
   // Sparql Help Functions

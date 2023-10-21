@@ -6,8 +6,10 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const SimpleProgressWebpackPlugin = require('simple-progress-webpack-plugin');
 const WebpackNotifierPlugin = require('webpack-notifier');
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const path = require('path');
 const sass = require('sass');
+const TerserPlugin = require('terser-webpack-plugin');
 
 const utils = require('./utils.js');
 const commonConfig = require('./webpack.common.js');
@@ -44,25 +46,25 @@ module.exports = (options) => webpackMerge(commonConfig({
       },
       {
         context: ['/repositories/dhPLUS'], // GraphDB
-        target: `http${options.tls ? 's' : ''}://mhdbdb.softwarekomponist.at:7200`,
+        target: `http${options.tls ? 's' : ''}://mhdbdb.plus.ac.at:7200`,
         secure: false,
         changeOrigin: options.tls,
         logLevel: 'debug',
         headers: {
-                   Connection: 'keep-alive'
-            }
-      }, 
+          Connection: 'keep-alive'
+        }
+      },
       {
         context: ['/services/rest/api'],
         target: `http${options.tls ? 's' : ''}://localhost:5000`,
-        pathRewrite: {'^/services/rest' : ''},
+        pathRewrite: { '^/services/rest': '' },
         secure: false,
         changeOrigin: options.tls
       },
       {
         context: ['/services/rdf/api'],
         target: `http${options.tls ? 's' : ''}://localhost:8094`,
-        pathRewrite: {'^/services/rdf' : ''},
+        pathRewrite: { '^/services/rdf': '' },
         secure: false,
         changeOrigin: options.tls
       },
@@ -102,68 +104,111 @@ module.exports = (options) => webpackMerge(commonConfig({
   },
   module: {
     rules: [{
-        test: /\.(j|t)s$/,
-        enforce: 'pre',
-        loader: 'eslint-loader',
-        exclude: /node_modules/
-      },
-      {
-        test: /\.([cm]?ts|tsx)$/,
-        use: [
-          'angular2-template-loader',
-          {
-            loader: 'cache-loader',
-            options: {
-              cacheDirectory: path.resolve('build/cache-loader')
-            }
-          },
-          {
-            loader: 'thread-loader',
-            options: {
-              // There should be 1 cpu for the fork-ts-checker-webpack-plugin.
-              // The value may need to be adjusted (e.g. to 1) in some CI environments,
-              // as cpus() may report more cores than what are available to the build.
-              workers: require('os').cpus().length - 1
-            }
-          },
-          {
-            loader: 'ts-loader',
-            options: {
-              transpileOnly: true,
-              happyPackMode: true
-            }
-          }
-        ],
-        exclude: /(node_modules)/
-      },
-      {
-        test: /\.scss$/,
-        use: ['to-string-loader', 'css-loader', {
-          loader: 'sass-loader',
+      test: /\.(j|t)s$/,
+      enforce: 'pre',
+      loader: 'eslint-loader',
+      exclude: /node_modules/
+    },
+    {
+      test: /\.([cm]?ts|tsx)$/,
+      use: [
+        'angular2-template-loader',
+        {
+          loader: 'cache-loader',
           options: {
-            implementation: sass
+            cacheDirectory: path.resolve('build/cache-loader')
           }
-        }],
-        exclude: /(vendor\.scss|global\.scss)/
-      },
-      {
-        test: /(vendor\.scss|global\.scss)/,
-        use: ['style-loader', 'css-loader', 'postcss-loader', {
-          loader: 'sass-loader',
+        },
+        {
+          loader: 'thread-loader',
           options: {
-            implementation: sass
+            // There should be 1 cpu for the fork-ts-checker-webpack-plugin.
+            // The value may need to be adjusted (e.g. to 1) in some CI environments,
+            // as cpus() may report more cores than what are available to the build.
+            workers: require('os').cpus().length - 1
           }
-        }]
-      }
+        },
+        {
+          loader: 'ts-loader',
+          options: {
+            transpileOnly: true,
+            happyPackMode: true
+          }
+        }
+      ],
+      exclude: /(node_modules)/
+    },
+    {
+      test: /\.scss$/,
+      use: ['to-string-loader', 'css-loader', {
+        loader: 'sass-loader',
+        options: {
+          implementation: sass
+        }
+      }],
+      exclude: /(vendor\.scss|global\.scss)/
+    },
+    {
+      test: /(vendor\.scss|global\.scss)/,
+      use: ['style-loader', 'css-loader', 'postcss-loader', {
+        loader: 'sass-loader',
+        options: {
+          implementation: sass
+        }
+      }]
+    }
     ]
   },
   stats: process.env.JHI_DISABLE_WEBPACK_LOGS ? 'none' : options.stats,
+  optimization: {
+    runtimeChunk: false,
+    minimizer: [
+      new TerserPlugin({
+        parallel: true,
+        cache: true,
+        sourceMap: false, // Enable source maps. Please note that this will slow down the build
+        terserOptions: {
+          ecma: 5,
+          ie8: false,
+          toplevel: true,
+          module: true,
+          compress: {
+            dead_code: true,
+            warnings: false,
+            properties: true,
+            drop_debugger: true,
+            conditionals: true,
+            booleans: true,
+            loops: true,
+            unused: true,
+            toplevel: true,
+            if_return: true,
+            inline: true,
+            join_vars: true,
+            ecma: 5,
+            module: true
+          },
+          output: {
+            comments: false,
+            beautify: true,
+            indent_level: 2,
+            ecma: 5
+          },
+          mangle: {
+            module: true,
+            toplevel: true
+          }
+        }
+      }),
+      new OptimizeCSSAssetsPlugin({})
+    ]
+  },
   plugins: [
     process.env.JHI_DISABLE_WEBPACK_LOGS ?
-    null :
-    new SimpleProgressWebpackPlugin({
-      format: options.stats === 'minimal' ? 'compact' : 'expanded'
-    }),
+      null :
+      new SimpleProgressWebpackPlugin({
+        format: options.stats === 'minimal' ? 'compact' : 'expanded'
+      }),
     new FriendlyErrorsWebpackPlugin(),
     new ForkTsCheckerWebpackPlugin(),
     new BrowserSyncPlugin({

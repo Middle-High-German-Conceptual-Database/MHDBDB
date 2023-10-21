@@ -537,169 +537,14 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       }
     });
 
-    if (qp.filter.tokenFilters[0].label != '') {
-      if (qp.filter.tokenFilters[0].searchLabelInLemma) {
-        /* token0 = `
-                    ?wordId a dhpluso:Word .
-                    ?wordId dhpluso:canonicalForm/dhpluso:writtenRep ?wordLabel .
-                    ?wordId dhpluso:canonicalForm ?lemma .
-
-                    ?annotationId oa:hasBody ?wordId .
-                    ?annotationId oa:hasTarget ?rootId .
-                    filter(regex(str(?wordLabel), "${labelFilterGenerator(qp.tokenFilters[0].label, false)}", "i"))
-
-                `; */
-      } else {
-        /* token0 = `
-                    {
-                        ?search a luc-index:token ;
-                            luc:query "content:${this._labelFilterGenerator(qp.filter.tokenFilters[0].label, true)}" ;
-                            luc:entities ?token0 .
-                        ?token0 mhdbdbxml:partOf ?text ;
-                            mhdbdbxml:n ?n0 .
-                        ${posFilter(0, qp.filter.tokenFilters[0].pos)}
-                        ${conceptFilter(0, qp.filter.tokenFilters[0].concepts)}
-                    }
-                `; */
-      }
-    } else {
-      /*token0 = `
-            {
-                ?token0
-                    a tei:seg ;
-                    mhdbdbxml:n ?n0 ;
-                .
-                ${posFilter(0, qp.filter.tokenFilters[0].pos)}
-                ${conceptFilter(0, qp.filter.tokenFilters[0].concepts)}
-            }
-            `;*/
-    }
-
-    const lines = `
-            {
-                ?token0 mhdbdbxml:parent ?lines .
-                ?lines a tei:l .
-            }
-            ${
-              qp.context > 1
-                ? `
-                UNION
-                {
-                    select ?lines  {
-                        ?token0 mhdbdbxml:parent ?lineX .
-                        ?lineX a tei:l .
-                        ?lineX mhdbdbxml:nextSibling+ ?lines .
-                        ?lines a tei:l .
-                    }
-                    Limit ${qp.context - 1}
-                }
-                UNION
-                {
-                    select ?lines  {
-                        ?token0 mhdbdbxml:parent ?lineX .
-                        ?lineX a tei:l .
-                        ?lineX mhdbdbxml:prevSibling+ ?lines .
-                        ?lines a tei:l .
-                    }
-                    Limit ${qp.context - 1}
-                }
-            `
-                : ''
-            }
-        `;
-
-    /* let tokenSelects: string[] = [];
-    let tokens: string[] = [];
-    qp.tokenFilters.forEach((tokenFilter, i) => {
-      tokenSelects.push(`?token${i}`);
-      if (i > 0) {
-        if (tokenFilter.searchLabelInLemma) {
-          tokens.push(
-            `
-                        {
-                            ?lines mhdbdbxml:child ?token${i} .
-                            [
-                                oa:hasBody ?word ;
-                                oa:hasTarget ?token${i} ;
-                            ]
-                            {
-                                ?word${i} a dhpluso:Word .
-                                ?word${i} dhpluso:canonicalForm/dhpluso:writtenRep ?label${i} .
-                                filter(regex(str(?label${i}), "${labelFilterGenerator(tokenFilter.label, false)}", "i"))
-                            }
-                            ?token${i} mhdbdbxml:n ?n${i} .
-                            ${posFilter(i, tokenFilter.pos)}
-                            ${conceptFilter(i, tokenFilter.concepts)}
-                            ${qp.filter.directlyFollowing === true ? `filter (?n${i} > ?n${i - 1})` : ''}
-                        }
-                        `
-          );
-        } else {
-          tokens.push(
-            `
-                        {
-                            ?lines mhdbdbxml:child ?token${i} .
-                            ?token${i} mhdbdbxml:firstChild/mhdbdbxml:content ?content${i}
-                            filter (regex(str(?content${i}),"${labelFilterGenerator(tokenFilter.label, false)}"))
-                            ?token${i} mhdbdbxml:n ?n${i} .
-                            ${posFilter(i, tokenFilter.pos)}
-                            ${conceptFilter(i, tokenFilter.concepts)}
-                            ${qp.filter.directlyFollowing === true ? `filter (?n${i} > ?n${i - 1})` : ''}
-                        }
-                        `
-          );
-        }
-      }
-    }); */
-
-    /*   let qt = '';
-    if (countResults) {
-      qt = `
-                SELECT (count(*) as ?count)
-                WHERE {
-                    ${words.join('\r\n')}
-                    ${lines}
-                    ${tokens.join('\r\n')}
-                }
-
-                ${this._sparqlLimitOffset(qp.limit, qp.offset)}
-
-            `;
-    } else {
-      qt = `
-            SELECT DISTINCT ?wordLemma ?wordLabel ?wordId ?annotationId ?textId ?id ?rootId ?workId ?electronicId ${tokenSelects.join(
-              ' '
-            )} ${wordSelects.join(' ')}
-            WHERE {
-                ${words.join('\r\n')}
-                ${lines}
-                ${tokens.join('\r\n')}
-            }
-
-            ${this._sparqlLimitOffset(qp.limit, qp.offset)}
-
-            `;
-    } */
 
     let bindings: string[] = [];
     let filters: string[] = [];
 
     let labelQuery = '';
     if (qp.filter.isLabelActive && qp.filter.label) {
-      if (qp.filter.option.useLucene) {
-        // Todo: Add Lucene Index to graphdb
-        labelQuery = `
-                        ?search a luc-index:electronic ;
-                        luc:query "title:${labelFilterGenerator(qp.filter.label, qp.filter.option.useLucene)}" ;
-                        luc:entities ?id .
-                        `;
-      } else {
         filters.push(`filter(regex(str(?label), "${labelFilterGenerator(qp.filter.label, qp.filter.option.useLucene)}", "i"))`);
-      }
     }
-
-    // Filters Section
-    console.log(qp);
 
     if (qp.isWorksActive && qp.works) {
       let tempFilters = [];
@@ -723,68 +568,6 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       // bindings.push(`Bind (<${qp.workId}> as ?workId)`);
     }
 
-    let instanceSelect = `
-            ${bindings.join('\r\n')}
-            ${labelQuery}
-            ?id mhdbdbxml:root ?rootId .
-            ?id dhpluso:hasElectronicInstance ?electronicId .
-            ?electronicId dhpluso:instanceOf/dhpluso:expressionOf ?workId .
-
-            ${filters.join('\r\n')}
-        `;
-
-    /*    let q: string = '';
-       if (countResults) {
-         q = `
-                   SELECT (count(*) as ?count)
-                   where {
-                       {
-                           ${instanceSelect}
-                       }
-                   }
-
-               `;
-       } else {
-         console.log(token0);
-         if (token0 !== '') {
-           q = `
-                   SELECT DISTINCT ?id ?label ?rootId ?electronicId ?workId ${tokenSelects.join(' ')}
-                   WHERE {
-                           {
-                           ${qt}
-                           }
-
-                           ?workId rdfs:label ?label .
-                           filter(langmatches(lang(?label),'${this.languageSubject.value}'))
-
-
-                   }
-
-                   ${this._sparqlOrder(qp.order, qp.desc)}
-                   ${this._sparqlLimitOffset(qp.limit, qp.offset)}
-
-                   `;
-         } else {
-           q = `
-                   SELECT DISTINCT ?id ?label ?rootId ?electronicId ?workId
-                   WHERE {
-                           {
-                             ${instanceSelect}
-                           }
-
-                           ?id rdfs:label ?label .
-                           filter(langmatches(lang(?label),'${this.languageSubject.value}'))
-
-
-                   }
-
-                   ${this._sparqlOrder(qp.order, qp.desc)}
-                   ${this._sparqlLimitOffset(qp.limit, qp.offset)}
-
-                   `;
-         }
-       } */
-
     let newQuery = `
                     SELECT DISTINCT * WHERE {
                     ?rootId mhdbdbxml:partOf ?textId .
@@ -803,20 +586,22 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                       ?authorId rdfs:label ?authorLabel .
                     }
 
-                    ${words.join('\r\n')}
-                    ${concepts.join('\r\n')}
-                    ${onomastics.join('\r\n')}
-                    ${poss.join('\r\n')}
+                    {
+                      ${words.join('\r\n')}
+                      ${concepts.join('\r\n')}
+                      ${onomastics.join('\r\n')}
+                      ${poss.join('\r\n')}
 
-                    ${bindings.join('\r\n')}
-                    ${filters.join('\r\n')}
+                      ${bindings.join('\r\n')}
+                      ${filters.join('\r\n')}
+                    }
 
                     filter(langmatches(lang(?label),'de')) 
                     filter(langmatches(lang(?authorLabel),'de')) 
 
                     }
                     ORDER BY ASC(?label)
-    
+                    ${this._sparqlLimitOffset(qp.limit, qp.offset)}
 
             `;
 
@@ -825,9 +610,38 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       q = `
                 SELECT (count(*) as ?count)
                 where {
+                  SELECT DISTINCT ?annotationId0 WHERE {
+                    ?rootId mhdbdbxml:partOf ?textId .
+                    ?textId dhpluso:hasElectronicInstance ?workId .
+                    ?workId rdf:type dhpluso:Text .
+
                     {
-                        <http://www.temporarydisabled.com> ?predicate ?object .
+    					        ?textId dhpluso:hasElectronicInstance ?electronicId .
+                      ?electronicId rdf:type dhpluso:Text .
+                      ?electronicId rdfs:label ?label .
+                      BIND(?electronicId as ?id)
                     }
+                    
+                    {
+                      ?workId dhpluso:contribution/dhpluso:agent ?authorId .
+                      ?authorId rdfs:label ?authorLabel .
+                    }
+
+                    {
+                      ${words.join('\r\n')}
+                      ${concepts.join('\r\n')}
+                      ${onomastics.join('\r\n')}
+                      ${poss.join('\r\n')}
+
+                      ${bindings.join('\r\n')}
+                      ${filters.join('\r\n')}
+                    }
+
+                    filter(langmatches(lang(?label),'de')) 
+                    filter(langmatches(lang(?authorLabel),'de')) 
+
+                    }
+                    ORDER BY ASC(?label)
                 }
 
             `;

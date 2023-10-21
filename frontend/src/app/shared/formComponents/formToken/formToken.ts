@@ -181,6 +181,7 @@ export class FormTokenHelpComponent {}
 export class FormTokenWordComponent {
   @Input() tokenFilter;
   @Input() filter: any;
+  @ViewChild('myInput') myInput: ElementRef;
 
   form: FormGroup;
   private destroy$ = new Subject<void>();
@@ -197,19 +198,24 @@ export class FormTokenWordComponent {
     });
 
     this.store
-      .pipe(
-        select(selectTokenFilterById, { id: this.filter.id }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe(tokenFilter => {
-        this.form.disable({ emitEvent: false }); // disable form to prevent emitting events while patching values
+    .pipe(
+      select(selectTokenFilterById, { id: this.filter.id }),
+      takeUntil(this.destroy$)
+    )
+    .subscribe(tokenFilter => {
+      if (JSON.stringify(tokenFilter) !== JSON.stringify(this.form.value)) {
         this.form.patchValue(tokenFilter, { emitEvent: false });
-        this.form.enable({ emitEvent: false }); // re-enable form after patching values
-      });
+        
+        // Refocus the input after a slight delay
+        setTimeout(() => {
+         // this.myInput.nativeElement.focus();
+        });
+      }
+    });
 
     this.form.valueChanges
       .pipe(
-        debounceTime(500),
+        debounceTime(1500),
         distinctUntilChanged(),
         takeUntil(this.destroy$)
       )
@@ -230,6 +236,7 @@ export class FormTokenWordComponent {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
 }
 
 @Component({
@@ -537,7 +544,7 @@ export class FormTokenPositionComponent implements OnInit, OnDestroy {
 
     this.form.valueChanges
       .pipe(
-        debounceTime(500),
+        debounceTime(1500),
         distinctUntilChanged(),
         takeUntil(this.destroy$)
       )

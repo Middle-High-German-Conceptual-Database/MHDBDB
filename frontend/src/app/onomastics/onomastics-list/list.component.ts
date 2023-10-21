@@ -13,6 +13,7 @@ import { map } from 'rxjs/operators';
 import { SparqlQuery } from "../../shared/mhdbdb-graph.service";
 import { Concept } from "../../concept/concept.class";
 import { OnomasticsService } from '../onomastics.service';
+import { Store } from "@ngrx/store";
 
 /** Flat node with expandable and level information */
 export class DynamicFlatNode {
@@ -215,7 +216,7 @@ export class DynamicDataSource implements DataSource<DynamicFlatNode> {
 })
 export class ConceptListComponent implements OnInit {
     eventsSubject: Subject<any> = new Subject<any>();
-    protected sq = new SparqlQuery()
+    protected sq = new SparqlQuery(this.store)
     @ViewChild('conceptsearch') conceptsearch: ElementRef;
 
     form: FormGroup;
@@ -260,6 +261,7 @@ export class ConceptListComponent implements OnInit {
         private conceptService: OnomasticsService,
         private fb: FormBuilder,
         private database: DynamicDatabase,
+        public store: Store
     ) {
 
         // this.treeControl = new CustomTreeControl<DynamicFlatNode>(this.getLevel, this.isExpandable);
