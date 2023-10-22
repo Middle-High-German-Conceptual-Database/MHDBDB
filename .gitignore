@@ -6,6 +6,7 @@
 
 /frontend/.angular/
 /frontend/node_modules/karma/config.tpl.js
+/frontend/node
 
 ### Added PH
 /src/main/webapp/app/shared/ng-jhipster/**
