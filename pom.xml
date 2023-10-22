@@ -13,7 +13,12 @@
 	<packaging>pom</packaging>
 	<name>MHDBDB</name>
 	<description>Mittelhochdeutsche Begriffsdatenbank</description>
+	<properties>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+	  </properties>
 	<modules>
+		<module>tools</module>
 		<module>backend</module>
 		<module>frontend</module>
 		<module>delivery</module>
