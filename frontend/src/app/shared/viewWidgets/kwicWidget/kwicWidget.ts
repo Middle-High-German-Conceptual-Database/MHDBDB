@@ -45,9 +45,10 @@ export class KwicWidgetComponent
 
   ngOnInit(): void {
     super.ngOnInit();
+
     if (this.instance) {
-      // this.loadOccurrences();
-      this.textService.getKwic(this.word).then(kwic => {
+      this.loadOccurrences();
+      this.textService.getKwic(this.instance.id).then(kwic => {
         if (kwic) {
           this.kwics.push(kwic);
         }
@@ -75,7 +76,7 @@ export class KwicWidgetComponent
 
   public loadOccurrences() {
     this.textService
-      .getAnnotations(100, this.offset, this.word, undefined, 'tei:seg')
+      .getAnnotations(100, this.offset, this.instance.id, undefined, 'tei:seg')
       .then(annotations => {
         this.isLoaded = Promise.resolve(true);
         this.total = annotations[1];

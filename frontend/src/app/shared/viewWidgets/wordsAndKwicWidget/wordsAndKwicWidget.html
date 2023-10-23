@@ -5,7 +5,7 @@
         {{ total }} Wörter gefunden
         <mat-card *ngFor="let word of words;">
             <mat-card-title><a [routerLink]="['/dictionary/view/', word.strippedId]" [state]="{ instance: word }"><span class="fil-text">{{ word.label }}</span></a></mat-card-title>
-            <mat-card-subtitle><span *ngFor="let pos of word.pos">{{ pos.label }}</span></mat-card-subtitle>
+            <mat-card-subtitle><span *ngFor="let pos of word.pos">{{ pos.label }}&nbsp;</span></mat-card-subtitle>
             <mat-card-content><dhpp-widget-kwic [instance]="word" [asPanel]="false" [limit]="3"></dhpp-widget-kwic></mat-card-content>
         </mat-card>
         <mat-paginator *ngIf="total > limit"

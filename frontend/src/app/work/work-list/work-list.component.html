@@ -48,6 +48,7 @@
             <dhpp-work-element [instance]="instance" [qp]="qp"></dhpp-work-element>
         </div>
         <!-- <span *ngIf="total > instances.length">Scrollen für mehr Resultate</span> -->
+        <mat-spinner *ngIf="isLoading"></mat-spinner>
         <mat-spinner *ngIf="isLoadingNext"></mat-spinner>
     </div>
 
