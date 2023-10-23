@@ -2,9 +2,9 @@
 Na sicher! Unter "Werke" in der Werkansicht kann man die Texte entweder einzelnen oder als Paket als \*.txt herunterladen. 
 
 # Wie zitiere ich die MHDBDB? 
-**Mittelhochdeutsche Begriffsdatenbank (MHDBDB).** Universität Salzburg. Koordination: Katharina Zeppezauer-Wachauer. Seit 1992. URL: [http://www.mhdbdb.plus.ac.at/](http://www.mhdbdb.plus.ac.at/) (Abrufdatum).
+**Mittelhochdeutsche Begriffsdatenbank (MHDBDB).** Universität Salzburg. Koordination: Katharina Zeppezauer-Wachauer. Seit 1992. URL: [http://www.mhdbdb.plus.ac.at/](http://www.mhdbdb.plus.ac.at/) (Abrufdatum). Eine DOI ist für 2024 geplant.
 # Kann ich meine Suchabfragen speichern?
-Ein personalisierter User-Bereich ist für geplant. Es ist aber jetzt schon möglich, den Suchverlauf für eine Session einzusehen. 
+Ein personalisierter User-Bereich ist für 2024 geplant. Es ist aber jetzt schon möglich, den Suchverlauf für eine Session einzusehen. 
 
 # Welche Metadaten sind verfügbar?
 
@@ -32,4 +32,8 @@ Wir arbeiten kontinuierlich an der Optimierung unserer Suchmöglichkeiten. Graph
 Letztlich sind wir auf Entscheidungen und Entwicklungen der Universität Salzburg angewiesen, da derzeit kein uns bekannter Triplestore/kein Repositorium in- oder auch außerhalb von Universitäten die großen Mengen der MHDBDB problemlos bewältigen kann. Wir arbeiten auch im Verbund mit anderen Partnern an einer besseren Infrastrukturlösung im leistungsstarken High Performance Computing (HPC)-Bereich für österreichische Digital Humanities-Projekte [siehe [www.dhinfra.at](http://www.dhinfra.at)]. 
 
 Bis es einen solchen „Supercomputer“ für DH-Projekte gibt, bitten wir weiterhin um Geduld.
+
+# Warum soll ich die neue Plattform nutzen, obwohl sie noch nicht perfekt funktioniert? 
+
+Es gibt eine große Menge neuer Features, Vorteile und Verbesserungen gegenüber der alten Website, beispielsweise den Download von Volltexten und Annotationen, eine visuelle Suchmaske für einfache Einzelwort-Suchen, die Anbindung ans Semantic Web uvm. Für mehr Details siehe „About > Niuwe maere“.
 

@@ -11,7 +11,7 @@ Der Fokus des Korpus liegt hauptsächlich auf dem Mittelhochdeutschen, wobei auc
 
 Das Korpus ist ein Referenzkorpus und enthält eine ausgewogene Mischung verschiedener Genres und Varietäten. Es gibt eine festgelegte Konturierung der Textsammlung, wobei alle Gattungen von Texten möglich sind. Zudem ist eine breite Streuung der Sprachräume gegeben, um eine vielfältige Datenbasis zu gewährleisten.
 
-Der zeitliche Rahmen des Korpus umfasst nicht nur den Zeitraum von 1050 bis 1350, der als "Mittelhochdeutsche" Basis-Daten-Bestand bekannt ist, sondern erstreckt sich vielmehr von 1050 bis 1600. Dies wird als "Textarchiv vor 1600" bezeichnet und ermöglicht einen erweiterten zeitlichen Kontext für die Forschung.
+Der zeitliche Rahmen des Korpus umfasst nicht nur den Zeitraum von 1050 bis 1350, der als "Mittelhochdeutscher Basis-Daten-Bestand" bekannt ist, sondern erstreckt sich vielmehr von 1050 bis 1600. Man könnte die MHDBDB als "Textarchiv vor 1600" bezeichnen (in Ergänzung zum DTA) und es ermöglicht einen erweiterten zeitlichen Kontext für die Forschung.
 
 Das Korpus wird linguistisch aufbereitet, indem eine Tokenisierung und Lemmatisierung der Texte erfolgt. Es werden auch teilweise Disambiguierungen vorgenommen, um Mehrdeutigkeiten aufzulösen. Zudem erfolgt eine Annotation der Daten.
 
@@ -37,20 +37,11 @@ Die E-Texte wurden ursprünglich in basalem, strukturangebendem TEI-XML kodiert 
 ## Kann man die Daten herunterladen?
 
 Sämtliche Annotationen können zur weiteren Verwendung "Korpus" als TEI/RDF heruntergeladen werden. Wo das Urheberrecht es erlaubt, stehen die E-Texte zusätzlich als PDF-Dateien zur Verfügung.
-![](Pasted image20230601133241.png)
-![Screenshot der MHDBDB E-Texte, Beispiel Wigalois]
 
-## Wie sind die Daten annotiert? 
 ### Semantische Modellierung in der MHDBDB 
 
 ### POS-Tagging 
-Die Texte sind weitestgehend mit **part-of-speech-Tagging (POS-Tagging)** versehen. Darunter versteht man die Zuordnung von Wörtern und Satzzeichen eines Textes zu Wortarten (englisch part of speech). https://de.wikipedia.org/wiki/Part-of-speech-Tagging Dies ermöglicht unter anderem, nur nach bestimmten Wortarten zu suchen. So kann man bei der Belegsuche etwa angeben, z.B. wenn man nicht alle Ergebnisse zu "minne" sehen möchte, kann man "Minne + Eigenname" angeben und bekommt dann Stellen angezeigt, an denen "Frau Minne" auftaucht. 
-
-![](Pastedimage20230601132752.png)
-![Screenshot aus der Belegsuche]
-
-
-Die POS-Annotationen folgen den Vorgaben des [OntoLex-Lemon-Lexicography-Modules](https://www.w3.org/2019/09/lexicog/) des W3C. 
+Die Texte sind weitestgehend mit **part-of-speech-Tagging (POS-Tagging)** versehen. Darunter versteht man die Zuordnung von Wörtern und Satzzeichen eines Textes zu Wortarten (englisch part of speech). https://de.wikipedia.org/wiki/Part-of-speech-Tagging Dies ermöglicht unter anderem, nur nach bestimmten Wortarten zu suchen. So kann man bei der Belegsuche etwa angeben, z.B. wenn man nicht alle Ergebnisse zu "minne" sehen möchte, kann man "Minne + Eigenname" angeben und bekommt dann Stellen angezeigt, an denen "Frau Minne" auftaucht. Die POS-Annotationen folgen den Vorgaben des [OntoLex-Lemon-Lexicography-Modules](https://www.w3.org/2019/09/lexicog/) des W3C. 
 
 ### Begriffssystem 
 
@@ -101,11 +92,10 @@ Sämtliche Metadaten der MHDBDB sind ans Semantic Web bzw. an Normdaten angebund
 Abb.: MHDBDB Main Ontology 
 
 ### Ontologien 
-Die Zusammenhänge der Annotationen sind in der MHDBDB Main Ontology abgebildet, die auch auf GitHub verfügbar ist (s. Ontologien)
-
+Die Zusammenhänge der Annotationen sind in der MHDBDB Main Ontology abgebildet, die auch auf GitHub verfügbar ist (s. Ontologien).
 
 ### Zitiervorschlag  
-**Mittelhochdeutsche Begriffsdatenbank (MHDBDB).** Universität Salzburg. Koordination: Katharina Zeppezauer-Wachauer. Seit 1992. URL: [http://www.mhdbdb.plus.ac.at/](http://www.mhdbdb.plus.ac.at/) (Abrufdatum).
+**Mittelhochdeutsche Begriffsdatenbank (MHDBDB).** Universität Salzburg. Koordination: Katharina Zeppezauer-Wachauer. Seit 1992. URL: [http://www.mhdbdb.plus.ac.at/](http://www.mhdbdb.plus.ac.at/) (Abrufdatum). Eine DOI bei re3data und zitierbare Permalinks sind für 2024 geplant.
 
 ### Infrastruktur, Architektur und Design
 tba 

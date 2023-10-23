@@ -307,17 +307,17 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
   
   private _filterConcept(value: string): string[] {
     const filterValue = value.toLowerCase();
-    return this.conceptLabels.filter(concept => concept.toLowerCase().indexOf(filterValue) === 0);
+    return this.conceptLabels.filter(concept => concept.toLowerCase().includes(filterValue));
   }
 
   private _filterWork(value: string): WorkClass[] {
     const filterValue = value.toLowerCase();
-    return this.workList.filter(work => work.label.toLowerCase().indexOf(filterValue) === 0);
+    return this.workList.filter(work => work.label.toLowerCase().includes(filterValue));
   }
 
   private _filterAuthor(value: string): PersonClass[] {
     const filterValue = value.toLowerCase();
-    return this.authorList.filter(work => work.label.toLowerCase().indexOf(filterValue) === 0);
+    return this.authorList.filter(work => work.label.toLowerCase().includes(filterValue));
   }
 
   get concepts() {

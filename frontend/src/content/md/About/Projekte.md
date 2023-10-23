@@ -3,7 +3,7 @@
 
  [ONAMA – Ontologie der Narrative des Mittelalters](http://onama.sbg.ac.at/ "ONAMA - Ontologie der Narrative des Mittelalters")
 
-[MHDBDB-Textreihentypologie](https://www.marketext.at/Textreihentypologie/ "MHDBDB-Textreihentypologie")
+ [MHDBDB-Textreihentypologie](https://www.marketext.at/Textreihentypologie/ "MHDBDB-Textreihentypologie")
 
  [DiTAH – Digitale Transformation der Österreichischen Geisteswissenschaften](https://www.ditah.at/ "DiTAH - Digitale Transformation der Österreichischen Geisteswissenschaften")
 
