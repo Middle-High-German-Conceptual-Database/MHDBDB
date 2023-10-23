@@ -119,7 +119,7 @@ module.exports = (options) => webpackMerge(commonConfig({
             cacheDirectory: path.resolve('build/cache-loader')
           }
         },
-        {
+        /* {
           loader: 'thread-loader',
           options: {
             // There should be 1 cpu for the fork-ts-checker-webpack-plugin.
@@ -127,7 +127,7 @@ module.exports = (options) => webpackMerge(commonConfig({
             // as cpus() may report more cores than what are available to the build.
             workers: require('os').cpus().length - 1
           }
-        },
+        }, */
         {
           loader: 'ts-loader',
           options: {
@@ -210,7 +210,6 @@ module.exports = (options) => webpackMerge(commonConfig({
         format: options.stats === 'minimal' ? 'compact' : 'expanded'
       }),
     new FriendlyErrorsWebpackPlugin(),
-    new ForkTsCheckerWebpackPlugin(),
     new BrowserSyncPlugin({
       https: options.tls,
       host: 'localhost',

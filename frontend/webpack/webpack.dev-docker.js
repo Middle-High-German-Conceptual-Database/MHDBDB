@@ -165,7 +165,6 @@ module.exports = (options) => webpackMerge(commonConfig({
       format: options.stats === 'minimal' ? 'compact' : 'expanded'
     }),
     new FriendlyErrorsWebpackPlugin(),
-    new ForkTsCheckerWebpackPlugin(),
     new BrowserSyncPlugin({
       https: options.tls,
       host: 'localhost',
