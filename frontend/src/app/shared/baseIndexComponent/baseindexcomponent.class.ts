@@ -15,7 +15,11 @@ export interface LabelI {
     label: string;
 }
 
-export interface IdLabelI extends IdI, LabelI { }
+export interface AltLabelI {
+    altLabels?: string[];
+}
+
+export interface IdLabelI extends IdI, LabelI, AltLabelI { }
 
 export interface PosI {
     pos: PoS[]

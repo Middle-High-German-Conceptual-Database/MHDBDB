@@ -3,6 +3,7 @@ import { MhdbdbIdLabelEntity, IdLabelI, SkosConceptI } from '../baseIndexCompone
 export class SkosConcept extends MhdbdbIdLabelEntity implements IdLabelI, SkosConceptI {
     public broaderIds?: string[];
     public narrowerIds?: string[];
+    public altLabels?: string[];
 
     constructor(
         public id: string,

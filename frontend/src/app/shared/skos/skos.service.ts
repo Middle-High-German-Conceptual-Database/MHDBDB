@@ -158,7 +158,7 @@ export abstract class SkosConceptService<
     }
 
     return `
-        SELECT DISTINCT ?id ?label ?broaderId ?narrowerId
+        SELECT DISTINCT ?id ?label ?altLabel ?broaderId ?narrowerId
         WHERE {
             # Bindings
             ${this._sparqlGenerateBinding(qp.filter.id)}
@@ -171,6 +171,7 @@ export abstract class SkosConceptService<
             ${scheme}
             ${topConcepts}
             ?id skos:prefLabel ?label .
+            OPTIONAL { ?id skos:altLabel ?altLabel . }
             ${filters.join('\n')}
             OPTIONAL {
                 ?id skos:broader ?broaderId .
@@ -196,6 +197,9 @@ export abstract class SkosConceptService<
   }
 
   protected _sparqlAllQuery(qp: P): string {
+
+    console.log("real all query");
+
     // filters
     let filters = [];
     if ('label' in qp.filter && qp.filter.label != '') {
@@ -222,9 +226,9 @@ export abstract class SkosConceptService<
     }
 
     return `
-        SELECT DISTINCT ?id ?label ?broaderId ?narrowerId
+        SELECT DISTINCT ?id ?label ?altLabel ?broaderId ?narrowerId
         WHERE {
-            # Bindings
+            # DANIEL Bindings
             ${this._sparqlGenerateBinding(qp.filter.id)}
             Bind('${qp.lang}' AS ?lang)
 
@@ -233,6 +237,7 @@ export abstract class SkosConceptService<
 
             ${scheme}
             ?id skos:prefLabel ?label .
+            OPTIONAL { ?id skos:altLabel ?altLabel . }
             ${filters.join('\n')}
             OPTIONAL {
                 ?id skos:broader ?broaderId .
@@ -261,6 +266,15 @@ export abstract class SkosConceptService<
     let results: E[] = super._jsonToObject(bindings);
     bindings.forEach(row => {
       let element = results.find(element => element.id.toString() === row.id.value);
+
+      if ('altLabel' in row && element && !element.altLabels) {
+        let altLabelsList: string[] = [];
+        altLabelsList.push(row.altLabel.value);
+        element.altLabels = altLabelsList;
+      } else if ('altLabel' in row && element && !element.altLabels.includes(row.altLabel.value)) {
+        element.altLabels.push(row.altLabel.value);
+      }
+
       if ('broaderId' in row && element && !element.broaderIds) {
         let broaderList: string[] = [];
         broaderList.push(row.broaderId.value);

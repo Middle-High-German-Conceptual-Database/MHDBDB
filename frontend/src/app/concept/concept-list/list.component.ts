@@ -310,8 +310,6 @@ export class ConceptListComponent implements OnInit {
     }
 
     buildFilterQuery() {
-
-      console.log("list querty");
         let query = `SELECT DISTINCT ?subject ?writtenRep ?pos
     WHERE {`;
 

@@ -225,7 +225,7 @@ export abstract class BaseIndexTreeDirective<qT extends skosQueryParameterMap<f,
 
     listSearch = new FormControl();
     listSearchControl = new FormControl();
-    $listSearch = this.listSearch.valueChanges.pipe(
+    /* $listSearch = this.listSearch.valueChanges.pipe(
         startWith(null),
         debounceTime(200),
         switchMap((res: string) => {
@@ -234,7 +234,21 @@ export abstract class BaseIndexTreeDirective<qT extends skosQueryParameterMap<f,
                 this.realAllConcepts.filter(x => x.label.toLowerCase().indexOf(res.toLowerCase()) >= 0)
             );
         })
-    );
+    ); */
+
+    $listSearch = this.listSearch.valueChanges.pipe(
+        startWith(null),
+        debounceTime(200),
+        switchMap((res: string) => {
+          if (!res) return of(this.realAllConcepts);
+          return of(
+            this.realAllConcepts.filter(x =>
+              x.label.toLowerCase().indexOf(res.toLowerCase()) >= 0 ||
+              x.altLabels?.some(a => a.toLowerCase().indexOf(res.toLowerCase()) >= 0)
+            )
+          );
+        })
+      );
 
 
     constructor(

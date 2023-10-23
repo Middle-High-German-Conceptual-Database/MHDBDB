@@ -37,11 +37,12 @@ export class ConceptService extends SkosConceptService<ConceptQueryParameterI, C
 
   getConceptsOfSense(senseUri: string): Promise<Concept[]> {
     const query = `
-            select ?id ?label ?narrowerId ?broaderId
+            select ?id ?label ?altLabel ?narrowerId ?broaderId
             where {
                 <${senseUri}> dhpluso:isLexicalizedSenseOf ?id .
                 ?id a skos:Concept .
                 ?id skos:prefLabel ?label .
+                OPTIONAL { ?id skos:altLabel ?altLabel . }
                 OPTIONAL {
                 ?id skos:broader ?broaderId .
                 FILTER NOT EXISTS {
