@@ -10,7 +10,7 @@ export class NiceInstanceNamePipe implements PipeTransform  {
     }
 
     if (value.includes('d-nb.info')) {
-      return 'DNB';
+      return 'GND';
     }
 
     if (value.includes('wikidata.org')) {
