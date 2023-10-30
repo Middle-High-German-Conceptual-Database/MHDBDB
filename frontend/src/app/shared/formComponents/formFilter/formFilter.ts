@@ -238,7 +238,7 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
 
     this.form.valueChanges
       .pipe(
-        debounceTime(1500),
+        debounceTime(2000),
         distinctUntilChanged(),
         takeUntil(this.destroy$)
       )

@@ -30,6 +30,7 @@ export const contextRange: number[] = [1, 2, 3, 4, 5];
 
 export interface TokenFilterI {
   id: string;
+  isNamenActive: boolean;
   searchLabelInLemma: boolean;
   label?: string;
   pos?: string[];
@@ -64,6 +65,7 @@ export interface TextPassageQueryParameterI extends QueryParameterI<TextPassageF
 export const defaultTokenFilter: TokenFilterI = {
   id: uuidv4(),
   searchLabelInLemma: false,
+  isNamenActive: false,
   searchExactForm: false,
   label: '',
   pos: [],

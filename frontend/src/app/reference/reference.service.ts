@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { LanguageService, NAMEDGRAPHS } from 'app/shared/base.imports';
+import { NAMEDGRAPHS } from 'app/shared/base.imports';
 import {
   FilterConceptsI,
   FilterIdLabelI,
@@ -11,10 +11,7 @@ import {
 } from '../shared/mhdbdb-graph.service';
 import { AnnotationClass } from './annotation.class';
 import { Kwic, ElectronicText, Token } from './reference.class';
-import { WorkFilterI, WorkOptionsI } from 'app/work/work.service';
 import { ContextRangeT, TokenFilterI } from 'app/reference/referencePassage.service';
-import { DictionaryQueryParameterI } from 'app/dictionary/dictionary.service';
-import { WordClass } from 'app/dictionary/dictionary.class';
 import { v4 as uuidv4 } from 'uuid';
 import { selectLanguage } from 'app/store/language.reducer';
 import { Store, select } from '@ngrx/store';
@@ -43,6 +40,7 @@ export interface TextOptionsI extends OptionsI {
 export const defaultTokenFilter: TokenFilterI = {
   id: uuidv4(),
   searchLabelInLemma: false,
+  isNamenActive: false,
   label: '',
   pos: [],
   concepts: [],
@@ -459,15 +457,12 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
 
         ?annotationId${i} oa:hasBody ?wordId${i} .
         ?annotationId${i} oa:hasTarget ?rootId .
-
                 `;
 
         if (exactForm == true) {
-          wordFilter += ` 
-                  ?typeId${i} dhpluso:writtenRep ?wr${i} .
-                   filter(regex(str(?wr${i}), "^${labelFilterGenerator(word, false)}$", "i")) .`;
+          wordFilter += ` ?typeId${i} dhpluso:writtenRep "${word}" .`;
         } else {
-          wordFilter += ` filter(regex(str(?typeLabel${i}), "${labelFilterGenerator(word, false)}", "i")) .`;
+          wordFilter += `filter(regex(str(?typeLabel${i}), "${labelFilterGenerator(word, false)}", "i")) .`;
         }
       }
       if (relation === 'or') {

@@ -26,6 +26,7 @@ import { selectTokenFilterById } from 'app/store/filter.reducer';
 import { updateFilterById } from 'app/store/filter.actions';
 import { OnomasticsService } from 'app/onomastics/onomastics.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import {SkosConceptI} from "app/shared/baseIndexComponent/baseindexcomponent.class";
 
 @Injectable({ providedIn: 'root' })
 export class tokenFormService {
@@ -207,7 +208,7 @@ export class FormTokenWordComponent {
     .subscribe(tokenFilter => {
       if (JSON.stringify(tokenFilter) !== JSON.stringify(this.form.value)) {
         this.form.patchValue(tokenFilter, { emitEvent: false });
-        this.focusOnInput();
+        // this.focusOnInput();
 
       }
     }); 
@@ -215,12 +216,12 @@ export class FormTokenWordComponent {
     this.form.valueChanges
       .pipe(
         distinctUntilChanged(),
-        debounceTime(1500),
+        debounceTime(2000),
         takeUntil(this.destroy$)
       )
       .subscribe(value => {
         const changes =
-          this.tokenFilter.label !== value.label;
+          this.tokenFilter.label !== value.label || this.tokenFilter.searchExactForm !== value.searchExactForm || this.tokenFilter.searchLabelInLemma !== value.searchLabelInLemma;
         if (changes) {
           const updatedFilter = { ...this.tokenFilter, ...value };
           this.store.dispatch(updateFilterById({ filterId: this.filter.id, newFilter: updatedFilter }));
@@ -234,9 +235,9 @@ export class FormTokenWordComponent {
     this.destroy$.complete();
   }
 
-  focusOnInput(): void {
+/*  focusOnInput(): void {
     this.myInput.nativeElement.focus();
-}
+}*/
 
 }
 
@@ -313,7 +314,7 @@ export class FormTokenConceptsComponent implements OnInit, OnDestroy {
   @Input() tokenFilter;
   @Input() filter: any;
 
-  public conceptList: Concept[];
+  public conceptList: SkosConceptI[];
   public form: FormGroup;
   public filterConcepts: FormGroup;
   public conceptLabels: string[] = [];
@@ -342,7 +343,7 @@ export class FormTokenConceptsComponent implements OnInit, OnDestroy {
 
   private _filterConcept(value: string): string[] {
     const filterValue = value.toLowerCase();
-    return this.conceptLabels.filter(concept => concept.toLowerCase().indexOf(filterValue) === 0);
+    return this.conceptLabels.filter(concept => concept.toLowerCase().indexOf(filterValue) >= 0);
   }
 
   get concepts() {
@@ -370,6 +371,8 @@ export class FormTokenConceptsComponent implements OnInit, OnDestroy {
 
     this.conceptList.forEach(concept => {
       this.conceptLabels.push(concept.label);
+      // concept.altLabels?.map(label => this.conceptLabels.push(label));
+
       if (this.tokenFilter.concepts.includes(concept.id)) {
         this.concepts.addControl(concept.label.trim(), new FormControl(true));
       }
@@ -377,21 +380,29 @@ export class FormTokenConceptsComponent implements OnInit, OnDestroy {
   }
 
   private subscribe(): Subscription {
+    console.log(this.tokenFilter);
     this.tokenFilter = { ...this.tokenFilter } as TokenFilterI;
+
     return this.form.valueChanges.pipe(distinctUntilChanged()).subscribe(value => {
+      console.log(value);
       this.tokenFilter.concepts = [];
       for (let v in value.filterConcepts) {
+        console.log(v);
         const e = this.conceptList.find(element => element.label === v);
-        this.tokenFilter.concepts.push(e.id);
+        if (e != undefined) {
+          console.log(e);
+          this.tokenFilter.concepts.push(e.id);
+        }
       }
       const updatedFilter = { ...this.tokenFilter };
+      console.log(updatedFilter);
       this.store.dispatch(updateFilterById({ filterId: this.filter.id, newFilter: updatedFilter }));
       this.service.nextQp();
     });
   }
 
   ngOnInit() {
-    this.conceptService.getAllConcepts().then(data => {
+    this.conceptService.getRealAllConcepts().then(data => {
       this.conceptList = data;
       this.initHtmlForm();
       this.subscription = this.subscribe();
@@ -442,7 +453,7 @@ export class FormTokenNamenComponent implements OnInit, OnDestroy {
 
   private _filterConcept(value: string): string[] {
     const filterValue = value.toLowerCase();
-    return this.conceptLabels.filter(concept => concept.toLowerCase().indexOf(filterValue) === 0);
+    return this.conceptLabels.filter(concept => concept.toLowerCase().indexOf(filterValue) >= 0);
   }
 
   get concepts() {
@@ -471,6 +482,7 @@ export class FormTokenNamenComponent implements OnInit, OnDestroy {
 
     this.conceptList.forEach(concept => {
       this.conceptLabels.push(concept.label);
+      // concept.altLabels?.map(label => this.conceptLabels.push(label));
       if (this.tokenFilter.onomastics.includes(concept.id)) {
         this.concepts.addControl(concept.label.trim(), new FormControl(true));
       }
@@ -480,10 +492,13 @@ export class FormTokenNamenComponent implements OnInit, OnDestroy {
   private subscribe(): Subscription {
     this.tokenFilter = { ...this.tokenFilter } as TokenFilterI;
     return this.form.valueChanges.pipe(distinctUntilChanged()).subscribe(value => {
+      console.log(value);
       this.tokenFilter.onomastics = [];
       for (let v in value.filterConcepts) {
         const e = this.conceptList.find(element => element.label === v);
-        this.tokenFilter.onomastics.push(e.id);
+        if (e != undefined) {
+          this.tokenFilter.onomastics.push(e.id);
+        }
       }
       const updatedFilter = { ...this.tokenFilter };
       this.store.dispatch(updateFilterById({ filterId: this.filter.id, newFilter: updatedFilter }));
@@ -492,7 +507,7 @@ export class FormTokenNamenComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.conceptService.getAllConcepts().then(data => {
+    this.conceptService.getRealAllConcepts().then(data => {
       this.conceptList = data;
       this.initHtmlForm();
       this.subscription = this.subscribe();
@@ -545,7 +560,7 @@ export class FormTokenPositionComponent implements OnInit, OnDestroy {
 
     this.form.valueChanges
       .pipe(
-        debounceTime(1500),
+        debounceTime(2000),
         distinctUntilChanged(),
         takeUntil(this.destroy$)
       )
