@@ -28,7 +28,6 @@ import { Options } from '@angular-slider/ngx-slider';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { PersonQueryParameterI, PersonService } from 'app/indices/person/person.service';
 import { Person, PersonClass } from 'app/indices/person/person.class';
-import { defaultTextQP } from 'app/reference/reference.service';
 
 @Component({
   selector: 'dhpp-form-filter',

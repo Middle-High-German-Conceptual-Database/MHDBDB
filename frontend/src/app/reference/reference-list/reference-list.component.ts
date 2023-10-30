@@ -193,8 +193,11 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
     if (this.totalAnnotations == -1 || fromScroll == false) {
       const countResults = this.service.sparqlQuery({ ...this.generalFilter, filter: this.filter }, true);
       _sq.query(countResults).then(data => {
-        if (data.results.bindings.length == 0) {
+        if (data.results.bindings.length === 0) {
           this.totalAnnotations = 0;
+          this.isRLoading = false;
+          this.isLoading = false;
+          return;
         } else {
           this.totalAnnotations = data.results.bindings[0].count.value;
           this.executeQuery();

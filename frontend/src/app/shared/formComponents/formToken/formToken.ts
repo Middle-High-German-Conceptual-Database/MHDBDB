@@ -56,6 +56,7 @@ export class FormTokenComponent implements OnInit, OnDestroy {
   @Input() tokenFilter;
   @Input() filter: any;
   advancedSearch = false;
+  isNamenActive = false;
   public he: ListHistoryEntry<TextPassageQueryParameterI, TextPassageFilterI, TextPassageOptionsI, TextPassage>;
   isLoading: boolean = false;
   notifier = new Subject();
@@ -65,12 +66,29 @@ export class FormTokenComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
+  // chips input for concepts
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+  selectable = true;
+  removable = true;
+  addOnBlur = true;
+  visible = true;
+
+  public onomasticForm: FormGroup;
+
+  onomasticCtrl = new FormControl();
+  filteredOnomastics: Observable<string[]>;
+  public onomasticsList: Concept[];
+  public filterOnomastics: FormGroup;
+  public onomasticsLabels: string[] = [];
+  @ViewChild('onomasticInput', { static: false }) onomasticInput: ElementRef<HTMLInputElement>;
+
   constructor(
     public historyService: HistoryService<TextPassageQueryParameterI, TextPassageFilterI, TextPassageOptionsI, TextPassage>,
     public help: MatDialog,
     public TextPassageService: TextPassageService,
     public service: tokenFormService,
-    public store: Store
+    public store: Store,
+    public conceptService: OnomasticsService
   ) { }
 
   openHelp() {
@@ -96,6 +114,21 @@ export class FormTokenComponent implements OnInit, OnDestroy {
     });
   }
 
+  get onomastics() {
+    return <FormGroup>this.onomasticForm.get('filterOnomastics');
+  }
+
+  removeOnomastic(conceptLabel: string): void {
+    this.onomastics.removeControl(conceptLabel);
+    this.onomastics.updateValueAndValidity();
+  }
+
+  selectedOnomastic(event: MatAutocompleteSelectedEvent): void {
+    this.onomastics.addControl(event.option.viewValue, new FormControl(true));
+    this.onomasticInput.nativeElement.value = '';
+    this.onomasticCtrl.setValue(null);
+  }
+
   addForm() {
     this.service.qp.filter.tokenFilters.push(defaultTokenFilter);
     this.service.nextQp();
@@ -117,6 +150,13 @@ export class FormTokenComponent implements OnInit, OnDestroy {
     this.store.dispatch(updateFilterById({ filterId: this.filter.id, newFilter: updatedFilter }));
   }
 
+  setNamenChecked(e: MatSlideToggleChange) {
+    this.isNamenActive = e.checked;
+
+    const updatedFilter = { ...this.tokenFilter, isNamenActive: e.checked };
+    this.store.dispatch(updateFilterById({ filterId: this.filter.id, newFilter: updatedFilter }));
+  }
+
   moveForm(shift, currentIndex) {
     let newIndex: number = currentIndex + shift;
     if (newIndex === -1) {
@@ -135,8 +175,25 @@ export class FormTokenComponent implements OnInit, OnDestroy {
     this.moveForm(1, index);
   }
 
+  private _filterOnomastic(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.onomasticsLabels.filter(concept => concept.toLowerCase().indexOf(filterValue) >= 0);
+  }
+
   ngOnInit() {
     this.tokenFilter = { ...this.tokenFilter } as TokenFilterI;
+
+    this.filterOnomastics = new FormGroup({});
+    this.onomasticForm = new FormGroup({
+      filterOnomastics: this.filterOnomastics
+    });
+
+    this.updateOnomastics();
+
+    this.filteredOnomastics = this.onomasticCtrl.valueChanges.pipe(
+        startWith(null),
+        map((concept: string | null) => (concept ? this._filterOnomastic(concept) : this.onomasticsLabels.slice()))
+    );
 
     this.store
       .pipe(
@@ -145,7 +202,29 @@ export class FormTokenComponent implements OnInit, OnDestroy {
       )
       .subscribe(tokenFilter => {
         this.advancedSearch = tokenFilter.advancedSearch;
+        this.isNamenActive = tokenFilter.isNamenActive;
+        this.tokenFilter.onomastics = tokenFilter.onomastics;
+
+        this.onomasticForm.disable({ emitEvent: false }); // disable form to prevent emitting events while patching values
+        this.updateOnomastics();
+        this.onomasticForm.enable({ emitEvent: false }); // re-enable form after patching values
+
       });
+
+    let tempOnomastics = [];
+
+    this.onomasticForm.valueChanges.pipe(distinctUntilChanged()).subscribe(value => {
+      for (let v in value.filterOnomastics) {
+        const e = this.onomasticsList.find(element => element.label === v);
+        if (e != undefined) {
+          tempOnomastics.push(e.id);
+        }
+      }
+
+      const updatedFilter = {...this.tokenFilter, onomastics: tempOnomastics};
+      this.tokenFilter = updatedFilter;
+        this.store.dispatch(updateFilterById({filterId: this.filter.id, newFilter: updatedFilter}));
+    });
 
     this.historyService.history.pipe(takeUntil(this.notifier)).subscribe(historyMap => {
       this.he = this.historyService.getListHistoryEntry(this.routeString);
@@ -156,6 +235,25 @@ export class FormTokenComponent implements OnInit, OnDestroy {
         this.notifier.complete();
       }
     });
+  }
+
+
+  updateOnomastics() {
+    if (this.onomasticsList && this.onomasticsList.length == 0) {
+      this.conceptService.getRealAllConcepts().then(data => {
+        this.onomasticsList = data;
+        // @todo add redux
+
+        this.onomasticsList.forEach(concept => {
+          this.onomasticsLabels.push(concept.label);
+          // concept.altLabels?.map(label => this.conceptLabels.push(label));
+          if (this.tokenFilter.onomastics.includes(concept.id)) {
+            this.onomastics.addControl(concept.label.trim(), new FormControl(true));
+          }
+        });
+        //   this.subscription = this.subscribe();
+      });
+    }
   }
 
   ngOnDestroy(): void {
@@ -367,16 +465,7 @@ export class FormTokenConceptsComponent implements OnInit, OnDestroy {
       filterConcepts: this.filterConcepts
     });
 
-    // @todo add redux
 
-    this.conceptList.forEach(concept => {
-      this.conceptLabels.push(concept.label);
-      // concept.altLabels?.map(label => this.conceptLabels.push(label));
-
-      if (this.tokenFilter.concepts.includes(concept.id)) {
-        this.concepts.addControl(concept.label.trim(), new FormControl(true));
-      }
-    });
   }
 
   private subscribe(): Subscription {
@@ -402,9 +491,19 @@ export class FormTokenConceptsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.initHtmlForm();
     this.conceptService.getRealAllConcepts().then(data => {
       this.conceptList = data;
-      this.initHtmlForm();
+      // @todo add redux
+
+      this.conceptList.forEach(concept => {
+        this.conceptLabels.push(concept.label);
+        // concept.altLabels?.map(label => this.conceptLabels.push(label));
+
+        if (this.tokenFilter.concepts.includes(concept.id)) {
+          this.concepts.addControl(concept.label.trim(), new FormControl(true));
+        }
+      });
       this.subscription = this.subscribe();
     });
   }
@@ -441,14 +540,11 @@ export class FormTokenNamenComponent implements OnInit, OnDestroy {
   onomasticCtrl = new FormControl();
   filteredOnomastics: Observable<string[]>;
 
-  @ViewChild('conceptInput', { static: false }) conceptInput: ElementRef<HTMLInputElement>;
+  @ViewChild('onomasticInput', { static: false }) conceptInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
 
   constructor(public service: tokenFormService, public conceptService: OnomasticsService, public store: Store) {
-    this.filteredOnomastics = this.onomasticCtrl.valueChanges.pipe(
-      startWith(null),
-      map((concept: string | null) => (concept ? this._filterConcept(concept) : this.conceptLabels.slice()))
-    );
+
   }
 
   private _filterConcept(value: string): string[] {
@@ -456,67 +552,76 @@ export class FormTokenNamenComponent implements OnInit, OnDestroy {
     return this.conceptLabels.filter(concept => concept.toLowerCase().indexOf(filterValue) >= 0);
   }
 
-  get concepts() {
+  get onomastics() {
     return <FormGroup>this.form.get('filterOnomastics');
   }
 
   removeOnomastic(conceptLabel: string): void {
-    this.concepts.removeControl(conceptLabel);
-    this.concepts.updateValueAndValidity();
+    this.onomastics.removeControl(conceptLabel);
+    this.onomastics.updateValueAndValidity();
   }
 
   selectedOnomastic(event: MatAutocompleteSelectedEvent): void {
-    this.concepts.addControl(event.option.viewValue, new FormControl(true));
+    this.onomastics.addControl(event.option.viewValue, new FormControl(true));
     this.conceptInput.nativeElement.value = '';
     this.onomasticCtrl.setValue(null);
   }
 
-  initHtmlForm() {
+  ngOnInit() {
+    this.tokenFilter = { ...this.tokenFilter } as TokenFilterI;
+
     this.filterOnomastics = new FormGroup({});
     this.form = new FormGroup({
       isNamenActive: new FormControl(this.tokenFilter.isNamenActive),
       filterOnomastics: this.filterOnomastics
     });
 
-    // @todo add redux
+    this.conceptService.getRealAllConcepts().then(data => {
+      this.conceptList = data;
+      // @todo add redux
 
-    this.conceptList.forEach(concept => {
-      this.conceptLabels.push(concept.label);
-      // concept.altLabels?.map(label => this.conceptLabels.push(label));
-      if (this.tokenFilter.onomastics.includes(concept.id)) {
-        this.concepts.addControl(concept.label.trim(), new FormControl(true));
-      }
+      this.conceptList.forEach(concept => {
+        this.conceptLabels.push(concept.label);
+        // concept.altLabels?.map(label => this.conceptLabels.push(label));
+        if (this.tokenFilter.onomastics.includes(concept.id)) {
+          this.onomastics.addControl(concept.label.trim(), new FormControl(true));
+        }
+      });
+   //   this.subscription = this.subscribe();
     });
-  }
 
-  private subscribe(): Subscription {
-    this.tokenFilter = { ...this.tokenFilter } as TokenFilterI;
-    return this.form.valueChanges.pipe(distinctUntilChanged()).subscribe(value => {
+    this.filteredOnomastics = this.onomasticCtrl.valueChanges.pipe(
+        startWith(null),
+        map((concept: string | null) => (concept ? this._filterConcept(concept) : this.conceptLabels.slice()))
+    );
+
+
+    this.form.valueChanges.pipe(distinctUntilChanged()).subscribe(value => {
       console.log(value);
       this.tokenFilter.onomastics = [];
+
+      const changes =
+          this.tokenFilter.isNamenActive !== value.isNamenActive ||
+          this.tokenFilter.onomastics !== value.onomastics;
+
       for (let v in value.filterConcepts) {
         const e = this.conceptList.find(element => element.label === v);
         if (e != undefined) {
           this.tokenFilter.onomastics.push(e.id);
         }
       }
-      const updatedFilter = { ...this.tokenFilter };
-      this.store.dispatch(updateFilterById({ filterId: this.filter.id, newFilter: updatedFilter }));
-      this.service.nextQp();
-    });
-  }
 
-  ngOnInit() {
-    this.conceptService.getRealAllConcepts().then(data => {
-      this.conceptList = data;
-      this.initHtmlForm();
-      this.subscription = this.subscribe();
+      if (changes) {
+        const updatedFilter = {...this.tokenFilter};
+        this.store.dispatch(updateFilterById({filterId: this.filter.id, newFilter: updatedFilter}));
+        this.service.nextQp();
+      }
     });
   }
 
   ngOnDestroy(): void {
     if (this.subscription) {
-      this.subscription.unsubscribe();
+   //   this.subscription.unsubscribe();
     }
   }
 }

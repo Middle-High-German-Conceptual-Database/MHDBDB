@@ -14,16 +14,56 @@
                 <dhpp-form-token-pos [filter]="filter" [tokenFilter]="filter"></dhpp-form-token-pos>
                 <dhpp-form-token-concepts [filter]="filter" [tokenFilter]="filter"></dhpp-form-token-concepts>
 
-                <mat-slide-toggle class="example-margin" color="primary" [checked]="advancedSearch"
+              <!--  <mat-slide-toggle class="example-margin" color="primary" [checked]="advancedSearch"
                     (change)="setAdvChecked($event)" style="margin-top: 25px;">
                     Erweiterte Suche
-                </mat-slide-toggle>
+                </mat-slide-toggle> -->
 
-                <dhpp-form-token-namen *ngIf="advancedSearch" [filter]="filter"
+
+                    <div  class="werke_row flxrow">
+                        <form [formGroup]="onomasticForm" novalidate>
+
+                        <div class="radio-btn">
+                            <mat-slide-toggle class="example-margin" color="primary" [checked]="isNamenActive"
+                                              (change)="setNamenChecked($event)" style="margin-top: 25px;">
+                                Namen
+                            </mat-slide-toggle>
+                        </div>
+
+                        <div class="werke_row_inner">
+                            <div class="input-row">
+                                <mat-form-field class="form-check form-check-inline" style="width: 100%;">
+                                    <input type="text" class="input-text" [formControl]="onomasticCtrl" #onomasticInput
+                                           [matAutocomplete]="auto" [matChipInputFor]="chipListOnomastic"
+                                           [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+                                           matInput>
+                                    <mat-chip-list #chipListOnomastic aria-label="onomastic selection">
+                                        <mat-chip *ngFor="let onomastic of onomasticForm.get('filterOnomastics').value | keyvalue"
+                                                  [selectable]="true" [removable]="true" (removed)="removeOnomastic(onomastic.key)">
+                                            {{onomastic.key}}
+                                            <mat-icon matChipRemove *ngIf="removable"><i class="fas fa-times"></i></mat-icon>
+                                        </mat-chip>
+                                    </mat-chip-list>
+                                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedOnomastic($event)">
+                                        <mat-option *ngFor="let onomastic of filteredOnomastics | async" [value]="onomastic">
+                                            {{onomastic}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <!-- <button mat-button type="button" (click)="openHelp()"><i class="fas fa-question-circle"></i>
+                         </button>-->
+                        </form>
+                    </div>
+
+
+
+                <!--<dhpp-form-token-namen [filter]="filter"
                     [tokenFilter]="filter"></dhpp-form-token-namen>
 
-                <dhpp-form-token-position *ngIf="advancedSearch" [filter]="filter"
-                    [tokenFilter]="filter"></dhpp-form-token-position>
+                <dhpp-form-token-position  [filter]="filter"
+                    [tokenFilter]="filter"></dhpp-form-token-position>-->
 
             </mat-card-content>
             <!--<mat-card-actions>

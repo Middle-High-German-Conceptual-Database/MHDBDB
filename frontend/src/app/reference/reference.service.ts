@@ -406,8 +406,11 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       }
       if (concepts.length > 0) {
         conceptFilter += `
-                ?concept${i} skos:narrowerTransitive?/^dhpluso:isLexicalizedSenseOf/dhpluso:isSenseOf ?wordId${i} .
-                FILTER ( ?concept${i} IN (${conceptUris.join()}) )
+        {
+           ?concept0 dhpluso:isSenseOf ?wordId0 .
+           ?concept0 dhpluso:isLexicalizedSenseOf ?sense0 .
+             FILTER ( ?sense${i} IN (${conceptUris.join()}) )
+         }   
                 `;
       }
       if (relation === 'or') {
@@ -519,14 +522,19 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
         wordOrLemma = wordFilter(i, tokenFilter.label, tokenFilter.relation, tokenFilter.searchExactForm);
       }
 
-      let concept = conceptFilter(i, tokenFilter.concepts, tokenFilter.relation);
-      let pos = posFilter(i, tokenFilter.pos, tokenFilter.relation);
+      if (tokenFilter.concepts && tokenFilter.concepts.length > 0) {
+        let concept = conceptFilter(i, tokenFilter.concepts, tokenFilter.relation);
+        concepts.push(concept);
+      }
+
+      if (tokenFilter.pos && tokenFilter.pos.length > 0) {
+        let pos = posFilter(i, tokenFilter.pos, tokenFilter.relation);
+        poss.push(pos);
+      }
 
       words.push(wordOrLemma);
-      concepts.push(concept);
-      poss.push(pos);
 
-      if (tokenFilter.advancedSearch) {
+      if (tokenFilter.advancedSearch && tokenFilter.onomastics && tokenFilter.onomastics.length > 0) {
         let onomastic = onomasticsFilter(i, tokenFilter.onomastics, tokenFilter.relation);
         onomastics.push(onomastic);
       }
