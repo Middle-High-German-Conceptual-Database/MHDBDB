@@ -46,17 +46,36 @@ export class KwicWidgetComponent
   ngOnInit(): void {
     super.ngOnInit();
 
-    if (this.instance) {
-      this.loadOccurrences();
-      this.textService.getKwic(this.instance.id).then(kwic => {
-        if (kwic) {
-          this.kwics.push(kwic);
-        }
-        this.isLoaded = Promise.resolve(true);
-      });
+    console.log(this.instance);
 
-      
+    if (this.instance && this.instance.id) {
+      if (this.instance) {
+        this.loadOccurrences();
+        this.textService.getKwic(this.instance.id).then(kwic => {
+          if (kwic) {
+            this.kwics.push(kwic);
+          }
+          this.isLoaded = Promise.resolve(true);
+        });
+
+
+      }
+
+    } else {
+      if (this.instance) {
+        // this.loadOccurrences();
+        this.textService.getKwic(`${this.instance}`).then(kwic => {
+          if (kwic) {
+            this.kwics.push(kwic);
+          }
+          this.isLoaded = Promise.resolve(true);
+        });
+
+
+      }
+
     }
+
   }
 
   openHelp() {
@@ -75,8 +94,10 @@ export class KwicWidgetComponent
   }
 
   public loadOccurrences() {
+    let id = this.instance.id ? this.instance.id : this.instance;
+
     this.textService
-      .getAnnotations(100, this.offset, this.instance.id, undefined, 'tei:seg')
+      .getAnnotations(100, this.offset, `${id}`, undefined, 'tei:seg')
       .then(annotations => {
         this.isLoaded = Promise.resolve(true);
         this.total = annotations[1];

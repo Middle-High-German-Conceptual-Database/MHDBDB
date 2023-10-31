@@ -70,6 +70,7 @@ export class TextElementComponent extends BaseIndexElementDirective<WorkClass, W
   }
 
   public loadOccurrences() {
+    console.log('loadOccurrences');
     this.textService
       .getAnnotations(0, 10, this.instance.rootId, undefined, 'tei:seg')
       .then(annotations => {
