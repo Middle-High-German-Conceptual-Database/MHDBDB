@@ -30,8 +30,7 @@ export class OnomasticsViewComponent extends BaseIndexViewDirective<NameConceptQ
         public locationService: Location,
         public http: HttpClient,
         public fb: FormBuilder,
-        public service: OnomasticsService, // --> service
-        public textService: TextService
+        public service: OnomasticsService,
     ) {
         super(router, route, locationService, http, fb, service)
     }

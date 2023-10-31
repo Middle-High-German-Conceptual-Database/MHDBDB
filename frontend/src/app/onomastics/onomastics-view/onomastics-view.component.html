@@ -1,7 +1,12 @@
-
-<!--  -->
 <div *ngIf="instance; else noInstanceSelected">
-    <dhpp-onomastics-element [instance]="instance"></dhpp-onomastics-element>
+    <dhpp-concept-element [instance]="instance"></dhpp-concept-element>
+    <div class="row" style="padding-top: 0.5rem;">
+        <div class="col-12">
+            <mat-accordion [multi]="true" #accordion="matAccordion" [togglePosition]="'before'">
+                <dhpp-widget-wordsAndkwic [instance]="instance"></dhpp-widget-wordsAndkwic>
+            </mat-accordion>
+        </div>
+    </div>
 </div>
 <ng-template #noInstanceSelected>
     <div>Bitte wählen Sie eine Kategorie aus.</div>

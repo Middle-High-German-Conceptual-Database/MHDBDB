@@ -21,33 +21,35 @@ import { onomasticsRoutes } from './onomastics.route';
 import { OnomasticsViewComponent } from './onomastics-view/onomastics-view.component';
 import { OnomasticsTreeComponent } from './onomastics-tree/onomastics-tree.component';
 import { ElementComponentModule } from 'app/shared/elementComponent/elementComponentModule';
+import {MHDBDBViewWidgetsModule} from "app/shared/viewWidgets/viewWidgetsModule";
 
 const ENTITY_STATES = [...onomasticsRoutes];
 
 @NgModule({
   declarations: [OnomasticsComponent, OnomasticsViewComponent, OnomasticsTreeComponent],
   entryComponents: [OnomasticsComponent, OnomasticsViewComponent, OnomasticsTreeComponent],
-  imports: [
-    CommonModule,
-    FormsModule,
-    AppXSharedModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    MatListModule,
-    MatTabsModule,
-    MatSlideToggleModule,
-    MatExpansionModule,
-    MatButtonModule,
-    MatToolbarModule,
-    MatProgressBarModule,
-    MatIconModule,
-    RouterModule.forChild(ENTITY_STATES),
-    MatFormFieldModule,
-    MatChipsModule,
-    MatAutocompleteModule,
-    MatTreeModule,
-    ElementComponentModule
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        AppXSharedModule,
+        ReactiveFormsModule,
+        MatInputModule,
+        MatListModule,
+        MatTabsModule,
+        MatSlideToggleModule,
+        MatExpansionModule,
+        MatButtonModule,
+        MatToolbarModule,
+        MatProgressBarModule,
+        MatIconModule,
+        RouterModule.forChild(ENTITY_STATES),
+        MatFormFieldModule,
+        MatChipsModule,
+        MatAutocompleteModule,
+        MatTreeModule,
+        ElementComponentModule,
+        MHDBDBViewWidgetsModule
+    ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class OnomasticsModule {}
