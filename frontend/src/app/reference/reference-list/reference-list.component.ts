@@ -177,8 +177,11 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
   }
 
   search(fromScroll: boolean) {
+    this.textInstances = [];
     this.isRLoading = true;
     this.instances = [];
+    this.totalAnnotations = -1;
+    this.isLoading = false;
 
     setTimeout(() => {
       if (this.totalAnnotations == -1) {

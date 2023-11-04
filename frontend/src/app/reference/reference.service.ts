@@ -463,7 +463,10 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                 `;
 
         if (exactForm == true) {
-          wordFilter += ` ?typeId${i} dhpluso:writtenRep "${word}" .`;
+          wordFilter += ` ?typeId${i} dhpluso:writtenRep "${word}" .
+                           ?tokenNodeId mhdbdbxml:parent ?rootId .
+                          ?tokenNodeId mhdbdbxml:content "${word}" .
+          `;
         } else {
           wordFilter += `filter(regex(str(?typeLabel${i}), "${labelFilterGenerator(word, false)}", "i")) .`;
         }
