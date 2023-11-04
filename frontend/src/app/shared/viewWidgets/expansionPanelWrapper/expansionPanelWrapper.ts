@@ -20,7 +20,7 @@ import { FilterIdI, MhdbdbGraphService, OptionsI, QueryParameterI } from '../../
             </ng-content>
         </p>
         <mat-action-row>
-            <button mat-button type="button" (click)="triggerOpenHelp()"><i class="fas fa-question-circle"></i></button>
+            <button *ngIf="hasHelp" mat-button type="button" (click)="triggerOpenHelp()"><i class="fas fa-question-circle"></i></button>
         </mat-action-row>
     </mat-expansion-panel>
 
@@ -36,6 +36,7 @@ export class ExpansionPanelWrapperComponent<qT extends QueryParameterI<f, o>, f 
     @Input() asPanel: boolean;    
     @Input() openHelpSubject: BehaviorSubject<boolean>;    
     @Input() expandAll: boolean;
+    @Input() hasHelp: boolean = true;
 
     triggerOpenHelp() {        
         this.openHelpSubject.next(true);
