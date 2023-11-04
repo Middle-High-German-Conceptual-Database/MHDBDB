@@ -29,7 +29,7 @@ Webbetreuung: Dr. Alan van Beek
 
 Software Komponist [[https://www.softwarekomponist.at/](https://www.softwarekomponist.at/ "https://www.softwarekomponist.at/")]  Inh. Daniel Schlager 
 
-Die inhaltliche Betreuung der Seiteobliegt der MHDBDB, Universität Salzburg. Es gelten die Bedingungen, die im [Impressum auf der Homepage der Universität Salzburg](http://www.uni-salzburg.at/index.php?id=200699) veröffentlicht werden.  Informationsstruktur und die technische Realisierung sind Eigenentwicklungen, sofern nicht anders angegeben.
+Die inhaltliche Betreuung der Seite obliegt der MHDBDB, Universität Salzburg. Es gelten die Bedingungen, die im [Impressum auf der Homepage der Universität Salzburg](https://www.plus.ac.at/impressum/) veröffentlicht werden.  Informationsstruktur und die technische Realisierung sind Eigenentwicklungen, sofern nicht anders angegeben.
 
 ### Technik
 
@@ -45,6 +45,5 @@ Die Inhalte sind im World-Wide-Web für den Online-Zugriff veröffentlicht. Das 
 
 Die Erstellung, die Verwendung und die nicht kommerzielle Weitergabe von Kopien in elektronischer oder ausgedruckter Form sind erlaubt, wenn der Inhalt unverändert bleibt und die Quelle angeben wird (Quelle:  Mittelhochdeutsche Begriffsdatenbank - MHDBDB, Universität Salzburg). 
 
-Die Annotationen unterliegen der Creative Commons Lizenz CC BY-NC-SA (https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode): Namensnennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen. 
-Die Lizenzen der Volltexte sind individuell ausgezeichnet. 
+Die Annotationen unterliegen der Creative Commons Lizenz CC BY-NC-SA (https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode): Namensnennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen. Die Lizenzen der Volltexte sind individuell ausgezeichnet. 
 
