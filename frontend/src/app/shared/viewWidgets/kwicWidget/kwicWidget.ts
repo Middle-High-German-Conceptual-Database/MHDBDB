@@ -25,6 +25,9 @@ export class KwicWidgetComponent
   extends ViewWidgetsDirective<DictionaryQueryParameterI, DictionaryFilterI, DictionaryOptionsI, MhdbdbIdEntity, DictionaryService>
   implements OnInit {
   @Input() word;
+  @Input() public radius: number = 5;
+
+  @Input() public contextUnit: string = 'words';
 
   total: number;
   kwics: Kwic[] = [];
@@ -51,7 +54,7 @@ export class KwicWidgetComponent
     if (this.instance && this.instance.id) {
       if (this.instance) {
         this.loadOccurrences();
-        this.textService.getKwic(this.instance.id).then(kwic => {
+        this.textService.getKwic(this.instance.id, this.radius).then(kwic => {
           if (kwic) {
             this.kwics.push(kwic);
           }
@@ -64,7 +67,7 @@ export class KwicWidgetComponent
     } else {
       if (this.instance) {
         // this.loadOccurrences();
-        this.textService.getKwic(`${this.instance}`).then(kwic => {
+        this.textService.getKwic(`${this.instance}`, this.radius).then(kwic => {
           if (kwic) {
             this.kwics.push(kwic);
           }
@@ -103,7 +106,7 @@ export class KwicWidgetComponent
         this.total = annotations[1];
         if (annotations[1] > 0) {
           annotations[0].forEach(annotation => {
-            this.textService.getKwic(annotation.target).then(kwic => {
+            this.textService.getKwic(annotation.target, 5).then(kwic => {
               if (kwic) {
                 this.kwics.push(kwic);
               }

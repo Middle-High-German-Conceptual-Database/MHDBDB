@@ -138,7 +138,9 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
   //KWIC//
   ////////
 
-  private sparqlKwic(centerUri: string, radius: number = 5): string {
+  private sparqlKwic(centerUri: string, radius: number): string {
+    console.log(radius);
+
     return `            
             select distinct ?position ?seg ?n ?content
             where { 
@@ -235,7 +237,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
     }
   }
 
-  public getKwic(centerUri: string, radius: number = 5): Promise<Kwic> {
+  public getKwic(centerUri: string, radius: number): Promise<Kwic> {
     const query = this.sparqlKwic(centerUri, radius);
     return new Promise<Kwic>((resolve, reject) => {
       this._sq.query(query).then(

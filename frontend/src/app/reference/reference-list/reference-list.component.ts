@@ -70,6 +70,9 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
 
   downloadProgress: 0;
 
+  radius: number = 5;
+  contextUnit: string = 'words';
+
   relation: string = 'and';
 
   selectedFilter: TokenFilterI;
@@ -104,6 +107,8 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
 
     this.filters$.subscribe(f => {
       this.filter = f;
+      this.radius = f.context;
+      this.contextUnit = f.contextUnit;
     });
 
     this.generalFilter$.subscribe(f => {

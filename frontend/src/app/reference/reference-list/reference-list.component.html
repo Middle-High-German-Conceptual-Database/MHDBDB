@@ -102,7 +102,7 @@ In der Belegsuche können eine oder mehrere Wortformen mit verschiedenen Eigensc
             <p style="margin-top: 15px; margin-bottom: 15px" *ngIf="totalAnnotations > 2500">Für diese Suchanfrage gibt es sehr viele Belege. Bitte verwenden Sie die Blätterfunktion unterhalb der Ergebnisliste, um die weiteren Belege anzuzeigen.</p>
 
             <div *ngFor="let instance of instances">
-                <dhpp-text-element [instance]="instance" [qp]="qp"></dhpp-text-element>
+                <dhpp-text-element [instance]="instance" [qp]="qp" [radius]="radius" [contextUnit]="contextUnit"></dhpp-text-element>
             </div>
 
             <mat-paginator [length]="totalAnnotations" (page)="handlePageEvent($event)" [pageSize]="limit">

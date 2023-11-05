@@ -25,6 +25,11 @@ export class TextElementComponent extends BaseIndexElementDirective<WorkClass, W
 
   @Input() public qp: any;
 
+  @Input() public radius: number = 5;
+
+  @Input() public contextUnit: string = 'words';
+
+
   kwics: Kwic[] = [];
 
   annotations: [] = [];
@@ -57,9 +62,9 @@ export class TextElementComponent extends BaseIndexElementDirective<WorkClass, W
   loadSenses() {
     console.log(this.instance);
     if (this.instance) {
-      this.referenceService.getKwic(this.instance.rootId).then(data => {
+      /* this.referenceService.getKwic(this.instance.rootId).then(data => {
         console.log(data);
-      });
+      }); */
 
       /* this.dicService.getSenses(this.instance).then( data => {
         this.senses = data
@@ -77,7 +82,7 @@ export class TextElementComponent extends BaseIndexElementDirective<WorkClass, W
         this.total = annotations[1];
         if (annotations[1] > 0) {
           annotations[0].forEach(annotation => {
-            this.textService.getKwic(annotation.target).then(kwic => {
+            this.textService.getKwic(annotation.target, this.radius).then(kwic => {
               if (kwic) {
                 this.kwics.push(kwic);
               }
