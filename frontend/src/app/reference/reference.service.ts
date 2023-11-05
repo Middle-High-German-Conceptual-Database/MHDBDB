@@ -375,39 +375,22 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
     console.log('TextService._sparqlQuery', qp);
 
     function posFilter(i: number, pos: string[], relation: string): string {
-      i = 0;
       let posUris = pos.map(p => `<${p}>`);
       let posFilter = '';
 
-      if (relation === 'and' && i > 0) {
-        posFilter += ' OPTIONAL ';
-      }
-      if (relation === 'and') {
-        posFilter += '{';
-      }
       if (pos.length > 0) {
         posFilter += `
                 ?wordId${i} dhpluso:partOfSpeech ?pos${i} .
                 FILTER ( ?pos${i} IN (${posUris.join()}) )
                 `;
       }
-      if (relation === 'and') {
-        posFilter += '}';
-      }
       return posFilter;
     }
 
     function conceptFilter(i: number, concepts: string[], relation: string): string {
-      i = 0;
       let conceptUris = concepts.map(c => `<${c}>`);
       let conceptFilter = '';
 
-      if (relation === 'and' && i > 0) {
-        conceptFilter += ' OPTIONAL ';
-      }
-      if (relation === 'and') {
-        conceptFilter += '{';
-      }
       if (concepts.length > 0) {
         conceptFilter += `
         {
@@ -417,46 +400,26 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
          }   
                 `;
       }
-      if (relation === 'and') {
-        conceptFilter += '}';
-      }
       return conceptFilter;
     }
 
     // Namen
     function onomasticsFilter(i: number, concepts: string[], relation: string): string {
-      i = 0;
       let conceptUris = concepts.map(c => `<${c}>`);
       let conceptFilter = '';
 
-      if (relation === 'and' && i > 0) {
-        conceptFilter += ' OPTIONAL ';
-      }
-      if (relation === 'and') {
-        conceptFilter += '{';
-      }
       if (concepts.length > 0) {
         conceptFilter += `
                 ?onomastic${i} skos:narrowerTransitive?/^dhpluso:isLexicalizedSenseOf/dhpluso:isSenseOf ?wordId${i} .
                 FILTER ( ?onomastic${i} IN (${conceptUris.join()}) )
                 `;
       }
-      if (relation === 'and') {
-        conceptFilter += '}';
-      }
       return conceptFilter;
     }
 
     function wordFilter(i: number, word: string, relation: string, exactForm: boolean): string {
-      i = 0;
       let wordFilter = '';
 
-      if (relation === 'and' && i > 0) {
-        wordFilter += ' OPTIONAL ';
-      }
-      if (relation === 'and') {
-        wordFilter += '{';
-      }
       if (word != '') {
         wordFilter += `
 
@@ -467,6 +430,13 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
 
         ?annotationId${i} oa:hasBody ?wordId${i} .
         ?annotationId${i} oa:hasTarget ?rootId .
+        
+        OPTIONAL {
+          ?rootId mhdbdbxml:nextSibling ?nextTokenId .
+          ?nextTokenId rdf:type tei:seg . 
+          ?nextTokenId mhdbdbxml:lastChild/mhdbdbxml:content ?lastTokenContent .
+          ?nextTokenId mhdbdbxml:firstChild/mhdbdbxml:content ?firstTokenContent .
+        }
                 `;
 
         if (exactForm == true) {
@@ -478,22 +448,12 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
           wordFilter += `filter(regex(str(?typeLabel${i}), "${labelFilterGenerator(word, false)}", "i")) .`;
         }
       }
-      if (relation === 'and') {
-        wordFilter += '}';
-      }
       return wordFilter;
     }
 
     function lemmaFilter(i: number, word: string, relation: string): string {
-      i = 0;
       let wordFilter = '';
 
-      if (relation === 'and' && i > 0) {
-        wordFilter += ' OPTIONAL ';
-      }
-      if (relation === 'and') {
-        wordFilter += '{';
-      }
       if (word != '') {
         wordFilter += `
                 ?wordId${i} a dhpluso:Word .
@@ -505,10 +465,30 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                 filter(regex(str(?wordLabel${i}), "${labelFilterGenerator(word, false)}", "i"))
                 `;
       }
-      if (relation === 'and') {
-        wordFilter += '}';
-      }
       return wordFilter;
+    }
+
+    function positionFilter(i: number, position: string, relation: string): string {
+      let positionFilter = '';
+
+      if (position != '') {
+
+        if (position === 'Anfang') {
+          positionFilter += `
+              
+              FILTER(REGEX(?firstTokenContent, "[!.,?]"))
+
+              
+                `;
+        } else if (position === 'Ende') {
+          positionFilter += `
+              
+              FILTER(REGEX(?lastTokenContent, "[!.,?]"))
+
+                `;
+        }
+      }
+      return positionFilter;
     }
 
 
@@ -548,6 +528,13 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
     let concepts: string[] = [];
     let onomastics: string[] = [];
     let poss: string[] = [];
+    let positions: string[] = [];
+
+    let wordsAnd: string[] = [];
+    let conceptsAnd: string[] = [];
+    let onomasticsAnd: string[] = [];
+    let possAnd: string[] = [];
+    let positionsAnd: string[] = [];
 
     // query with joins
     let qq: string = `
@@ -560,10 +547,58 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
 
     qp.filter.tokenFilters.forEach((tokenFilter, i: number) => {
 
+      let wordOrLemma = '';
+
+      if (tokenFilter.searchLabelInLemma) {
+        wordOrLemma = lemmaFilter(i, tokenFilter.label, tokenFilter.relation);
+      } else {
+        wordOrLemma = wordFilter(i, tokenFilter.label, tokenFilter.relation, tokenFilter.searchExactForm);
+      }
+
+      if (tokenFilter.relation === 'and') {
+        wordsAnd.push(wordOrLemma);
+      }
+
+      if (tokenFilter.concepts && tokenFilter.concepts.length > 0) {
+        let concept = conceptFilter(i, tokenFilter.concepts, tokenFilter.relation);
+
+        if (tokenFilter.relation === 'and') {
+          conceptsAnd.push(concept);
+        }
+      }
+
+      if (tokenFilter.pos && tokenFilter.pos.length > 0) {
+        let pos = posFilter(i, tokenFilter.pos, tokenFilter.relation);
+
+        if (tokenFilter.relation === 'and') {
+          possAnd.push(pos);
+        }
+      }
+
+      if (tokenFilter.advancedSearch && tokenFilter.onomastics && tokenFilter.onomastics.length > 0) {
+        let onomastic = onomasticsFilter(i, tokenFilter.onomastics, tokenFilter.relation);
+
+        if (tokenFilter.relation === 'and') {
+          onomasticsAnd.push(onomastic);
+        }
+      }
+
+      if (tokenFilter.isPositionActive && tokenFilter.anfang && tokenFilter.anfang != '') {
+        let pos = positionFilter(i, tokenFilter.anfang, tokenFilter.relation);
+
+        if (tokenFilter.relation === 'and') {
+          positionsAnd.push(pos);
+        }
+      }
+
+    });
+
+    qp.filter.tokenFilters.forEach((tokenFilter, i: number) => {
       words = [];
       concepts = [];
       onomastics = [];
       poss = [];
+      positions = [];
 
       qq += ` { 
       
@@ -599,32 +634,63 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       let wordOrLemma = '';
 
       if (tokenFilter.searchLabelInLemma) {
-        wordOrLemma = lemmaFilter(i, tokenFilter.label, tokenFilter.relation);
+        wordOrLemma = lemmaFilter(0, tokenFilter.label, tokenFilter.relation);
       } else {
-        wordOrLemma = wordFilter(i, tokenFilter.label, tokenFilter.relation, tokenFilter.searchExactForm);
+        wordOrLemma = wordFilter(0, tokenFilter.label, tokenFilter.relation, tokenFilter.searchExactForm);
+      }
+
+      if (tokenFilter.relation !== 'and') {
+        words.push(wordOrLemma);
       }
 
       if (tokenFilter.concepts && tokenFilter.concepts.length > 0) {
-        let concept = conceptFilter(i, tokenFilter.concepts, tokenFilter.relation);
-        concepts.push(concept);
+        let concept = conceptFilter(0, tokenFilter.concepts, tokenFilter.relation);
+
+        if (tokenFilter.relation !== 'and') {
+          concepts.push(concept);
+        }
       }
 
       if (tokenFilter.pos && tokenFilter.pos.length > 0) {
-        let pos = posFilter(i, tokenFilter.pos, tokenFilter.relation);
-        poss.push(pos);
-      }
+        let pos = posFilter(0, tokenFilter.pos, tokenFilter.relation);
 
-      words.push(wordOrLemma);
+        if (tokenFilter.relation !== 'and') {
+            poss.push(pos);
+        }
+      }
 
       if (tokenFilter.advancedSearch && tokenFilter.onomastics && tokenFilter.onomastics.length > 0) {
-        let onomastic = onomasticsFilter(i, tokenFilter.onomastics, tokenFilter.relation);
-        onomastics.push(onomastic);
+        let onomastic = onomasticsFilter(0, tokenFilter.onomastics, tokenFilter.relation);
+
+        if (tokenFilter.relation !== 'and') {
+          onomastics.push(onomastic);
+        }
       }
 
-      qq += ` ${words.join('\r\n')}
+      if (tokenFilter.isPositionActive && tokenFilter.anfang && tokenFilter.anfang != '') {
+        let pos = positionFilter(i, tokenFilter.anfang, tokenFilter.relation);
+
+        if (tokenFilter.relation !== 'and') {
+          positions.push(pos);
+        }
+      }
+
+      qq += `         
+      
+                      ${words.join('\r\n')}
                       ${concepts.join('\r\n')}
                       ${onomastics.join('\r\n')}
-                      ${poss.join('\r\n')} `;
+                      ${poss.join('\r\n')} 
+                      ${positions.join('\r\n')} 
+                      
+                      ${wordsAnd.join('\r\n')}
+                      ${conceptsAnd.join('\r\n')}
+                      ${onomasticsAnd.join('\r\n')}
+                      ${possAnd.join('\r\n')}
+                      ${positionsAnd.join('\r\n')}
+                      
+                      
+                      `;
 
 
 
@@ -681,6 +747,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                       ${concepts.join('\r\n')}
                       ${onomastics.join('\r\n')}
                       ${poss.join('\r\n')}
+                      ${positions.join('\r\n')}
                       
                       ${bindings.join('\r\n')}
                       ${filters.join('\r\n')}

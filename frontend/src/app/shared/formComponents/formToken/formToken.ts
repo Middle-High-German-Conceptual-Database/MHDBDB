@@ -638,8 +638,8 @@ export class FormTokenPositionComponent implements OnInit, OnDestroy {
   form: FormGroup;
   private destroy$ = new Subject<void>();
 
-  versList = [''];
-  anfangList = ['Anfang'];
+  versList = ['Verse'];
+  anfangList = ['Anfang', 'Ende'];
 
   constructor(public service: tokenFormService, public store: Store) { }
 
