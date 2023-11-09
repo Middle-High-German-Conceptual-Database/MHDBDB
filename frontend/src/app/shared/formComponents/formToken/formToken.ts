@@ -226,7 +226,7 @@ export class FormTokenComponent implements OnInit, OnDestroy {
         this.store.dispatch(updateFilterById({filterId: this.filter.id, newFilter: updatedFilter}));
     });
 
-    this.historyService.history.pipe(takeUntil(this.notifier)).subscribe(historyMap => {
+    /*this.historyService.history.pipe(takeUntil(this.notifier)).subscribe(historyMap => {
       this.he = this.historyService.getListHistoryEntry(this.routeString);
       if (this.he) {
         this.service.qp = this.he.getQp();
@@ -234,7 +234,7 @@ export class FormTokenComponent implements OnInit, OnDestroy {
         this.subscriptionTokenFormQp = this.subscribeTokenFormQp();
         this.notifier.complete();
       }
-    });
+    });*/
   }
 
 
@@ -257,13 +257,13 @@ export class FormTokenComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subscriptionQueryHistory) {
+    /*if (this.subscriptionQueryHistory) {
       this.subscriptionQueryHistory.unsubscribe();
     }
 
     if (this.subscriptionTokenFormQp) {
       this.subscriptionTokenFormQp.unsubscribe();
-    }
+    }*/
   }
 }
 
