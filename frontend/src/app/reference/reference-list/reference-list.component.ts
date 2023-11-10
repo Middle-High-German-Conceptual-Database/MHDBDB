@@ -41,6 +41,7 @@ import { showDialog } from 'app/store/ui.actions';
 import * as referenceActions from '../../store/reference.actions';
 import { selectDownloadProgress } from 'app/store/ui.reducer';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import {MatTabChangeEvent} from "@angular/material/tabs";
 
 @Component({
   selector: 'dhpp-reference-list',
@@ -89,6 +90,8 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
   offset = 0;
 
   navigation: Navigation;
+
+  selectedTabIndex: number = 0;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -143,6 +146,16 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
     this.isLoading = false;
   }
 
+  onTabChanged(tabChangeEvent: MatTabChangeEvent, index: number): void {
+    this.selectedTabIndex = tabChangeEvent.index;
+    this.tokenFilters$.pipe(take(1)).subscribe(filters => {
+      if (filters && filters.length > index) {
+        const updatedFilter = { ...filters[index], activeTab: tabChangeEvent.index };
+        this.store.dispatch(updateFilterById({ filterId: filters[index].id, newFilter: updatedFilter }));
+      }
+    });
+  }
+
   openDialog() {
     this.store.dispatch(showDialog({ title: 'Test Title 1', content: 'Test Content' }));
   }
@@ -182,11 +195,6 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
   ngOnInit() {
     super.ngOnInit();
     this.isRLoading = false;
-
-
-
-
-
     // this.loadSenses()
   }
 
@@ -234,6 +242,11 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
           this.totalAnnotations = data.results.bindings[0].count.value;
           this.executeQuery();
         }
+      }).catch(error => {
+        this.isRLoading = false;
+        this.isLoading = false;
+        console.error('Error during search:', error);
+        // Handle the error in UI, e.g., show an error message
       });
     } else {
       this.executeQuery();
@@ -259,6 +272,11 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
       }
       this.isRLoading = false;
       this.isLoading = false;
+    }).catch(error => {
+      this.isRLoading = false;
+      this.isLoading = false;
+      console.error('Error during query execution:', error);
+      // Handle the error in UI
     });
   }
   

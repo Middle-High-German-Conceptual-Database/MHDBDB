@@ -36,6 +36,7 @@ export interface TokenFilterI {
   pos?: string[];
   concepts?: string[];
   onomastics?: string[];
+  activeTab: number;
   searchExactForm?: boolean;
   positionInLine?: number;
   connectorAnd: boolean;
@@ -67,6 +68,7 @@ export const defaultTokenFilter: TokenFilterI = {
   searchLabelInLemma: false,
   isNamenActive: false,
   searchExactForm: false,
+  activeTab: 0,
   label: '',
   pos: [],
   concepts: [],

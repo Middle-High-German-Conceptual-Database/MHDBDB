@@ -41,6 +41,7 @@ export const defaultTokenFilter: TokenFilterI = {
   id: uuidv4(),
   searchLabelInLemma: false,
   isNamenActive: false,
+  activeTab: 0,
   label: '',
   pos: [],
   concepts: [],
@@ -372,8 +373,6 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
   }*/
 
   public sparqlQuery(qp: any, countResults: boolean): string {
-    console.log('TextService._sparqlQuery', qp);
-
     function posFilter(i: number, pos: string[], relation: string): string {
       let posUris = pos.map(p => `<${p}>`);
       let posFilter = '';
@@ -495,21 +494,12 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
     let bindings: string[] = [];
     let filters: string[] = [];
 
-    let labelQuery = '';
-    if (qp.filter.isLabelActive && qp.filter.label) {
-      filters.push(`filter(regex(str(?label), "${labelFilterGenerator(qp.filter.label, qp.filter.option.useLucene)}", "i"))`);
-    }
-
     if (qp.isWorksActive && qp.works) {
       let tempFilters = [];
       qp.works.forEach((work, i) => {
-        console.log(work);
         bindings.push(`Bind (<${work}> as ?work${i})`);
         tempFilters.push(`?workId = ?work${i}`);
       });
-
-      let orFilter = tempFilters.join(' || ');
-      // filters.push(`filter(${orFilter})`);
     }
 
     if (qp.isIdActive && qp.id) {
@@ -517,9 +507,6 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
     }
     if (qp.isElectronicIdActive && qp.electronicId) {
       bindings.push(`Bind (<${qp.electronicId}> as ?electronicId)`);
-    }
-    if (qp.isWorkIdActive && qp.workId) {
-      // bindings.push(`Bind (<${qp.workId}> as ?workId)`);
     }
 
     let wordSelects: string[] = [];
@@ -547,47 +534,66 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
 
     qp.filter.tokenFilters.forEach((tokenFilter, i: number) => {
 
-      let wordOrLemma = '';
+      if (tokenFilter.activeTab && tokenFilter.activeTab == 1) {
+        if (tokenFilter.concepts && tokenFilter.concepts.length > 0) {
+          let concept = conceptFilter(i, tokenFilter.concepts, tokenFilter.relation);
 
-      if (tokenFilter.searchLabelInLemma) {
-        wordOrLemma = lemmaFilter(i, tokenFilter.label, tokenFilter.relation);
+          if (tokenFilter.relation === 'and') {
+            conceptsAnd.push(concept);
+          }
+        }
+      } else if (tokenFilter.activeTab && tokenFilter.activeTab == 2) {
+        if (tokenFilter.advancedSearch && tokenFilter.onomastics && tokenFilter.onomastics.length > 0) {
+          let onomastic = onomasticsFilter(i, tokenFilter.onomastics, tokenFilter.relation);
+
+          if (tokenFilter.relation === 'and') {
+            onomasticsAnd.push(onomastic);
+          }
+        }
       } else {
-        wordOrLemma = wordFilter(i, tokenFilter.label, tokenFilter.relation, tokenFilter.searchExactForm);
-      }
 
-      if (tokenFilter.relation === 'and') {
-        wordsAnd.push(wordOrLemma);
-      }
+        let wordOrLemma = '';
 
-      if (tokenFilter.concepts && tokenFilter.concepts.length > 0) {
-        let concept = conceptFilter(i, tokenFilter.concepts, tokenFilter.relation);
-
-        if (tokenFilter.relation === 'and') {
-          conceptsAnd.push(concept);
+        if (tokenFilter.searchLabelInLemma) {
+          wordOrLemma = lemmaFilter(i, tokenFilter.label, tokenFilter.relation);
+        } else {
+          wordOrLemma = wordFilter(i, tokenFilter.label, tokenFilter.relation, tokenFilter.searchExactForm);
         }
-      }
-
-      if (tokenFilter.pos && tokenFilter.pos.length > 0) {
-        let pos = posFilter(i, tokenFilter.pos, tokenFilter.relation);
 
         if (tokenFilter.relation === 'and') {
-          possAnd.push(pos);
+          wordsAnd.push(wordOrLemma);
         }
-      }
 
-      if (tokenFilter.advancedSearch && tokenFilter.onomastics && tokenFilter.onomastics.length > 0) {
-        let onomastic = onomasticsFilter(i, tokenFilter.onomastics, tokenFilter.relation);
+        if (tokenFilter.concepts && tokenFilter.concepts.length > 0) {
+          let concept = conceptFilter(i, tokenFilter.concepts, tokenFilter.relation);
 
-        if (tokenFilter.relation === 'and') {
-          onomasticsAnd.push(onomastic);
+          if (tokenFilter.relation === 'and') {
+            conceptsAnd.push(concept);
+          }
         }
-      }
 
-      if (tokenFilter.isPositionActive && tokenFilter.anfang && tokenFilter.anfang != '') {
-        let pos = positionFilter(i, tokenFilter.anfang, tokenFilter.relation);
+        if (tokenFilter.pos && tokenFilter.pos.length > 0) {
+          let pos = posFilter(i, tokenFilter.pos, tokenFilter.relation);
 
-        if (tokenFilter.relation === 'and') {
-          positionsAnd.push(pos);
+          if (tokenFilter.relation === 'and') {
+            possAnd.push(pos);
+          }
+        }
+
+        if (tokenFilter.advancedSearch && tokenFilter.onomastics && tokenFilter.onomastics.length > 0) {
+          let onomastic = onomasticsFilter(i, tokenFilter.onomastics, tokenFilter.relation);
+
+          if (tokenFilter.relation === 'and') {
+            onomasticsAnd.push(onomastic);
+          }
+        }
+
+        if (tokenFilter.isPositionActive && tokenFilter.anfang && tokenFilter.anfang != '') {
+          let pos = positionFilter(i, tokenFilter.anfang, tokenFilter.relation);
+
+          if (tokenFilter.relation === 'and') {
+            positionsAnd.push(pos);
+          }
         }
       }
 
@@ -631,51 +637,120 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       wordSelects.push(`?wordLabel${i}`);
       wordSelects.push(`?annotationId${i}`);
       //wordSelects.push(`?rootId${i}`);
-      let wordOrLemma = '';
 
-      if (tokenFilter.searchLabelInLemma) {
-        wordOrLemma = lemmaFilter(0, tokenFilter.label, tokenFilter.relation);
+      if (tokenFilter.activeTab && tokenFilter.activeTab == 1) {
+        if (tokenFilter.concepts && tokenFilter.concepts.length > 0) {
+          let concept = conceptFilter(0, tokenFilter.concepts, tokenFilter.relation);
+
+          if (tokenFilter.relation !== 'and') {
+            concepts.push(concept);
+          }
+        }
+
+        qq += `         
+      
+                      ${concepts.join('\r\n')}
+                     
+                      ${conceptsAnd.join('\r\n')}
+                      
+                      `;
+
+
+
+        qq += `
+                      
+                      ${bindings.join('\r\n')}
+                      ${filters.join('\r\n')}
+                    }
+
+                    filter(langmatches(lang(?label),'de')) 
+                    filter(langmatches(lang(?authorLabel),'de')) 
+
+                    }
+                    ORDER BY ASC(?label)
+                    ${this._sparqlLimitOffset(qp.limit, qp.offset)}`;
+        qq += ` } `;
+      } else if (tokenFilter.activeTab && tokenFilter.activeTab == 2) {
+
+        if (tokenFilter.advancedSearch && tokenFilter.onomastics && tokenFilter.onomastics.length > 0) {
+          let onomastic = onomasticsFilter(0, tokenFilter.onomastics, tokenFilter.relation);
+
+          if (tokenFilter.relation !== 'and') {
+            onomastics.push(onomastic);
+          }
+        }
+
+
+        qq += `         
+      
+                      ${onomastics.join('\r\n')}
+                      
+                      ${onomasticsAnd.join('\r\n')}
+                      
+                      
+                      `;
+
+
+
+        qq += `
+                      
+                      ${bindings.join('\r\n')}
+                      ${filters.join('\r\n')}
+                    }
+
+                    filter(langmatches(lang(?label),'de')) 
+                    filter(langmatches(lang(?authorLabel),'de')) 
+
+                    }
+                    ORDER BY ASC(?label)
+                    ${this._sparqlLimitOffset(qp.limit, qp.offset)}`;
+        qq += ` } `;
       } else {
-        wordOrLemma = wordFilter(0, tokenFilter.label, tokenFilter.relation, tokenFilter.searchExactForm);
-      }
+        let wordOrLemma = '';
 
-      if (tokenFilter.relation !== 'and') {
-        words.push(wordOrLemma);
-      }
-
-      if (tokenFilter.concepts && tokenFilter.concepts.length > 0) {
-        let concept = conceptFilter(0, tokenFilter.concepts, tokenFilter.relation);
-
-        if (tokenFilter.relation !== 'and') {
-          concepts.push(concept);
+        if (tokenFilter.searchLabelInLemma) {
+          wordOrLemma = lemmaFilter(0, tokenFilter.label, tokenFilter.relation);
+        } else {
+          wordOrLemma = wordFilter(0, tokenFilter.label, tokenFilter.relation, tokenFilter.searchExactForm);
         }
-      }
-
-      if (tokenFilter.pos && tokenFilter.pos.length > 0) {
-        let pos = posFilter(0, tokenFilter.pos, tokenFilter.relation);
 
         if (tokenFilter.relation !== 'and') {
+          words.push(wordOrLemma);
+        }
+
+        if (tokenFilter.concepts && tokenFilter.concepts.length > 0) {
+          let concept = conceptFilter(0, tokenFilter.concepts, tokenFilter.relation);
+
+          if (tokenFilter.relation !== 'and') {
+            concepts.push(concept);
+          }
+        }
+
+        if (tokenFilter.pos && tokenFilter.pos.length > 0) {
+          let pos = posFilter(0, tokenFilter.pos, tokenFilter.relation);
+
+          if (tokenFilter.relation !== 'and') {
             poss.push(pos);
+          }
         }
-      }
 
-      if (tokenFilter.advancedSearch && tokenFilter.onomastics && tokenFilter.onomastics.length > 0) {
-        let onomastic = onomasticsFilter(0, tokenFilter.onomastics, tokenFilter.relation);
+        if (tokenFilter.advancedSearch && tokenFilter.onomastics && tokenFilter.onomastics.length > 0) {
+          let onomastic = onomasticsFilter(0, tokenFilter.onomastics, tokenFilter.relation);
 
-        if (tokenFilter.relation !== 'and') {
-          onomastics.push(onomastic);
+          if (tokenFilter.relation !== 'and') {
+            onomastics.push(onomastic);
+          }
         }
-      }
 
-      if (tokenFilter.isPositionActive && tokenFilter.anfang && tokenFilter.anfang != '') {
-        let pos = positionFilter(i, tokenFilter.anfang, tokenFilter.relation);
+        if (tokenFilter.isPositionActive && tokenFilter.anfang && tokenFilter.anfang != '') {
+          let pos = positionFilter(i, tokenFilter.anfang, tokenFilter.relation);
 
-        if (tokenFilter.relation !== 'and') {
-          positions.push(pos);
+          if (tokenFilter.relation !== 'and') {
+            positions.push(pos);
+          }
         }
-      }
 
-      qq += `         
+        qq += `         
       
                       ${words.join('\r\n')}
                       ${concepts.join('\r\n')}
@@ -694,7 +769,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
 
 
 
-      qq += `
+        qq += `
                       
                       ${bindings.join('\r\n')}
                       ${filters.join('\r\n')}
@@ -706,7 +781,10 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                     }
                     ORDER BY ASC(?label)
                     ${this._sparqlLimitOffset(qp.limit, qp.offset)}`;
-      qq += ` } `;
+        qq += ` } `;
+      }
+
+
 
       if (qp.filter.tokenFilters.length > i+1) {
         if (tokenFilter.relation == 'or') {
@@ -721,49 +799,6 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
     });
 
     qq += ` } `;
-
-
-    let newQuery = `
-                    SELECT DISTINCT * WHERE {
-                    ?rootId mhdbdbxml:partOf ?textId .
-                    ?textId dhpluso:hasElectronicInstance ?workId .
-                    ?workId rdf:type dhpluso:Text .
-
-                    {
-    					        ?textId dhpluso:hasElectronicInstance ?electronicId .
-                      ?electronicId rdf:type dhpluso:Text .
-                      ?electronicId rdfs:label ?label .
-                      BIND(?electronicId as ?id)
-                    }
-                    
-                    {
-                      ?workId dhpluso:contribution/dhpluso:agent ?authorId .
-                      ?authorId rdfs:label ?authorLabel .
-                    }
-
-                    {
-                      
-                      ${words.join('\r\n')}
-                      ${concepts.join('\r\n')}
-                      ${onomastics.join('\r\n')}
-                      ${poss.join('\r\n')}
-                      ${positions.join('\r\n')}
-                      
-                      ${bindings.join('\r\n')}
-                      ${filters.join('\r\n')}
-                    }
-
-                    filter(langmatches(lang(?label),'de')) 
-                    filter(langmatches(lang(?authorLabel),'de')) 
-
-                    }
-                    ORDER BY ASC(?label)
-                    ${this._sparqlLimitOffset(qp.limit, qp.offset)}
-
-            `;
-
-
-
 
     let q = '';
     if (countResults) {
@@ -780,7 +815,6 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       q = `${qq}`;
     }
 
-    console.log('q', q);
     return q;
   }
 

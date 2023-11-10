@@ -215,13 +215,14 @@ export class SparqlQuery {
 
       xhr.onload = () => {
         if (xhr.status >= 200 && xhr.status < 300) {
-          // Reset the progress once the download is complete
-          // this.store.dispatch(resetProgress());
           resolve(JSON.parse(xhr.responseText));
         } else {
-          // Reset the progress in case of an error
           this.store.dispatch(resetProgress());
-          reject(new Error(xhr.statusText));
+          if (xhr.status === 503) {
+            reject(new Error('Service Unavailable: The server is currently unable to handle the request.'));
+          } else {
+            reject(new Error(xhr.statusText));
+          }
         }
       };
 
@@ -271,17 +272,21 @@ export class SparqlQuery {
       this.postWithProgress(SERVER_API_SPARQL_URL, q, headersa)
     ])
       .catch(function (error) {
-        console.warn('Something went wrong: ', error);
+        return Promise.reject(error); // Reject with the error
+
+        /* console.warn('Something went wrong: ', error);
         console.warn(queryString);
 
         // Handle the timeout error specifically
         if (error.message === 'Query timed out after 60 seconds') {
           // Throw an error of the right type (or handle it differently if you wish)
           throw new Error('The query operation was timed out after 60 seconds.');
+        } else if (error.message === 'Service Unavailable: The server is currently unable to handle the request.') {
+          throw new Error('The query operation was timed out after 240 seconds.');
         } else {
           // Handle other errors
           throw error;
-        }
+        } */
       });
   }
 

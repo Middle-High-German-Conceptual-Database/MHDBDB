@@ -11,7 +11,7 @@ In der Belegsuche können eine oder mehrere Wortformen mit verschiedenen Eigensc
             <li *ngFor="let filter of tokenFilters$ | async; index as i">
                 <div class="row" style="border: 2px solid #ffd740; margin-top: 15px;">
                     <div class="col" style="margin: 20px;">
-                        <mat-tab-group animationDuration="0ms" style="width: 100%;">
+                        <mat-tab-group [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="onTabChanged($event, i)" animationDuration="300ms" style="width: 100%;">
                             <mat-tab label="Wort">
                                 <div class="werke-blk">
                                     <dhpp-form-token [filter]="filter" [tokenFilter]="filter"

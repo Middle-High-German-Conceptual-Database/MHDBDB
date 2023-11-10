@@ -34,7 +34,7 @@ import { referenceReducer } from './store/reference.reducer';
 import { DialogComponent } from './shared/dhpp-help-dialog.component';
 
 import { MarkdownModule } from 'ngx-markdown';
-import { HttpClientModule } from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MarkdownDisplayComponent } from 'app/shared/markdown-display.component';
 import { RefreshGuard } from './refresh-guard';
@@ -42,6 +42,7 @@ import { DhppWelcomeDialog } from './app.welcome-dialog';
 
 import { SafeUrlPipe } from './safe-url.pipe';
 import { TeiWidgetComponent } from './shared/viewWidgets/teiWidget/teiWidget';
+import {HttpErrorInterceptorService} from "app/blocks/interceptor/timeout.interceptor";
 
 @NgModule({
   imports: [
@@ -94,6 +95,6 @@ import { TeiWidgetComponent } from './shared/viewWidgets/teiWidget/teiWidget';
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  providers: [RefreshGuard]
+  providers: [RefreshGuard, { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptorService, multi: true },]
 })
 export class DhppbaseAppModule {}
