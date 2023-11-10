@@ -258,17 +258,17 @@ export class SparqlQuery {
     };
 
     // Create a new promise that rejects after 60s
-    const timeout = new Promise<SparqlQueryResultI>((resolve, reject) => {
+    /*const timeout = new Promise<SparqlQueryResultI>((resolve, reject) => {
       const id = setTimeout(() => {
+        console.warn('timeout of 60 seconds reached');
         clearTimeout(id);
         reject(new Error('Query timed out after 60 seconds'));
       }, 60000);
-    });
+    });*/
 
     // Use Promise.race to race the fetch against the timeout
     return Promise.race([
-      this.postWithProgress(SERVER_API_SPARQL_URL, q, headersa),
-      timeout
+      this.postWithProgress(SERVER_API_SPARQL_URL, q, headersa)
     ])
       .catch(function (error) {
         console.warn('Something went wrong: ', error);
