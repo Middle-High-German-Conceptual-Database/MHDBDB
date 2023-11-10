@@ -8,6 +8,7 @@ import { BaseComponent } from 'app/shared/base.imports';
 import { SparqlJsonParser } from 'sparqljson-parse';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import {Store} from "@ngrx/store";
 
 const sparqlJsonParser = new SparqlJsonParser();
 
@@ -25,10 +26,10 @@ export class AppHomeComponent implements OnInit, OnDestroy {
 
   searchTerm: string;
   selectFilter: boolean = false;
-  searchFilterValue = 'globalSearch';
+  searchFilterValue = 'reference';
 
   searchFilterValues = [
-    { id: 'globalSearch', name: 'Übergreifende Suche' },
+   // { id: 'globalSearch', name: 'Übergreifende Suche' },
     { id: 'reference', name: 'Belegsuche' },
     { id: 'dictionary', name: 'Lemmata' }
   ];
@@ -37,7 +38,7 @@ export class AppHomeComponent implements OnInit, OnDestroy {
 
   items: ['Eintrag 1', 'Eintrag 2', 'Eintrag 3'];
 
-  constructor(public navbarService: NavbarService, public eventService: EventManager, public router: Router) {}
+  constructor(public navbarService: NavbarService, public eventService: EventManager, public router: Router, private store: Store) {}
 
   ngOnInit() {}
 

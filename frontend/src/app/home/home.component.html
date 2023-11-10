@@ -2,25 +2,26 @@
     <div class="container justify-content-center">
         <div class="row justify-content-center">
             <div class="col-12 text-center">
-                <mat-form-field appearance="fill" class="example-form-field">
-                    <mat-label>{{ findFilterValue(searchFilterValue) }}</mat-label>
-                    <input matInput [(ngModel)]="searchTerm"/>
-                    <button matPrefix mat-icon-button aria-label="Clear" (click)="doSearch()">
-                        <mat-icon>search</mat-icon>
-                    </button>
-                    <button *ngIf="searchTerm" matSuffix mat-icon-button aria-label="Clear" (click)="searchTerm=''">
-                        <mat-icon>close</mat-icon>
-                    </button>
-                    <button matSuffix mat-icon-button aria-label="Clear" (click)="selectFilter=!selectFilter">
-                        <mat-icon *ngIf="!selectFilter">keyboard_arrow_down</mat-icon>
-                        <mat-icon *ngIf="selectFilter">keyboard_arrow_up</mat-icon>
-                    </button>
-                </mat-form-field>
-                <mat-form-field *ngIf="selectFilter" (change)="selectFilter=false" appearance="fill" class="example-form-field">
-                    <select matNativeControl [(ngModel)]="searchFilterValue" (ngModelChange)="selectFilter=false">
-                        <option *ngFor="let value of searchFilterValues" [value]="value.id">{{value.name}}</option>
-                    </select>
-                </mat-form-field>
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <!-- Input Field -->
+                    <mat-form-field appearance="fill" class="example-form-field">
+                        <mat-label>{{ findFilterValue(searchFilterValue) }}</mat-label>
+                        <input matInput [(ngModel)]="searchTerm"/>
+                        <button matPrefix mat-icon-button aria-label="Clear" (click)="doSearch()">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                        <button *ngIf="searchTerm" matSuffix mat-icon-button aria-label="Clear" (click)="searchTerm=''">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+
+                    <!-- Dropdown Field -->
+                    <mat-form-field appearance="fill" class="example-form-field" style="width: 25%; margin-left: 10px;">
+                        <mat-select [(ngModel)]="searchFilterValue">
+                            <mat-option *ngFor="let value of searchFilterValues" [value]="value.id">{{value.name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
             </div>
         </div>
     </div>

@@ -2,11 +2,13 @@
 import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import {ActivatedRoute, Navigation, Router} from '@angular/router';
 import { HistoryService } from '../../shared/historyService';
 import { WordClass } from '../dictionary.class';
 import { DictionaryFilterI, DictionaryOptionsI, DictionaryQueryParameterI, DictionaryService } from '../dictionary.service';
 import {BaseIndexListDirective} from "app/shared/baseIndexComponent/list/list.component";
+import {take} from "rxjs/operators";
+import {updateFilterById} from "app/store/filter.actions";
 
 @Component({
     selector: 'dhpp-dictionary-list',
@@ -23,6 +25,10 @@ export class DictionaryListComponent extends BaseIndexListDirective<DictionaryQu
     //// Concepts
     labelConceptSearch = 'Begriffe'
 
+    searchTerm: string;
+
+    navigation: Navigation;
+
     constructor(
         // BaseIndexComponent
         public router: Router,
@@ -33,7 +39,13 @@ export class DictionaryListComponent extends BaseIndexListDirective<DictionaryQu
         public history: HistoryService<DictionaryQueryParameterI, DictionaryFilterI, DictionaryOptionsI, WordClass>,
         // Individual
     ) {
-        super(router, route, locationService, http, service, history)
+        super(router, route, locationService, http, service, history);
+        this.navigation = this.router.getCurrentNavigation();
+
+        if (this.navigation?.extras.state && this.navigation.extras.state.searchTerm) {
+            this.searchTerm = this.navigation.extras.state.searchTerm;
+        }
+
     }
 
     search() {

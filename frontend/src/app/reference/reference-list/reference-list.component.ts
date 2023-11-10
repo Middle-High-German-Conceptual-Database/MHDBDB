@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import {ActivatedRoute, Navigation, Router} from '@angular/router';
 import { ListHistoryEntry } from '../../shared/history.class';
 import { HistoryService } from '../../shared/historyService';
 import { ElectronicText, TextPassage } from '../reference.class';
@@ -54,6 +54,7 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
   labelPosSearch = 'Wortart';
   labelConceptSearch = 'Begriffe';
   labelSeriesSearch = 'Textreihe (Gattung)';
+  searchTerm: string;
 
   labelAuthorSearch = 'AutorIn';
   tokenFilter?: TokenFilterI;
@@ -87,6 +88,8 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
   limit = 100;
   offset = 0;
 
+  navigation: Navigation;
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(
@@ -100,6 +103,9 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
     public store: Store
   ) {
     super(router, route, locationService, http, service, history);
+
+    this.navigation = this.router.getCurrentNavigation();
+
     this.tokenFilters$ = this.store.pipe(select(selectTokenFilters));
     this.filters$ = this.store.pipe(select(selectFilter));
     this.generalFilter$ = this.store.pipe(select(selectFilterClassExtended));
@@ -119,7 +125,20 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
       this.downloadProgress = f;
     });
 
+    if (this.navigation?.extras.state && this.navigation.extras.state.searchTerm) {
+      this.searchTerm = this.navigation.extras.state.searchTerm;
 
+      // find the first item in tokenFilters$ and update the label with the searchTerm
+      this.tokenFilters$.pipe(take(1)).subscribe(filters => {
+        if (filters.length > 0) {
+          const updatedFilter = { ...filters[0], label: this.searchTerm };
+          this.store.dispatch(updateFilterById({ filterId: filters[0].id, newFilter: updatedFilter }));
+        }
+      });
+
+      this.search(true);
+      // Perform actions based on the searchTerm
+    }
 
     this.isLoading = false;
   }
@@ -163,6 +182,11 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
   ngOnInit() {
     super.ngOnInit();
     this.isRLoading = false;
+
+
+
+
+
     // this.loadSenses()
   }
 

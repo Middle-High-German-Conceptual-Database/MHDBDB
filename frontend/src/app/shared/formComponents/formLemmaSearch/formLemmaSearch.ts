@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { HistoryService } from '../../historyService';
@@ -11,6 +11,8 @@ import { FormDirective } from '../formDirective';
     styleUrls: ['./formLemmaSearch.scss']
 })
 export class FormLemmaSearchComponent<qT extends QueryParameterI<f, o>, f extends FilterLabelI, o extends OptionsI, instanceClass> extends FormDirective<qT,f,o,instanceClass> implements OnInit, OnDestroy {
+
+    @Input() value: string = "";
 
     constructor(
         public historyService: HistoryService<qT, f, o, instanceClass>,
@@ -36,6 +38,12 @@ export class FormLemmaSearchComponent<qT extends QueryParameterI<f, o>, f extend
         if (this.form.get('label').value != filterMap.label) {
             this.form.patchValue({
                 label: filterMap.label,
+            })
+        }
+
+        if (this.value && this.value != '') {
+            this.form.patchValue({
+                label: this.value,
             })
         }
     }
