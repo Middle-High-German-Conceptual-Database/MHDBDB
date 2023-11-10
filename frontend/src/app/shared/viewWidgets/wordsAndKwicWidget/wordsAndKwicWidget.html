@@ -1,6 +1,6 @@
 <expansion-panel-wrapper [asPanel]="asPanel" [title]="title" [openHelpSubject]="openHelpSubject">
-    <mat-slide-toggle [checked]="includeNarrowerConcepts" (change)="toggleNarrower($any($event))">Untergeordnete Begriffe
-        einschließen</mat-slide-toggle>
+    <!--<mat-slide-toggle [checked]="includeNarrowerConcepts" (change)="toggleNarrower($any($event))">Untergeordnete Begriffe
+        einschließen</mat-slide-toggle>-->
     <p *ngIf="isLoaded | async; else loading">
         {{ total }} Wörter gefunden
         <mat-card *ngFor="let word of words;">
