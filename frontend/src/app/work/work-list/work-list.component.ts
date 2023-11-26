@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { Location } from '@angular/common';
+import {Location, ViewportScroller} from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -38,7 +38,8 @@ export class WorkListComponent extends BaseIndexListDirective<WorkQueryParameter
         public http: HttpClient,
         public service: WorkService, // --> service
         public history: HistoryService<WorkQueryParameterI, WorkFilterI, WorkOptionsI, WorkClass>,
-        public store: Store
+        public store: Store,
+        private viewportScroller: ViewportScroller
         // Individual
     ) {
         super(router, route, locationService, http, service, history);
@@ -73,7 +74,11 @@ export class WorkListComponent extends BaseIndexListDirective<WorkQueryParameter
 
     search() {
         super.first();
+        this.he.update();
+    }
 
+    scrollToBottom(): void {
+        this.viewportScroller.scrollToPosition([0, document.body.scrollHeight]);
     }
 
     ngOnDestroy(): void {

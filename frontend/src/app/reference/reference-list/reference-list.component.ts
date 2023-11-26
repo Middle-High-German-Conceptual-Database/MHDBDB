@@ -1,4 +1,4 @@
-import { Location } from '@angular/common';
+import {Location, ViewportScroller} from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {ActivatedRoute, Navigation, Router} from '@angular/router';
@@ -103,7 +103,8 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
     public service: TextService, // --> service
     public dicService: DictionaryService,
     public history: HistoryService<TextQueryParameterI, TextFilterI, TextOptionsI, ElectronicText>,
-    public store: Store
+    public store: Store,
+    private viewportScroller: ViewportScroller
   ) {
     super(router, route, locationService, http, service, history);
 
@@ -154,6 +155,10 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
         this.store.dispatch(updateFilterById({ filterId: filters[index].id, newFilter: updatedFilter }));
       }
     });
+  }
+
+  scrollToBottom(): void {
+    this.viewportScroller.scrollToPosition([0, document.body.scrollHeight]);
   }
 
   openDialog() {

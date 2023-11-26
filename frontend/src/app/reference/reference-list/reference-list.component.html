@@ -5,7 +5,7 @@ In der Belegsuche können eine oder mehrere Wortformen mit verschiedenen Eigensc
 </p>
 
 <div class="container">
-    <form (keydown.enter)="$event.preventDefault(); search(false)">
+    <form (keydown.enter)="$event.preventDefault(); search(false); scrollToBottom()">
 
         <ul>
             <li *ngFor="let filter of tokenFilters$ | async; index as i">

@@ -5,9 +5,8 @@
 
 <div class="container">
 
-    <form (keydown.enter)="$event.preventDefault(); search()">
-        
-    </form>
+    <form (keydown.enter)="$event.preventDefault(); search(); scrollToBottom()">
+
     <div class="row" style="border: 1px solid #ffd740; margin-top: 15px;">
         <div class="col">
             <dhpp-form-header
@@ -36,6 +35,7 @@
         </div>
     </div>
 
+</form>
     <div *ngIf="!isLoading; else loading" class="search-results" infinite-scroll [infiniteScrollDistance]="2"
          [infiniteScrollUpDistance]="1.5"
          [infiniteScrollThrottle]="500" (scrolled)="onScrollDown()">

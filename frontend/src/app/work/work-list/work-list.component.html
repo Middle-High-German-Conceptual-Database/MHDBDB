@@ -5,6 +5,9 @@
 </p>
 
 <div class="container">
+
+    <form (keydown.enter)="$event.preventDefault(); search(); scrollToBottom()">
+
     <div class="row" style="border: 1px solid #ffd740; margin-top: 15px;">
         <div class="col">
             <dhpp-form-header [routeString]="routeString"></dhpp-form-header>
@@ -19,6 +22,8 @@
                 [routeString]="routeString"></dhpp-form-filter>
         </div>
     </div>
+
+    </form>
 
     <!-- <div class="row">
         <div class="col">

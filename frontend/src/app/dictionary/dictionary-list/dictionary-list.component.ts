@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { Location } from '@angular/common';
+import {Location, ViewportScroller} from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {ActivatedRoute, Navigation, Router} from '@angular/router';
@@ -37,6 +37,7 @@ export class DictionaryListComponent extends BaseIndexListDirective<DictionaryQu
         public http: HttpClient,
         public service: DictionaryService, // --> service
         public history: HistoryService<DictionaryQueryParameterI, DictionaryFilterI, DictionaryOptionsI, WordClass>,
+        private viewportScroller: ViewportScroller
         // Individual
     ) {
         super(router, route, locationService, http, service, history);
@@ -48,7 +49,11 @@ export class DictionaryListComponent extends BaseIndexListDirective<DictionaryQu
 
     }
 
+    scrollToBottom(): void {
+        this.viewportScroller.scrollToPosition([0, document.body.scrollHeight]);
+    }
+
     search() {
-       // this.isLoading = true;
+        this.he.update();
     }
 }
