@@ -2,11 +2,20 @@
     <div *ngIf="isLoaded | async; else loading" style="width: 100%;">
 <!--        <span *ngIf="total <= 0"><em>Wort nicht im Korpus</em></span>-->
         <div style="width: 100%;" *ngFor="let kwic of kwics;">
-                ...
-                {{joinTokens(kwic.left)}}
-                <mark>{{ kwic.center.content }}</mark>
-                {{joinTokens(kwic.right)}}
-                ...
+            <div class="row">
+                <div class="col-2">
+                    <span *ngIf="kwic.left.length > 0 && kwic.right.length > 0">Zeile {{ extractNumber(kwic.left[0].strippedId)}} - {{ extractNumber(kwic.right[kwic.right.length - 1].strippedId)}}</span>
+                </div>
+                <div class="col-10">
+                    ...
+                    {{joinTokens(kwic.left)}}
+                    <mark>{{ kwic.center.content }}</mark>
+                    {{joinTokens(kwic.right)}}
+                    ...
+                </div>
+
+            </div>
+
         </div>
 
        <!--  <div class="row" style="margin-top: 15px;">

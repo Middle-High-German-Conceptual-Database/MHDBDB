@@ -64,7 +64,7 @@ export class WorkBibWidgetComponent extends ViewWidgetsDirective<WorkQueryParame
                 {
                     annotations[0].forEach(
                         annotation => {
-                            this.textService.getKwic(annotation.target, 5).then(
+                            this.textService.getKwic(annotation.target, 5, 'words').then(
                                 kwic => {
                                     if (kwic) {
                                         this.kwics.push(kwic)

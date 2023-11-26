@@ -237,7 +237,10 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
     }
   }
 
-  public getKwic(centerUri: string, radius: number): Promise<Kwic> {
+  public getKwic(centerUri: string, radius: number, contextUnit: string): Promise<Kwic> {
+    if (contextUnit === 'lines') {
+      radius = 15; // quick fix
+    }
     const query = this.sparqlKwic(centerUri, radius);
     return new Promise<Kwic>((resolve, reject) => {
       this._sq.query(query).then(

@@ -27,7 +27,7 @@ export class TextElementComponent extends BaseIndexElementDirective<WorkClass, W
 
   @Input() public radius: number = 5;
 
-  @Input() public contextUnit: string = 'words';
+  @Input() public contextUnit: string = 'lines';
 
 
   kwics: Kwic[] = [];
@@ -82,7 +82,7 @@ export class TextElementComponent extends BaseIndexElementDirective<WorkClass, W
         this.total = annotations[1];
         if (annotations[1] > 0) {
           annotations[0].forEach(annotation => {
-            this.textService.getKwic(annotation.target, this.radius).then(kwic => {
+            this.textService.getKwic(annotation.target, this.radius, this.contextUnit).then(kwic => {
               if (kwic) {
                 this.kwics.push(kwic);
               }

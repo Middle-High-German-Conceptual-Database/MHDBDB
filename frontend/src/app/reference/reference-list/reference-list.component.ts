@@ -73,7 +73,7 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
   downloadProgress: 0;
 
   radius: number = 5;
-  contextUnit: string = 'words';
+  contextUnit: string = 'lines';
 
   relation: string = 'and';
 

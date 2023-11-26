@@ -27,7 +27,7 @@ export class KwicWidgetComponent
   @Input() word;
   @Input() public radius: number = 5;
 
-  @Input() public contextUnit: string = 'words';
+  @Input() public contextUnit: string = 'lines';
 
   total: number;
   kwics: Kwic[] = [];
@@ -49,12 +49,10 @@ export class KwicWidgetComponent
   ngOnInit(): void {
     super.ngOnInit();
 
-    console.log(this.instance);
-
     if (this.instance && this.instance.id) {
       if (this.instance) {
         this.loadOccurrences();
-        this.textService.getKwic(this.instance.id, this.radius).then(kwic => {
+        this.textService.getKwic(this.instance.id, this.radius, this.contextUnit).then(kwic => {
           if (kwic) {
             this.kwics.push(kwic);
           }
@@ -67,7 +65,8 @@ export class KwicWidgetComponent
     } else {
       if (this.instance) {
         // this.loadOccurrences();
-        this.textService.getKwic(`${this.instance}`, this.radius).then(kwic => {
+        this.textService.getKwic(`${this.instance}`, this.radius, this.contextUnit).then(kwic => {
+
           if (kwic) {
             this.kwics.push(kwic);
           }
@@ -79,6 +78,11 @@ export class KwicWidgetComponent
 
     }
 
+  }
+
+  public extractNumber(input: string): string | null {
+    const match = input.match(/_(\d+)_/);
+    return match ? match[1] : null;
   }
 
   openHelp() {
@@ -106,7 +110,7 @@ export class KwicWidgetComponent
         this.total = annotations[1];
         if (annotations[1] > 0) {
           annotations[0].forEach(annotation => {
-            this.textService.getKwic(annotation.target, 5).then(kwic => {
+            this.textService.getKwic(annotation.target, 5, this.contextUnit).then(kwic => {
               if (kwic) {
                 this.kwics.push(kwic);
               }
