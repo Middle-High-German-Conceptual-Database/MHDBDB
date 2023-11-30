@@ -6,11 +6,11 @@ Die Mittelhochdeutsche Begriffsdatenbank (kurz: MHDBDB) ist ein Recherchetool f�
  
 # In welcher Form sind die Texte aufbereitet?
 Das Korpus umfasst derzeit über 10,6 Millionen Tokens in fast 29.000 Wortartikeln.
-Die einzelnen Vorkommensformen im Korpus (Tokens) werden auf diese Lemmata und die im Kontext gültige Bedeutung sowie auf weitere Annotationsebenen wie beispielsweise grammatikalische Daten (POS) oder Metadaten bezogen. [Daten (#/view/About/Daten)]
+Die einzelnen Vorkommensformen im Korpus (Tokens) werden auf diese Lemmata und die im Kontext gültige Bedeutung sowie auf weitere Annotationsebenen wie beispielsweise grammatikalische Daten (POS) oder Metadaten bezogen. 
 
 # Wie ist die Datenbank entstanden? 
 
-Die ersten elektronischen Grundlagen des mittelhochdeutschen Begriffswörterbuchs entstanden 1972 aus Klaus M. Schmidts Dissertation und wurden damals noch auf Lochkarten erstellt. Die Projekte "Namen in deutschen literarischen Texten des Mittelalters" und das "Begriffswörterbuch der mittelhochdeutschen Literatur"  wurden 1992 zusammengeführt.  Die MHDBDB wurde 1995 erstmals online über das Internet verfügbar gemacht.     - Weitere Informationen zur Geschichte der MHDBDB sind hier zu finden. [[Geschichte der MHDBDB]] #/view/About/Geschichte%20der%20MHDBDB
+Die ersten elektronischen Grundlagen des mittelhochdeutschen Begriffswörterbuchs entstanden 1972 aus Klaus M. Schmidts Dissertation und wurden damals noch auf Lochkarten erstellt. Die Projekte "Namen in deutschen literarischen Texten des Mittelalters" und das "Begriffswörterbuch der mittelhochdeutschen Literatur"  wurden 1992 zusammengeführt.  Die MHDBDB wurde 1995 erstmals online über das Internet verfügbar gemacht.     - Weitere Informationen zur Geschichte der MHDBDB sind unter About -> Geschichte der MHDBDB  zu finden.
 
 # Was ist ein Lemma?
 
@@ -33,50 +33,35 @@ Bei onomasiologischen Begriffswörterbüchern handelt es sich um Hilfsmittel fü
 
 Die einfachste Art und Weise, Belege in mittelhochdeutschen Texten zu finden, ist die Belegsuche. 
 
-Navigation zu Belegsuche in der Menuleiste 
+- Navigation zu Belegsuche in der Menuleiste 
 
-![[Pasted image 20230601131443.png]]
-
-![Navigation zu Belegsuche in der Menuleiste: Belegsuche Werke Lemmata Begriffssystem Namenssystem 
-]
-Eingeben von Suchbegriff, z.B. "stein"
-
-![[Pasted image 20230601131523.png]]
-
-1[ Suchmaske Wortformen: Wortformen  Wortform Exakte Wortform Lemma mit Bedeutung (Begriff), darunter auswählbare Wortformen wie bspw. "Adjektiv"]
-
-Erweiterte Suche
-Einstellen von Kontext: Wieviele Zeilen, Verse oder Wörter sollen um den jeweiligen Suchbegriff herum angezeigt werden? 
-
-![[Pasted image 20230601131619.png]]
-![Einstellen von Kontext: Wieviele Zeilen, Verse oder Wörter sollen um den jeweiligen Suchbegriff herum angezeigt werden? ]
+- Eingeben von Suchbegriff, z.B. "stein"
 
 
 # Erweiterte Suchen
+
 ## Kollokation 
 
 
-![[Pasted image 20230706110514.png]]
-
-![Screenshot von der Suche der Wortformen Wortformen > Eva (Eigenname) + UND > Apfel (Substantiv) ]
-
-Wortformen > Eva (Eigenname) + UND > Apfel (Substantiv) 
+- Wortformen > Eva (Eigenname) + UND > Apfel (Substantiv) 
 
 ## Kookkurrenz 
 
-Man kann auch Phrasen suchen: er wendet sîn 
+Man kann auch Phrasen suchen: z.B. er wendet sîn. Im Moment benutzt man dazu das gelbe "Plus"-Zeichen:
 
-Wortformen > er (Pronom) +UND wenden (Verb) +UND sin (Pronom)
-Reihenfolge beachten: AUS 
+- Wortformen > er (Pronom) +UND wenden (Verb) +UND sin (Pronom)
+- Reihenfolge beachten: AUS 
 
 ## Kontextoptionen
 
-Kontext der Wortformen > 3 Zeilen / Verse 
+Einstellen von Kontext: Wieviele Zeilen, Verse oder Wörter sollen um den jeweiligen Suchbegriff herum angezeigt werden? 
 
-Wenn man nicht global, sondern in bestimmten Texten, Gattungen, Zeiträumen etc. suchen möchte, kann man unter "Filter und Textausgabe" weiter modifizieren: 
+- Kontext der Wortformen > 3 Zeilen / Verse 
 
-Epik, Lyrik und Dramatik
-Wissensliteratur und Gebrauchsliteratur
+Wenn man nicht global, sondern in bestimmten Texten, Gattungen, Zeiträumen etc. suchen möchte, kann man unter "Filter und Textausgabe" weiter modifizieren: z.B.
+
+- Epik, Lyrik und Dramatik
+- Wissensliteratur und Gebrauchsliteratur
 
 
 # Linked Open Data: Verknüpfte Daten 
@@ -84,22 +69,4 @@ Wissensliteratur und Gebrauchsliteratur
 - Navigieren zu "Werke" in der Menuleiste 
 - nach Werk suchen, z.B. "Wigalois"
 
-![[Pasted image 20230601132032.png]]
-
-![Screenshot der Werkanzeige des Wigalois mit Linked Open Data]
-
-In der Werkansicht werden verknüpfte offene Datensätze angezeigt. Diese werden auch "linked open data" (kurz LOD) genannt. https://de.wikipedia.org/wiki/Linked_Open_Data 
-
-Man kann direkt weiterklicken zu:
-Handschriftencensus
-![[Pasted image 20230601132139.png]]
-![Link zum Handschriftencensus, Eintrag Wigalois]
- Katalog der Deutschen Nationalbibliothek
-![[Pasted image 20230601132215.png]]
-![Link zum Katalog der Deutschen Nationalbibliothek, Eintrag Wigalois]
-Wikidata
-![[Pasted image 20230601132240.png]]
-
-![Link zu Wikdata, Eintrag Wigalois]
-
-Die MHDBDB wird  in Zukunft mit noch mehr Linked Open Data angereichert. Alle Annotationen sind bereits jetzt ans Semantic Web angebunden. 
+Hier werden dann Werktitel, Autor\*in, LOD (verknüpfte offene Datensätze) wie Wikipedia, der Handschriftencensus und die DNB sowie die Textreihen (Gattungen) angezeigt. Die MHDBDB wird  in Zukunft mit noch mehr Linked Open Data angereichert. Alle Annotationen sind bereits jetzt ans Semantic Web angebunden. 

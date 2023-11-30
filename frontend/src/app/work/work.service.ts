@@ -60,7 +60,7 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
 
   async getWorkMetadata(workId: string): Promise<[(WorkMetadataClass[]), number]> {
     const query = `
-    select distinct ?id ?label ?sameAs ?dateOfCreation ?authorId ?authorSameAs ?authorLabel ?instance ?instanceLabel ?expression ?expressionLabel ?genreForm ?genreFormMainParent where {
+    select distinct ?id ?label ?sameAs ?dateOfCreation ?authorId ?authorSameAs ?authorLabel ?instance ?instanceLabel ?expression ?expressionLabel ?genreForm ?genreFormMainParent ?bibTitle ?bibPlace ?bibAgent ?bibDate where {
             Bind(mhdbdbi:${workId} AS ?id) .
             ?id rdfs:label ?label .
             ?id owl:sameAs ?sameAs .
@@ -80,6 +80,15 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
             OPTIONAL { ?id dhpluso:genreForm/skos:prefLabel ?genreForm . }
             OPTIONAL { ?id dhpluso:genreFormMainparent/skos:prefLabel ?genreFormMainParent . }
 
+            OPTIONAL {
+              ?bibId bf:instanceOf ?id .
+              ?bibId bf:title/bf:mainTitle ?bibTitle .
+              ?bibId bf:provisionActivity ?bibProvisionActivity .
+              ?bibProvisionActivity bf:place/rdfs:label ?bibPlace .
+              ?bibProvisionActivity bf:agent/rdfs:label ?bibAgent .
+              ?bibProvisionActivity bf:date ?bibDate .
+            }
+            
             filter(langMatches( lang(?genreForm), "de" ))
             filter(langMatches( lang(?genreFormMainParent), "de" ))
             filter(langMatches( lang(?label), "de" ))

@@ -99,23 +99,29 @@ Die Zusammenhänge der Annotationen sind in der MHDBDB Main Ontology abgebildet,
 
 ### Infrastruktur, Architektur und Design
 
-####Frontend####
-Angular, TypeScript, Bootstrap Material
+**Lucene**  
+Lucene wird für die Volltextsuche verwendet und ist über einen GraphDB Connector mit der Datenbank verbunden.  Es ermöglicht eine schnelle Suche über den gesamten Korpus und liefert die passenden Referenzen zu den Belegstellen.
 
-Angular als Hauptframework für die Entwicklung des Frontends, unterstützt durch TypeScript für verbesserte Code-Qualität und Fehlerprävention. Bootstrap Material wird für das responsive und konsistente User Interface Design verwendet.
+**Angular**  
+Komponentenbasierte Architektur: Angular verwendet eine komponentenbasierte Architektur, die die Wiederverwendbarkeit von Code erleichtert und die Entwicklung modular und übersichtlich macht.
 
-####Backend####
+Two-Way Data Binding: Diese Funktion erleichtert die Synchronisation zwischen Modell und Ansicht, was die Entwicklung effizienter macht und die Notwendigkeit reduziert, zusätzlichen Code für die Aktualisierung der Benutzeroberfläche zu schreiben.
 
-Backend ist in Java implementiert, nutzt Spring Boot für die effiziente Entwicklung und einfache Bereitstellung von Webanwendungen. Spring Boot erleichtert die Konfiguration und Integration mit externen Bibliotheken und Datenbanken.
+TypeScript-Basis: Angular wird mit TypeScript, einer Erweiterung von JavaScript, entwickelt. TypeScript bietet strenge Typisierung, was zu einer besseren Codequalität, einfacherer Fehlerbehebung und höherer Entwicklerproduktivität führt.
 
-####Datenbanken####
+Umfangreiche Werkzeugunterstützung: Angular bietet eine Vielzahl integrierter Werkzeuge für Testing, Building und Optimierung von Anwendungen, was die Entwicklungszeit verkürzt.
 
-GraphDB als Hauptdatenspeicher für komplexe Datenstrukturen und Anwendungsdaten, mit SPARQL-Abfragen über den Java/Spring Boot-Container. MariaDB speichert Benutzer-Authentifizierungs- und Identitätsdaten.
+Starkes Ökosystem: Durch die breite Nutzung und Unterstützung von Google hat Angular ein starkes Ökosystem, das reichhaltige Ressourcen, Bibliotheken und eine aktive Community bietet.
 
-#####Docker, NGINX#####
-NGINX fungiert als Reverse-Proxy und Webserver, leitet Anfragen an das Backend weiter. REST-Anfragen werden an den Java/Spring Boot-Container weitergeleitet, ebenso wie SPARQL-Abfragen für GraphDB.
+Integration mit modernen Webtechnologien: Angular ist kompatibel mit den neuesten Standards des Web Development und lässt sich gut mit anderen Technologien und Frameworks integrieren.
 
-Trennung und Sicherheit von Daten
+TypeScript: Angular und TypeScript sind eng miteinander verbunden, da Angular in TypeScript geschrieben ist. TypeScript bietet eine strengere Typisierung als JavaScript, was die Fehlerbehebung und Wartung erleichtert, besonders in großen Projekten. Dies führt zu einer höheren Codequalität und Skalierbarkeit.
 
-Durch die getrennte Handhabung der GraphDB für Anwendungsdaten und MariaDB für Benutzerdaten wird eine effiziente und sichere Datenverwaltung erreicht. NGINX verbessert die Leistung und Sicherheit durch schnelles Routing und Sicherheitsebenen für eingehende Anfragen.
+**GraphDB**  
+GraphDB 10.3.3
 
+Lizenzen der verwendeten Softwarekomponenten  
+GraphDB Enterprise Edition, Evaluation Lizenz für Universitäten
+
+Link zur Architektur  
+[https://drive.google.com/file/d/1ooWBbMBAf0YDKjiKDV40yy4voyzEpe2o/view?usp=sharing](https://drive.google.com/file/d/1ooWBbMBAf0YDKjiKDV40yy4voyzEpe2o/view?usp=sharing)

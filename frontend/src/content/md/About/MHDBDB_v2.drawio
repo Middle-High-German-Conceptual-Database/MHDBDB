@@ -1,0 +1,73 @@
+<mxfile host="app.diagrams.net" modified="2023-11-30T07:46:43.880Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36" etag="tziDaGIvH9fKxDIK6Etw" version="22.1.5" type="google">
+  <diagram name="Seite-1" id="LnucM8ts9vjZG450gAln">
+    <mxGraphModel dx="1049" dy="1121" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="-MePMfTreRYmeyvQL4pv-3" value="Spring-Boot Backend Container&lt;br&gt;&lt;br&gt;REST API&lt;br&gt;Spring Security&lt;br&gt;TEI XSLT Service" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="290" y="350" width="320" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="-MePMfTreRYmeyvQL4pv-4" value="MariaDB&lt;br&gt;User Datenbank und Logging" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+          <mxGeometry x="500" y="480" width="105" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="-MePMfTreRYmeyvQL4pv-5" value="GraphDB 1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+          <mxGeometry x="300" y="480" width="60" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="-MePMfTreRYmeyvQL4pv-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="-MePMfTreRYmeyvQL4pv-8" target="-MePMfTreRYmeyvQL4pv-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="-MePMfTreRYmeyvQL4pv-8" value="NGINX Proxy&lt;br&gt;Proxy für alte MHDBDB und neue MHDBDB" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="290" y="190" width="320" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="-MePMfTreRYmeyvQL4pv-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="-MePMfTreRYmeyvQL4pv-9" target="-MePMfTreRYmeyvQL4pv-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="-MePMfTreRYmeyvQL4pv-9" value="Actor" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="435" y="40" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="-MePMfTreRYmeyvQL4pv-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="-MePMfTreRYmeyvQL4pv-13" target="-MePMfTreRYmeyvQL4pv-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="-MePMfTreRYmeyvQL4pv-13" value="Angular Frontend Container&lt;br&gt;&lt;br&gt;NGINX Proxy für statische Inhalte und REST API" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="290" y="270" width="320" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="-MePMfTreRYmeyvQL4pv-17" value="GraphDB&lt;br&gt;2" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+          <mxGeometry x="380" y="480" width="60" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="-MePMfTreRYmeyvQL4pv-18" value="Lucene Index" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+          <mxGeometry x="260" y="530" width="60" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="-MePMfTreRYmeyvQL4pv-19" value="Lucene Index" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+          <mxGeometry x="420" y="530" width="60" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="-MePMfTreRYmeyvQL4pv-21" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="-MePMfTreRYmeyvQL4pv-5">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="330" y="430" as="sourcePoint" />
+            <mxPoint x="200" y="460" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="330" y="450" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-MePMfTreRYmeyvQL4pv-22" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="411" y="431" as="sourcePoint" />
+            <mxPoint x="411" y="481" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="411" y="451" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-MePMfTreRYmeyvQL4pv-23" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="555" y="430" as="sourcePoint" />
+            <mxPoint x="555" y="480" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="555" y="450" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
