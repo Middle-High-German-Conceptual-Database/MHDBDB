@@ -98,4 +98,24 @@ Die Zusammenhänge der Annotationen sind in der MHDBDB Main Ontology abgebildet,
 **Mittelhochdeutsche Begriffsdatenbank (MHDBDB).** Universität Salzburg. Koordination: Katharina Zeppezauer-Wachauer. Seit 1992. URL: [http://www.mhdbdb.plus.ac.at/](http://www.mhdbdb.plus.ac.at/) (Abrufdatum). Eine DOI bei re3data und zitierbare Permalinks sind für 2024 geplant.
 
 ### Infrastruktur, Architektur und Design
-tba 
+
+####Frontend####
+Angular, TypeScript, Bootstrap Material
+
+Angular als Hauptframework für die Entwicklung des Frontends, unterstützt durch TypeScript für verbesserte Code-Qualität und Fehlerprävention. Bootstrap Material wird für das responsive und konsistente User Interface Design verwendet.
+
+####Backend####
+
+Backend ist in Java implementiert, nutzt Spring Boot für die effiziente Entwicklung und einfache Bereitstellung von Webanwendungen. Spring Boot erleichtert die Konfiguration und Integration mit externen Bibliotheken und Datenbanken.
+
+####Datenbanken####
+
+GraphDB als Hauptdatenspeicher für komplexe Datenstrukturen und Anwendungsdaten, mit SPARQL-Abfragen über den Java/Spring Boot-Container. MariaDB speichert Benutzer-Authentifizierungs- und Identitätsdaten.
+
+#####Docker, NGINX#####
+NGINX fungiert als Reverse-Proxy und Webserver, leitet Anfragen an das Backend weiter. REST-Anfragen werden an den Java/Spring Boot-Container weitergeleitet, ebenso wie SPARQL-Abfragen für GraphDB.
+
+Trennung und Sicherheit von Daten
+
+Durch die getrennte Handhabung der GraphDB für Anwendungsdaten und MariaDB für Benutzerdaten wird eine effiziente und sichere Datenverwaltung erreicht. NGINX verbessert die Leistung und Sicherheit durch schnelles Routing und Sicherheitsebenen für eingehende Anfragen.
+
