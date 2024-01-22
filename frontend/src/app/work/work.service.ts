@@ -445,6 +445,22 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
         element.genreFormMainParent.push(row.genreFormMainParent.value);
       }
 
+      if ('bibTitle' in row && element && !element.bibTitle) {
+        element.bibTitle = row.bibTitle.value;
+      }
+
+      if ('bibPlace' in row && element && !element.bibPlace) {
+        element.bibPlace = row.bibPlace.value;
+      }
+
+      if ('bibAgent' in row && element && !element.bibAgent) {
+        element.bibAgent = row.bibAgent.value;
+      }
+
+      if ('bibDate' in row && element && !element.bibDate) {
+        element.bibDate = row.bibDate.value;
+      }
+
       /* if (element && !element.authors) {
           const authorElem = new Person(
             row.authorId.value,

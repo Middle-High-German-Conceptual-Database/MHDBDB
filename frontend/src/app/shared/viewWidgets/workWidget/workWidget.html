@@ -15,7 +15,7 @@
                 {{ metadata.label }}
             </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="metadata && metadata.authorSameAs && metadata.authorSameAs.length > 0">
             <div class="col-3">
                 Autor*in
             </div>
@@ -36,7 +36,7 @@
                 um 1200
             </div>
         </div> -->
-        <div class="row">
+        <div class="row" *ngIf="metadata && metadata.sameAs && metadata.sameAs.length > 0">
             <div class="col-3">
                 Linked Open Data (LOD)
             </div>
@@ -48,7 +48,7 @@
                 </ul>
             </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="metadata && metadata.genreForm && metadata.genreForm.length > 0">
             <div class="col-3">
                 Textreihe(n) (Gattung)
             </div>
@@ -58,7 +58,7 @@
                 </span>
             </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="metadata && metadata.genreFormMainParent && metadata.genreFormMainParent.length > 0">
             <div class="col-3">
                 Übergeordnete Textreihe(n)
             </div>
@@ -76,7 +76,7 @@
         </div>
     </div>
 
-    <div class="container">
+    <div class="container" *ngIf="metadata && metadata.instances && metadata.instances.length > 0">
         <div class="row" *ngFor="let instance of metadata.instances; index as i">
             <div class="col-3">
                 <a [routerLink]="['/tei', instance | textId]" target="_blank">{{ metadata.instanceLabels[i] }} {{ instance | textId }}</a>
@@ -102,6 +102,17 @@
     </div>
 
     <div class="container">
+        <div class="row">
+            <div class="col-1">
+                {{ metadata.bibTitle }}
+            </div>
+            <div class="col-6">
+                {{ metadata.bibAgent }}, {{ metadata.bibPlace }}, {{ metadata.bibDate }}
+            </div>
+        </div>
+    </div>
+    <!--
+    <div class="container" *ngIf="metadata && metadata.expressions && metadata.expressions.length > 0">
         <div class="row" *ngFor="let instance of metadata.expressions; index as i">
             <div class="col-3">
                 <a [routerLink]="['/tei', instance | textId]" target="_blank">{{ metadata.expressionLabels[i] }} {{ instance | textId }}</a>
@@ -110,15 +121,15 @@
                     <a [routerLink]="['/tei', instance | textId]">
                         <i class="fa-solid fa-scroll"></i>
                     </a>
-                    <!--<a href="#">
+                    &lt;!&ndash;<a href="#">
                         <i class="fas fa-download"></i>
-                    </a>-->
+                    </a>&ndash;&gt;
                     <a href="#">
                         <i style="color: green;" class="fa-solid fa-circle"></i>
                     </a>
             </div>
         </div>
-    </div>
+    </div>-->
 
     <!-- <div class="inner_info">
          <h2>Bibliografische Metadaten</h2>
