@@ -49,6 +49,8 @@ export class KwicWidgetComponent
   ngOnInit(): void {
     super.ngOnInit();
 
+    console.log(this.instance);
+
     if (this.instance && this.instance.id) {
       if (this.instance) {
         this.loadOccurrences();

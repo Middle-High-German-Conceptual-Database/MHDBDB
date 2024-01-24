@@ -444,7 +444,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                           ?tokenNodeId mhdbdbxml:content "${word}" .
           `;
         } else {
-          wordFilter += `filter(regex(str(?typeLabel${i}), "${labelFilterGenerator(word, false)}", "i")) .`;
+          wordFilter += `filter(regex(str(?typeLabel${i}), "(^|\\\\s)${labelFilterGenerator(word, false)}(\\\\s|$)", "i")) .`;
         }
       }
       return wordFilter;
