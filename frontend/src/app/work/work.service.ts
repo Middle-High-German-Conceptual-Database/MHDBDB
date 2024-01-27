@@ -60,20 +60,23 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
 
   async getWorkMetadata(workId: string): Promise<[(WorkMetadataClass[]), number]> {
     const query = `
-    select distinct ?id ?label ?sameAs ?dateOfCreation ?authorId ?authorSameAs ?authorLabel ?instance ?instanceLabel ?expression ?expressionLabel ?genreForm ?genreFormMainParent ?bibTitle ?bibPlace ?bibAgent ?bibDate where {
+    select distinct ?id ?label ?sameAs ?dateOfCreation ?authorId ?authorSameAs ?authorLabel ?authorRole ?instance ?instanceLabel ?expression ?expressionLabel ?genreForm ?genreFormMainParent ?bibTitle ?bibPlace ?bibAgent ?bibDate where {
             Bind(mhdbdbi:${workId} AS ?id) .
             ?id rdfs:label ?label .
             ?id owl:sameAs ?sameAs .
             ?id dcterms:created ?dateOfCreation .
+            
             ?id dhpluso:contribution/dhpluso:agent ?authorId .
+            ?id dhpluso:contribution/dhpluso:role <http://id.loc.gov/vocabulary/relators/aut> .
             ?id dhpluso:contribution/dhpluso:agent/rdfs:label ?authorLabel .
             ?id dhpluso:contribution/dhpluso:agent/owl:sameAs ?authorSameAs .
             
             ?id dhpluso:hasExpression/dhpluso:hasInstance ?instance .
+            ?instance rdf:type dhpluso:Electronic .
             ?instance rdfs:label ?instanceLabel .
 
             OPTIONAL { 
-              ?id dhpluso:hasExpression ?expression . 
+              ?id dhpluso:hasExpression ?expression .
               ?expression rdfs:label ?expressionLabel .
             }
 
@@ -92,6 +95,9 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
             filter(langMatches( lang(?genreForm), "de" ))
             filter(langMatches( lang(?genreFormMainParent), "de" ))
             filter(langMatches( lang(?label), "de" ))
+            filter(langMatches( lang(?expressionLabel), "de" ))
+            filter(langMatches( lang(?instanceLabel), "de" ))
+            filter(langMatches( lang(?authorLabel), "de" ))
             }
         `;
     return new Promise<[(WorkMetadataClass[]), number]>(resolve => {

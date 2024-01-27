@@ -38,7 +38,6 @@ export class WorkWidgetComponent extends ViewWidgetsDirective<WorkQueryParameter
     if (this.instance) {
       this.route.params.subscribe(params => {
         this.loadMetadata(params['id']);
-        this.isLoaded = Promise.resolve(true);
       });
     }
   }
