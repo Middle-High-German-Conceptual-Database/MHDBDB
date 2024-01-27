@@ -444,7 +444,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                           ?tokenNodeId mhdbdbxml:content "${word}" .
           `;
         } else {
-          wordFilter += `filter(regex(str(?typeLabel${i}), "(^|\\\\s)${labelFilterGenerator(word, false)}(\\\\s|$)", "i")) .`;
+          wordFilter += `filter(regex(str(?typeLabel${i}), "^${labelFilterGenerator(word, false)}$", "i")) .`;
         }
       }
       return wordFilter;
@@ -461,7 +461,10 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
 
                 ?annotationId${i} oa:hasBody ?wordId${i} .
                 ?annotationId${i} oa:hasTarget ?rootId .
-                filter(regex(str(?wordLabel${i}), "${labelFilterGenerator(word, false)}", "i"))
+                ?tokenNodeID mhdbdbxml:parent ?rootId .
+                
+                filter(regex(str(?wordLabel${i}), "^${word}$", "i")) .
+                
                 `;
       }
       return wordFilter;
