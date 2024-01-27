@@ -35,7 +35,7 @@ module.exports = (options) => webpackMerge(commonConfig({
           '/showTeiAsHtml',
           '/loading',
         ],
-        target: `http${options.tls ? 's' : ''}://backend:8081`,
+        target: `http${options.tls ? 's' : ''}://localhost:8081`,
         secure: false,
         changeOrigin: options.tls,
         headers: {
