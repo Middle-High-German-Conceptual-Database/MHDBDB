@@ -151,6 +151,7 @@
     "webpack:dev": "npm run webpack-dev-server -- --config webpack/webpack.dev.js --inline --hot --port=9066 --watch-content-base --env.stats=minimal",
     "webpack:dev-docker": "npm run webpack-dev-server -- --config webpack/webpack.dev-docker.js --inline --hot --port=9066 --disable-host-check --watch-content-base --env.stats=minimal",
     "webpack:dev-verbose": "npm run webpack-dev-server -- --config webpack/webpack.dev.js --inline --hot --port=9066 --watch-content-base --profile --progress --env.stats=normal",
+    "webpack:dev-localhost": "npm run webpack-dev-server -- --config webpack/webpack.dev-localhost.js --inline --hot --port=9066 --watch-content-base --profile --progress --env.stats=normal",
     "webpack:build:main": "npm run webpack -- --config webpack/webpack.dev.js --env.stats=minimal",
     "webpack:build": "npm run cleanup && npm run webpack:build:main",
     "webpack:prod:main": "npm run webpack -- --config webpack/webpack.prod.js --profile",
