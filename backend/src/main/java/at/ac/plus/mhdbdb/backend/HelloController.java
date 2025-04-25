@@ -17,7 +17,7 @@ public class HelloController {
     // simple GET response for our example purpose, we return a JSON structure
     @RequestMapping(value = "/api/message", produces = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, String> index() {
-        return Collections.singletonMap("message", "Greetings from Spring Boot!");
+        return Collections.singletonMap("message", "Greetings from Spring Boot and more!");
     }
 
 }
