@@ -536,11 +536,11 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
     let instanceSelect = '';
 
     instanceSelect = `
-                SELECT DISTINCT ?id (SAMPLE(?labelA) as ?label) (SAMPLE(?textA) AS ?text) (SAMPLE(?authorLabelA) AS ?authorLabel) (SAMPLE(?authorIdA) AS ?authorId)
+                SELECT DISTINCT (SAMPLE(?id) AS ?id) (SAMPLE(?labelA) as ?label) (?textA AS ?text) (SAMPLE(?authorLabelA) AS ?authorLabel) (SAMPLE(?authorIdA) AS ?authorId)
                 WHERE {
                     ${labelQuery}
                 }
-                GROUP BY ?id
+                GROUP BY ?textA
                 ORDER BY ASC(?label)
             `;
 
