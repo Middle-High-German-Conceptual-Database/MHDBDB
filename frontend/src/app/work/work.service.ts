@@ -487,17 +487,33 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
   }
 
   _jsonToObject(bindings: any): WorkClass[] {
-    let results: WorkClass[] = super._jsonToObject(bindings) as WorkClass[];
+    // TODO: This has been taken from mhdbdb-graph.service.ts
+    // but that groups by ID and we don't want that for work
+    // let results: WorkClass[] = super._jsonToObject(bindings) as WorkClass[];
+    let processedinstances: string[] = [];
+    let results: WorkClass[] = [];
 
-    bindings.forEach(
-      item => {
-        let element = results.find(element => element.id === item.id.value)
-        element.authorLabel = item.authorLabel.value;
-        element.authorId = item.authorId.value;
-        element.textId = Utils.removeNameSpaceFromTextUri(item.text.value);
-        element.workId = item.id.value;
+    bindings.forEach(row => {
+      try {
+        if (!processedinstances.includes(row.instance.value)) {
+          let element = {} as WorkClass;
+  
+          element.id = row.id.value;
+          element.strippedId = Utils.removeNameSpace(row.id.value);
+          element.label = row.label.value;
+          element.authorLabel = row.authorLabel.value;
+          element.authorId = row.authorId.value;
+          element.textId = Utils.removeNameSpaceFromTextUri(row.text.value);
+          element.workId = row.id.value;
+          results.push(element);
+          processedinstances.push(row.instance.value);
+  
+        }
+      } catch (error) {
+        console.error('jsonToObject: Error reading entry.', error);
+        console.error(row);
       }
-    ); 
+    }); 
     return results;
   }
 
@@ -522,7 +538,9 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
                                 ?electronic dhpluso:instanceOf ?textA ;
                                     a dhpluso:Electronic .
                                    ${authorFilter}
-
+                                {
+                                    ?textA dhpluso:hasInstance ?instanceA
+                                }
                                 ?id rdfs:label ?labelA .
                                 
                                 filter(langMatches( lang(?authorLabelA), "${qp.lang}" ))
@@ -536,7 +554,8 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
     let instanceSelect = '';
 
     instanceSelect = `
-                SELECT DISTINCT (SAMPLE(?id) AS ?id) (SAMPLE(?labelA) as ?label) (?textA AS ?text) (SAMPLE(?authorLabelA) AS ?authorLabel) (SAMPLE(?authorIdA) AS ?authorId)
+                SELECT DISTINCT (SAMPLE(?id) AS ?id) (SAMPLE(?labelA) as ?label) (?textA AS ?text) 
+                (SAMPLE(?instanceA) AS ?instance) (SAMPLE(?authorLabelA) AS ?authorLabel) (SAMPLE(?authorIdA) AS ?authorId)
                 WHERE {
                     ${labelQuery}
                 }
