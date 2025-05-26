@@ -42,10 +42,10 @@
                         <ul>
                             <li><a routerLink="/reference/list" routerLinkActive="active">Belegsuche</a></li>
                             <li><a routerLink="/dictionary/list" routerLinkActive="active">Lemmata</a></li>
-                            <li *ngIf="!isHomePage()"><a routerLink="/work/list" routerLinkActive="active">Werke</a></li>
+                            <li><a routerLink="/work/list" routerLinkActive="active">Werke</a></li>
                             <li><a routerLink="/concept/tree" routerLinkActive="active">Begriffssystem (Bedeutungen)</a></li>
                             <!-- <li><a routerLink="/indices/person/list" routerLinkActive="active">Begriffssystem (Bedeutungen)</a></li> -->
-                            <li *ngIf="!isHomePage()"><a routerLink="/onomastics/tree" routerLinkActive="active">Namenssystem</a></li>
+                            <li><a routerLink="/onomastics/tree" routerLinkActive="active">Namenssystem</a></li>
                             <!-- <li *ngIf="!isHomePage()" ngbDropdown>
                                 <a id="dropdownBasic1" ngbDropdownToggle>Indizes</a>
                                 <ul ngbDropdownMenu aria-labelledby="dropdownBasic1">
@@ -53,7 +53,7 @@
                                     <li ngbDropdownItem><a routerLink="/indices/person/list">Personen</a></li>
                                 </ul>
                             </li> -->
-                            <li *ngIf="!isHomePage()" ngbDropdown>
+                            <li ngbDropdown>
                                 <a id="dropdownBasic2" ngbDropdownToggle>About</a>
                                 <ul ngbDropdownMenu aria-labelledby="dropdownBasic1">
                                     <li ngbDropdownItem><a routerLink="/view/About/FAQ">FAQ</a></li>
@@ -68,7 +68,7 @@
                                     <li ngbDropdownItem><a routerLink="/view/About/Release Notes & Roadmap">Release Notes und Roadmap</a></li>
                                 </ul>
                             </li>
-                            <li *ngIf="!isHomePage()" ngbDropdown>
+                            <li *ngbDropdown>
                                 <a id="dropdownBasic3" ngbDropdownToggle>Hilfe</a>
                                 <ul ngbDropdownMenu aria-labelledby="dropdownBasic1">
                                     <li ngbDropdownItem><a routerLink="/view/Tutorial/Tutorial">Tutorial</a></li>
