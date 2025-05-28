@@ -6,6 +6,7 @@ import {
   addTokenFilter,
   moveTokenFilterUp,
   moveTokenFilterDown,
+  resetFilter,
   removeFilter,
   updateFilter,
   updateFilterById,
@@ -24,6 +25,9 @@ const _filterReducer = createReducer(
   on(increment, state => ({ ...state, limit: state.limit + 1 })),
   on(decrement, state => ({ ...state, limit: state.limit - 1 })),
   on(reset, state => ({ ...initialState })),
+  on(resetFilter, (state) => ({
+    ...state, filter: { ...state.filter, tokenFilters: [] }
+  })),
   on(addTokenFilter, (state, { tokenFilter }) => ({
     ...state,
     filter: { ...state.filter, tokenFilters: [...state.filter.tokenFilters, tokenFilter] }

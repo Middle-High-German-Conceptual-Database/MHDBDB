@@ -23,6 +23,7 @@ import { PoS } from 'app/shared/pos/pos.class';
 import { Store, select } from '@ngrx/store';
 import { Observable, from } from 'rxjs';
 import {
+  resetFilter,
   addTokenFilter,
   removeFilter,
   updateFilter,
@@ -211,6 +212,7 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
 
   reset() {
     this.textInstances = [];
+    this.store.dispatch(resetFilter());
     this.store.dispatch(reset());
     this.isRLoading = false;
     this.instances = [];

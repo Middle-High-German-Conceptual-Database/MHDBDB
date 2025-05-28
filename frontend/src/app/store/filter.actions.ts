@@ -5,6 +5,8 @@ export const increment = createAction('[Counter Component] Increment');
 export const decrement = createAction('[Counter Component] Decrement');
 export const reset = createAction('[Counter Component] Reset');
 
+export const resetFilter = createAction('[Filter] Reset Filter');
+
 export const addTokenFilter = createAction('[Filter] Add Token Filter', props<{ tokenFilter: TokenFilterI }>());
 
 export const removeFilter = createAction('[Filter] Remove Filter', props<{ filterIndex: number }>());
