@@ -6,7 +6,6 @@ import {
   addTokenFilter,
   moveTokenFilterUp,
   moveTokenFilterDown,
-  resetFilter,
   removeFilter,
   updateFilter,
   updateFilterById,
@@ -17,6 +16,7 @@ import {
   updateDirectlyFollowing
 } from './filter.actions';
 import { TextQueryParameterI, defaultTextQP } from 'app/reference/reference.service';
+import { tokenFormService } from 'app/shared/formComponents/formToken/formToken';
 
 export const initialState: TextQueryParameterI = defaultTextQP;
 
@@ -25,14 +25,12 @@ const _filterReducer = createReducer(
   on(increment, state => ({ ...state, limit: state.limit + 1 })),
   on(decrement, state => ({ ...state, limit: state.limit - 1 })),
   on(reset, state => ({ ...initialState })),
-  on(resetFilter, (state) => ({
-    ...state, filter: { ...state.filter, tokenFilters: [] }
-  })),
   on(addTokenFilter, (state, { tokenFilter }) => ({
     ...state,
     filter: { ...state.filter, tokenFilters: [...state.filter.tokenFilters, tokenFilter] }
   })),
   on(removeFilter, (state, { filterIndex }) => {
+    console.info('_filterReducer removeFilter', state)
     if (filterIndex >= 0 && filterIndex < state.filter.tokenFilters.length) {
       const newTokenFilters = [...state.filter.tokenFilters];
       newTokenFilters.splice(filterIndex, 1);

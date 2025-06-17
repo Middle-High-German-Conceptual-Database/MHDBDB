@@ -335,8 +335,22 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
     return <FormGroup>this.form.get('filterAuthors');
   }
 
+  reset(): void {
+    this.resetAuthors();
+    this.resetWorks();
+  }
+
   removeWork(workId: string): void {
     this.works.removeControl(workId);
+    this.works.updateValueAndValidity();
+  }
+
+  resetWorks(): void {
+    const keys = [];
+    for(let key in this.works.controls) {
+      keys.push(key);
+    }
+    keys.forEach(k => this.works.removeControl(k));
     this.works.updateValueAndValidity();
   }
 
@@ -375,6 +389,15 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
 
   removeAuthor(conceptLabel: string): void {
     this.authors.removeControl(conceptLabel);
+    this.authors.updateValueAndValidity();
+  }
+
+  resetAuthors(): void {
+    const keys = [];
+    for(let key in this.authors.controls) {
+      keys.push(key);
+    }
+    keys.forEach(k => this.authors.removeControl(k));
     this.authors.updateValueAndValidity();
   }
 
