@@ -59,17 +59,20 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
   filterWorksTemp = [];
   filterSeriesTemp = [];
   filterAuthorsTemp = [];
-
+  
   filterSeriesGroup: any[] = [];
-
+  
   filterSeriesCheckboxes: FormGroup;
   filterWorksCheckboxes: FormGroup;
   filterAuthorsCheckboxes: FormGroup;
-
+  
   labelAuthorTimeSearch = 'Lebensdaten AutorIn';
-
+  
   private filter$: Subscription;
-
+  
+  private resetEventSubscription: Subscription;
+  @Input() resetEvent: Observable<void>;
+  
   minValue: number = 900;
   maxValue: number = 1200;
   options: Options = {
@@ -167,7 +170,7 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
       "option": {
           "useLucene": false
       }
-  } as PersonQueryParameterI; 
+    } as PersonQueryParameterI; 
 
 
     this.filterAuthors = new FormGroup({});
@@ -293,11 +296,14 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
           //  this.form.get('series').setValue(this.filterSeriesTemp, { emitEvent: false });
         }
       });
+
+      this.resetEventSubscription = this.resetEvent.subscribe(() => this.reset());
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this.resetEventSubscription.unsubscribe();
   }
 
   setAdvChecked(e: MatSlideToggleChange) {
@@ -336,6 +342,7 @@ export class FormFilterComponent<qT extends QueryParameterI<f, o>, f extends Fil
   }
 
   reset(): void {
+    console.log('formFilter reset');
     this.resetAuthors();
     this.resetWorks();
   }

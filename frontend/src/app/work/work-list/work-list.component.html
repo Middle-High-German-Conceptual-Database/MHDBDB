@@ -19,7 +19,7 @@
     <div class="row" style="border: 1px solid #40a9ff; margin-top: 15px;">
         <div class="col">
             <dhpp-form-filter [label]="labelTextSearch" workFilter="false"
-                [routeString]="routeString"></dhpp-form-filter>
+                [routeString]="routeString" [resetEvent]="resetEventSubject.asObservable()"></dhpp-form-filter>
         </div>
     </div>
 

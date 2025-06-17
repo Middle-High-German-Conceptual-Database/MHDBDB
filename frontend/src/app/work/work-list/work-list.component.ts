@@ -29,6 +29,8 @@ export class WorkListComponent extends BaseIndexListDirective<WorkQueryParameter
 
     generalFilter$: Observable<any>;
     generalFilter: any;
+    
+    resetEventSubject: Subject<void> = new Subject<void>();
 
     constructor(
         // BaseIndexComponent
@@ -64,6 +66,7 @@ export class WorkListComponent extends BaseIndexListDirective<WorkQueryParameter
 
     reset() {
         this.store.dispatch(reset());
+        this.resetEventSubject.next();
         this.isLoading = false;
         this.qp.filter.label = '';
         this.qp.filter.isLabelActive = true;

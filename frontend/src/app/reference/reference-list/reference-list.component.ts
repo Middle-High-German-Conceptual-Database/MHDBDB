@@ -21,7 +21,7 @@ import { WorkQueryParameterI } from 'app/work/work.service';
 import { Utils } from 'app/shared/utils';
 import { PoS } from 'app/shared/pos/pos.class';
 import { Store, select } from '@ngrx/store';
-import { Observable, from } from 'rxjs';
+import { Observable, Subject, from } from 'rxjs';
 import {
   addTokenFilter,
   removeFilter,
@@ -66,6 +66,8 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
   filters$: Observable<any>;
   generalFilter$: Observable<any>;
   uiFilter$: Observable<any>;
+
+  resetEventSubject: Subject<void> = new Subject<void>();
 
   filter: any;
   generalFilter: any;
@@ -212,10 +214,7 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
   reset() {
     this.textInstances = [];
     this.store.dispatch(reset());
-    /*
-    //this.store.dispatch(resetFilter());
-    */
-   // TODO: call reset() in formFilter.ts
+    this.resetEventSubject.next();
     this.isRLoading = false;
     this.instances = [];
     this.totalAnnotations = -1;
