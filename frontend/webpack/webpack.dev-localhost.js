@@ -44,7 +44,7 @@ module.exports = (options) => webpackMerge(commonConfig({
       },
       {
         context: ['/repositories/dhPLUS'], // GraphDB
-        target: `http${options.tls ? 's' : ''}://localhost:7200`,
+        target: `http${options.tls ? 's' : ''}://localhost:8081`, // set this to 8081 to use the Java backend and 7200 to access the GrpahDB server directly
         secure: false,
         changeOrigin: options.tls,
         logLevel: 'debug',
