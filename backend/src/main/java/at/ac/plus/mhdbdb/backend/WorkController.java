@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 import java.io.OutputStream;
 
 
@@ -16,23 +18,19 @@ import com.ontotext.graphdb.repository.http.GraphDBHTTPRepositoryBuilder;
 import org.eclipse.rdf4j.query.*;
 import org.eclipse.rdf4j.query.resultio.sparqljson.SPARQLResultsJSONWriter;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.json.JSONException;
 
-@RestController
-@CrossOrigin(origins = { "${app.dev.frontend.local}", "${app.dev.frontend.remote}", "${app.dev.frontend.remote2}", "${app.dev.frontend.remote3}", "${app.dev.frontend.remote4}", "${app.dev.frontend.remote5}", "${app.dev.frontend.remote6}" })
-public class GraphdbProxyController {
+@RequestMapping("/works")
+public class WorkController extends ControllerBase {
+    // TODO: This Controller shall list works ('search') and return details ('detail') for works
 
-    private static final Logger logger = LoggerFactory.getLogger(GraphdbProxyController.class);
+    private static final Logger logger = LoggerFactory.getLogger(WorkController.class);
 
-    @Value("${target.host}")
-    private String targetHost;
+    @RequestMapping(value = "/search", method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
+    public @ResponseBody void search(HttpServletResponse response, HttpServletRequest request, @RequestBody(required = false) String body) 
+    throws JSONException, IOException {
+        logger.info("WorkController.proxy start");
 
-    @Value("${target.repository}")
-    private String targetRepository;
-
-    @RequestMapping(value = "/repositories/dhPLUS/**", method = { RequestMethod.GET, RequestMethod.POST }, produces = "application/json")
-    public @ResponseBody void proxy(HttpServletResponse response, HttpServletRequest request, @RequestBody(required = false) String body) {
-        // Log the request URI and method
-        logger.info("GraphdbProxyController.proxy start");
 
         GraphDBHTTPRepository repository = new GraphDBHTTPRepositoryBuilder()
             .withServerUrl(targetHost)
