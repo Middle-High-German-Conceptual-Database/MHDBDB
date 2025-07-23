@@ -30,13 +30,26 @@ public class WorkController extends ControllerBase {
     throws JSONException, IOException {
         logger.info("WorkController.proxy start!");
 
+        String query = new StringBuilder()
+            .append(this.getSparqlPrefixes())
+            .append("select distinct ?id ?label ?sameAs ?instance ?authorLabel where {")
+            .append("?id rdfs:label ?label .")
+            .append("?id owl:sameAs ?sameAs .")
+            .append("?id dhpluso:contribution/dhpluso:agent/rdfs:label ?authorLabel .")
+            .append("?id dhpluso:hasExpression/dhpluso:hasInstance ?instance .")
+            .append("filter(langMatches( lang(?label), \"de\" ))")
+            .append("filter(langMatches( lang(?authorLabel), \"de\" ))")
+            .append("}")
+            .append("ORDER BY ASC(?label)")
+            .toString();
+
         GraphDBHTTPRepository repository = new GraphDBHTTPRepositoryBuilder()
             .withServerUrl(targetHost)
             .withRepositoryId(targetRepository)
             .build();
         RepositoryConnection connection = repository.getConnection();
 
-        TupleQuery tupleQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, body);
+        TupleQuery tupleQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, query);
         try {
             OutputStream result = response.getOutputStream();
             tupleQuery.evaluate(new SPARQLResultsJSONWriter(result));

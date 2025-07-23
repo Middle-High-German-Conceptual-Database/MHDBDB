@@ -14,6 +14,7 @@ import { takeUntil } from 'rxjs/operators';
 import { generalFilterReducer } from '../../store/general-filter.reducer';
 import { stat } from 'fs';
 import { reset } from 'app/store/general-filter.actions';
+import { SERVER_API_URL_WORKS } from 'app/app.constants';
 
 @Component({
     selector: 'dhpp-work-list',

@@ -145,6 +145,7 @@ export interface FilterIdLabelI extends FilterIdI, FilterLabelI { }
 
 export interface OptionsI {
   useLucene?: boolean;
+  endpointUrl?: string;
 }
 
 interface SparqlQueryResultI {
