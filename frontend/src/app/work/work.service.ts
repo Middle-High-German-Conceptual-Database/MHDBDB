@@ -19,6 +19,7 @@ import { DatePrecision } from 'app/shared/baseIndexComponent/baseindexcomponent.
 import { Store, select } from '@ngrx/store';
 import { selectLanguage } from 'app/store/language.reducer';
 import { Utils } from 'app/shared/utils';
+import { SERVER_API_URL_WORKS } from 'app/app.constants';
 
 export interface WorkQueryParameterI extends QueryParameterI<WorkFilterI, WorkOptionsI> {}
 
@@ -125,7 +126,7 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
             ORDER BY ASC(?label)
         `;
     return new Promise<[(WorkClass[]), number]>(resolve => {
-      this._sq.query(query).then(data => {
+      this._sq.query(query, `${SERVER_API_URL_WORKS}/search`).then(data => {
         let total: number = 0;
         if (data.results.bindings && data.results.bindings.length >= 1) {
           resolve([this._jsonToObjectMeta(data.results.bindings), data.results.bindings.length]);

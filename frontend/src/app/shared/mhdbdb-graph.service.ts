@@ -244,7 +244,7 @@ export class SparqlQuery {
    * @return {*}  {Promise<SparqlQueryResultI>}
    * @memberof SparqlQuery
    */
-  query(queryString: string): Promise<SparqlQueryResultI> {
+  query(queryString: string, endpointUrl: string = SERVER_API_SPARQL_URL): Promise<SparqlQueryResultI> {
     let headers = new Headers();
     let q = this._sparqlPrefixes + '\n' + queryString;
     console.warn(q);
@@ -258,38 +258,14 @@ export class SparqlQuery {
       'Authorization': 'Basic ' + btoa('mhdbdb:2ffgMEdTo#HD')
     };
 
-    // Create a new promise that rejects after 60s
-    /*const timeout = new Promise<SparqlQueryResultI>((resolve, reject) => {
-      const id = setTimeout(() => {
-        console.warn('timeout of 60 seconds reached');
-        clearTimeout(id);
-        reject(new Error('Query timed out after 60 seconds'));
-      }, 60000);
-    });*/
-
     // Use Promise.race to race the fetch against the timeout
     return Promise.race([
-      this.postWithProgress(SERVER_API_SPARQL_URL, q, headersa)
+      this.postWithProgress(endpointUrl, q, headersa)
     ])
       .catch(function (error) {
         return Promise.reject(error); // Reject with the error
-
-        /* console.warn('Something went wrong: ', error);
-        console.warn(queryString);
-
-        // Handle the timeout error specifically
-        if (error.message === 'Query timed out after 60 seconds') {
-          // Throw an error of the right type (or handle it differently if you wish)
-          throw new Error('The query operation was timed out after 60 seconds.');
-        } else if (error.message === 'Service Unavailable: The server is currently unable to handle the request.') {
-          throw new Error('The query operation was timed out after 240 seconds.');
-        } else {
-          // Handle other errors
-          throw error;
-        } */
       });
   }
-
 }
 
 

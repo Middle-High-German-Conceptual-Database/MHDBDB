@@ -5,13 +5,10 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.io.OutputStream;
-
-
 
 import com.ontotext.graphdb.repository.http.GraphDBHTTPRepository;
 import com.ontotext.graphdb.repository.http.GraphDBHTTPRepositoryBuilder;
@@ -32,7 +29,6 @@ public class WorkController extends ControllerBase {
     public @ResponseBody void search(HttpServletResponse response, HttpServletRequest request, @RequestBody(required = false) String body) 
     throws JSONException, IOException {
         logger.info("WorkController.proxy start!");
-
 
         GraphDBHTTPRepository repository = new GraphDBHTTPRepositoryBuilder()
             .withServerUrl(targetHost)

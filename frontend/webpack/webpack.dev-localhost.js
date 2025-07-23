@@ -17,7 +17,7 @@ const ENV = 'development';
 module.exports = (options) => webpackMerge(commonConfig({
   env: ENV
 }), {
-  devtool: 'eval-source-map',
+  devtool: 'inline-source-map',
 
   devServer: {
     disableHostCheck: true,
@@ -49,8 +49,8 @@ module.exports = (options) => webpackMerge(commonConfig({
         changeOrigin: options.tls,
         logLevel: 'debug',
         headers: {
-                   Connection: 'keep-alive'
-            }
+          Connection: 'keep-alive'
+        }
       }, 
       {
         context: ['/services/rest/api'],

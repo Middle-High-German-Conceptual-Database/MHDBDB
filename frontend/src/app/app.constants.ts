@@ -8,6 +8,9 @@ export const SERVER_API_URL = process.env.SERVER_API_URL;
 export const SERVER_API_SPARQL_URL = `${SERVER_API_URL}repositories/dhPLUS`;
 // export const SERVER_API_SPARQL_URL = `${SERVER_API_URL}services/rdf/api/query/sparql`;
 
+export const SERVER_API_URL_PREFIX = "api/v1"
+export const SERVER_API_URL_WORKS = `${SERVER_API_URL}${SERVER_API_URL_PREFIX}/works`;
+
 export const BUILD_TIMESTAMP = process.env.BUILD_TIMESTAMP;
 
 export const NAMESPACES = new Map<string, string>([
