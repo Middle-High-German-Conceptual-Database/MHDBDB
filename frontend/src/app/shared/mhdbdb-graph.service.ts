@@ -4,6 +4,7 @@ import { NAMESPACES, SERVER_API_SPARQL_URL } from 'app/app.constants';
 import { MhdbdbEntity, MhdbdbIdLabelEntity } from './baseIndexComponent/baseindexcomponent.class';
 import { Utils } from './utils';
 import { setProgress, resetProgress } from '../store/ui.actions'; // Make sure to update the path appropriately
+import { HttpClient, HttpHandler } from '@angular/common/http';
 
 ////////////////////
 // Interfaces
@@ -266,6 +267,26 @@ export class SparqlQuery {
       .catch(function (error) {
         return Promise.reject(error); // Reject with the error
       });
+  }
+
+  /**
+   * Query MHDBDB API Endpoint
+   *
+   * @param {HttpClient} http // this is shitty
+   * @param {QueryParameterI<FilterI, OptionsI>} qp
+   * @return {*}  {Promise<SparqlQueryResultI>}
+   * @memberof SparqlQuery
+   */
+  apiQuery(http: HttpClient, qp: QueryParameterI<FilterI, OptionsI>, endpointUrl: string): Promise<SparqlQueryResultI> {
+    const body = JSON.stringify(qp)
+    
+    return Promise.race([
+       http.post<SparqlQueryResultI>(endpointUrl, qp).toPromise<SparqlQueryResultI>()
+    ])      
+      .catch(function (error) {
+        return Promise.reject(error); // Reject with the error
+      });
+
   }
 }
 

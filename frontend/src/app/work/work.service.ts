@@ -391,4 +391,10 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
     console.warn(q);
     return q;
   }
+
+  public getInstances(qp: WorkQueryParameterI): Promise<WorkClass[]> {
+    // TODO: we can ctach queries that are implemented in the API like this and have all others use MhdbdbGraphService
+    console.log("WorkServcie getInstances")
+    return super.getInstances(qp)
+  }
 }
