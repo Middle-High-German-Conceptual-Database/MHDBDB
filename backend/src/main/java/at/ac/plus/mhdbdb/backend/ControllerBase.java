@@ -15,6 +15,8 @@ public class ControllerBase {
     @Value("${target.repository}")
     protected String targetRepository;
 
+    protected String lang = "de";
+
     private Map<String, String> NAMESPACES = new HashMap<String, String>() {{
         put("bf", "http://id.loc.gov/ontologies/bibframe/");
         put("bflc", "http://id.loc.gov/ontologies/bflc/");
