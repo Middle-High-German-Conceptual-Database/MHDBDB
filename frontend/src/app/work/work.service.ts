@@ -62,49 +62,9 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
   }
 
   async getWorkMetadata(workId: string): Promise<[(WorkMetadataClass[]), number]> {
-    const query = `
-    select distinct ?id ?label ?sameAs ?dateOfCreation ?authorId ?authorSameAs ?authorLabel ?authorRole ?instance ?instanceLabel ?expression ?expressionLabel ?genreForm ?genreFormMainParent ?bibTitle ?bibPlace ?bibAgent ?bibDate where {
-            Bind(mhdbdbi:${workId} AS ?id) .
-            ?id rdfs:label ?label .
-            ?id owl:sameAs ?sameAs .
-            ?id dcterms:created ?dateOfCreation .
-            
-            ?id dhpluso:contribution/dhpluso:agent ?authorId .
-            ?id dhpluso:contribution/dhpluso:role <http://id.loc.gov/vocabulary/relators/aut> .
-            ?id dhpluso:contribution/dhpluso:agent/rdfs:label ?authorLabel .
-            ?id dhpluso:contribution/dhpluso:agent/owl:sameAs ?authorSameAs .
-            
-            ?id dhpluso:hasExpression/dhpluso:hasInstance ?instance .
-            ?instance rdf:type dhpluso:Electronic .
-            ?instance rdfs:label ?instanceLabel .
-
-            OPTIONAL { 
-              ?id dhpluso:hasExpression ?expression .
-              ?expression rdfs:label ?expressionLabel .
-            }
-
-            OPTIONAL { ?id dhpluso:genreForm/skos:prefLabel ?genreForm . }
-            OPTIONAL { ?id dhpluso:genreFormMainparent/skos:prefLabel ?genreFormMainParent . }
-
-            OPTIONAL {
-              ?bibId bf:instanceOf ?id .
-              ?bibId bf:title/bf:mainTitle ?bibTitle .
-              ?bibId bf:provisionActivity ?bibProvisionActivity .
-              ?bibProvisionActivity bf:place/rdfs:label ?bibPlace .
-              ?bibProvisionActivity bf:agent/rdfs:label ?bibAgent .
-              ?bibProvisionActivity bf:date ?bibDate .
-            }
-            
-            filter(langMatches( lang(?genreForm), "de" ))
-            filter(langMatches( lang(?genreFormMainParent), "de" ))
-            filter(langMatches( lang(?label), "de" ))
-            filter(langMatches( lang(?expressionLabel), "de" ))
-            filter(langMatches( lang(?instanceLabel), "de" ))
-            filter(langMatches( lang(?authorLabel), "de" ))
-            }
-        `;
+    const query = workId;
     return new Promise<[(WorkMetadataClass[]), number]>(resolve => {
-      this._sq.query(query).then(data => {
+      this._sq.simpleQuery(query, `${this._defaultQp.option.endpointUrl}/metadata`).then(data => {
         let total: number = 0;
         if (data.results.bindings && data.results.bindings.length >= 1) {
           resolve([this._jsonToObjectMeta(data.results.bindings), data.results.bindings.length]);
@@ -116,19 +76,9 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
   }
 
   async getWorkList(): Promise<[(WorkClass[]), number]> {
-    const query = `
-    select distinct ?id ?label ?sameAs ?instance ?authorLabel where {
-            ?id rdfs:label ?label .
-            ?id owl:sameAs ?sameAs .
-            ?id dhpluso:contribution/dhpluso:agent/rdfs:label ?authorLabel .
-            ?id dhpluso:hasExpression/dhpluso:hasInstance ?instance .
-            filter(langMatches( lang(?label), "de" ))
-            filter(langMatches( lang(?authorLabel), "de" ))
-            }
-            ORDER BY ASC(?label)
-        `;
+    const query = "";
     return new Promise<[(WorkClass[]), number]>(resolve => {
-      this._sq.query(query, `${this._defaultQp.option.endpointUrl}/search`).then(data => {
+      this._sq.simpleQuery(query, `${this._defaultQp.option.endpointUrl}/search`).then(data => {
         let total: number = 0;
         if (data.results.bindings && data.results.bindings.length >= 1) {
           resolve([this._jsonToObjectMeta(data.results.bindings), data.results.bindings.length]);
@@ -140,16 +90,9 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
   }
 
   async getSeriesParentList(): Promise<[(SeriesClass[]), number]> {
-    const query = `
-    select distinct ?id ?label where {
-            ?id skos:topConceptOf <https://dhplus.sbg.ac.at/mhdbdb/instance/textreihentypologie> .
-            ?id rdf:type skos:Concept .
-            ?id skos:prefLabel ?label .
-            filter(langMatches( lang(?label), "de" ))
-            }
-        `;
+    const query = "";
     return new Promise<[(SeriesClass[]), number]>(resolve => {
-      this._sq.query(query).then(data => {
+      this._sq.simpleQuery(query, `${this._defaultQp.option.endpointUrl}/seriesParents`).then(data => {
         let total: number = 0;
         if (data.results.bindings && data.results.bindings.length >= 1) {
           resolve([this._jsonToObject(data.results.bindings), data.results.bindings.length]);
@@ -161,16 +104,10 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
   }
 
   async getSeriesList(parent: string): Promise<[(SeriesClass[]), number]> {
-    const query = `
-    select distinct ?id ?label where {
-            ?id skos:broader <${parent}> .
-            ?id rdf:type skos:Concept .
-            ?id skos:prefLabel ?label .
-            filter(langMatches( lang(?label), "de" ))
-            }
-        `;
+    // TODO: This should be a JSON object or string
+    const query = parent; 
     return new Promise<[(SeriesClass[]), number]>(resolve => {
-      this._sq.query(query).then(data => {
+      this._sq.simpleQuery(query, `${this._defaultQp.option.endpointUrl}/series`).then(data => {
         let total: number = 0;
         if (data.results.bindings && data.results.bindings.length >= 1) {
           resolve([this._jsonToObject(data.results.bindings), data.results.bindings.length]);

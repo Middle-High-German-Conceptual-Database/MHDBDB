@@ -247,9 +247,20 @@ export class SparqlQuery {
    * @memberof SparqlQuery
    */
   query(queryString: string, endpointUrl: string = SERVER_API_SPARQL_URL): Promise<SparqlQueryResultI> {
-    let headers = new Headers();
     let q = this._sparqlPrefixes + '\n' + queryString;
-    console.warn(q);
+    return this.simpleQuery(q, endpointUrl);
+  }
+
+  /**
+   * Query MHDBDB Sparql Endpoint without _sparqlPrefixes
+   *
+   * @param {string} queryString
+   * @return {*}  {Promise<SparqlQueryResultI>}
+   * @memberof SparqlQuery
+   */
+  simpleQuery(queryString: string, endpointUrl: string = SERVER_API_SPARQL_URL): Promise<SparqlQueryResultI> {
+    let headers = new Headers();
+    console.warn("simpleQuery", queryString);
     headers.append('Accept', 'application/json');
     headers.append('Content-Type', 'application/sparql-query');
     headers.append('Authorization', 'Basic ' + btoa('mhdbdb:2ffgMEdTo#HD'));
@@ -262,13 +273,15 @@ export class SparqlQuery {
 
     // Use Promise.race to race the fetch against the timeout
     return Promise.race([
-      this.postWithProgress(endpointUrl, q, headersa)
+      this.postWithProgress(endpointUrl, queryString, headersa)
     ])
       .catch(function (error) {
         return Promise.reject(error); // Reject with the error
       });
   }
 
+
+  // TODO: Maybe later
   /**
    * Query MHDBDB API Endpoint
    *
