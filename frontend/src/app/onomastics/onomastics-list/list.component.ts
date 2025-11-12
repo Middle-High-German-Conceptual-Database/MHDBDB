@@ -312,8 +312,7 @@ export class ConceptListComponent implements OnInit {
     buildFilterQuery() {
 
       console.log("list querty");
-        let query = `SELECT DISTINCT ?subject ?writtenRep ?pos
-    WHERE {`;
+        let query = ` DISTINCT ?subject ?writtenRep ?pos WHERE {`;
 
         query += `?subject a mhdbdbodict:Word ;
     mhdbdbodict:sense ?sense ;

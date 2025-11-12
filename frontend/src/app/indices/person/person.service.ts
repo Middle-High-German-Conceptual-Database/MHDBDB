@@ -92,8 +92,7 @@ export class PersonService extends MhdbdbIdLabelEntityService<PersonQueryParamet
 
     let q = '';
     if (countResults) {
-      q = `
-                SELECT (count(*) as ?count) 
+      q = ` (count(*) as ?count) 
                 ${this._sparqlNamedGraph(qp.namedGraphs)}
                 where {
                     {
@@ -103,8 +102,7 @@ export class PersonService extends MhdbdbIdLabelEntityService<PersonQueryParamet
                 
             `;
     } else {
-      q = `
-                SELECT DISTINCT
+      q = ` DISTINCT
                     ?id
                     ?label
                     ?placeOfBirthId

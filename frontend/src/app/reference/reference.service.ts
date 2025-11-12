@@ -527,12 +527,11 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
     let positionsAnd: string[] = [];
 
     // query with joins
-    let qq: string = `
-        SELECT * {                
+    let qq: string = ` * {                
     `;
 
     if (countResults) {
-      qq = ` SELECT ?annotationId0 { `;
+      qq = ` ?annotationId0 { `;
     }
 
     qp.filter.tokenFilters.forEach((tokenFilter, i: number) => {
@@ -651,17 +650,11 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
         }
 
         qq += `         
-      
                       ${concepts.join('\r\n')}
-                     
                       ${conceptsAnd.join('\r\n')}
-                      
                       `;
 
-
-
         qq += `
-                      
                       ${bindings.join('\r\n')}
                       ${filters.join('\r\n')}
                     }
@@ -754,7 +747,6 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
         }
 
         qq += `         
-      
                       ${words.join('\r\n')}
                       ${concepts.join('\r\n')}
                       ${onomastics.join('\r\n')}
@@ -767,11 +759,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                       ${possAnd.join('\r\n')}
                       ${positionsAnd.join('\r\n')}
                       
-                      
                       `;
-
-
-
         qq += `
                       
                       ${bindings.join('\r\n')}
@@ -787,8 +775,6 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
         qq += ` } `;
       }
 
-
-
       if (qp.filter.tokenFilters.length > i+1) {
         if (tokenFilter.relation == 'or') {
           qq += ` UNION `;
@@ -797,20 +783,15 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
           qq += ` UNION `;
         }
       }
-
-
     });
 
     qq += ` } `;
 
     let q = '';
     if (countResults) {
-      q = `
-                SELECT (count(*) as ?count)
+      q = ` (count(*) as ?count)
                 {
-                    SELECT ?annotationId0 {   
-                    ${qq}
-                  }
+                    SELECT ${qq}
                 }
 
             `;
@@ -917,8 +898,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
   ////////
 
   private sparqlKwic(centerUri: string, radius: number = 5): string {
-    return `
-            select distinct ?position ?seg ?n ?content
+    return ` distinct ?position ?seg ?n ?content
             where {
                 { #self
                     Bind ('center' as ?position)
@@ -1040,8 +1020,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
     let bodyBind = bodyId === undefined ? '' : `BIND(<${bodyId}> AS ?body)`;
     let targetBind = targetId === undefined ? '' : `BIND(<${targetId}> AS ?target)`;
     const targetClassFilter = targetClass === undefined ? '' : `?target a ${targetClass} .`;
-    const query = `
-            SELECT DISTINCT ?annotation ?body ?target ?count WHERE {
+    const query = ` DISTINCT ?annotation ?body ?target ?count WHERE {
                 {
                     SELECT DISTINCT (count(*) as ?count) WHERE {
                         ${bodyBind}

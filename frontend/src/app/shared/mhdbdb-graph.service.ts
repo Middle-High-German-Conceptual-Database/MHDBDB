@@ -1,6 +1,6 @@
 /* eslint-disable object-shorthand */
 import { Store, select } from '@ngrx/store';
-import { NAMESPACES, SERVER_API_SPARQL_URL } from 'app/app.constants';
+import { SERVER_API_SPARQL_URL } from 'app/app.constants';
 import { MhdbdbEntity, MhdbdbIdLabelEntity } from './baseIndexComponent/baseindexcomponent.class';
 import { Utils } from './utils';
 import { setProgress, resetProgress } from '../store/ui.actions'; // Make sure to update the path appropriately
@@ -178,22 +178,6 @@ export class SparqlQuery {
 
   constructor(private store: Store) {}
 
-  /**
-   * Generate sparql prefix declaration from NAMESPACES
-   *
-   * @readonly
-   * @private
-   * @type {string}
-   * @memberof SparqlQuery
-   */
-  private get _sparqlPrefixes(): string {
-    const prefixes = [];
-    NAMESPACES.forEach((namespace: string, key: string) => {
-      prefixes.push(`prefix ${key}: <${namespace}>`);
-    });
-    return prefixes.join('\n');
-  }
-
   postWithProgress(url: string, data: string, headers: {[key: string]: string}): Promise<SparqlQueryResultI> {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
@@ -240,27 +224,13 @@ export class SparqlQuery {
 
 
   /**
-   * Query MHDBDB Sparql Endpoint
+   * Query MHDBDB API
    *
    * @param {string} queryString
    * @return {*}  {Promise<SparqlQueryResultI>}
    * @memberof SparqlQuery
-   * 
-   * This uses simpleQuery but adds conbfigured prefixes. All of that should be done in the API
    */
   query(queryString: string, endpointUrl: string = SERVER_API_SPARQL_URL): Promise<SparqlQueryResultI> {
-    let q = this._sparqlPrefixes + '\n' + queryString;
-    return this.simpleQuery(q, endpointUrl);
-  }
-
-  /**
-   * Query MHDBDB Sparql Endpoint without _sparqlPrefixes
-   *
-   * @param {string} queryString
-   * @return {*}  {Promise<SparqlQueryResultI>}
-   * @memberof SparqlQuery
-   */
-  simpleQuery(queryString: string, endpointUrl: string = SERVER_API_SPARQL_URL): Promise<SparqlQueryResultI> {
     console.warn("simpleQuery", queryString);
 
     let headersa = {

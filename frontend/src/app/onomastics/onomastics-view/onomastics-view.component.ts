@@ -6,7 +6,6 @@ import { FormBuilder } from "@angular/forms";
 import { MatAutocomplete } from '@angular/material/autocomplete';
 import { MatAccordion } from '@angular/material/expansion';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NAMESPACES } from 'app/app.constants';
 import { NameConcept } from "../onomastics.class";
 import { NameConceptFilterI, NameConceptOptionsI, NameConceptQueryParameterI, OnomasticsService } from '../onomastics.service';
 import { TextService } from "app/text/text.service"

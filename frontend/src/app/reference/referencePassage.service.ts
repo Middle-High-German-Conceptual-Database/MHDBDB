@@ -270,16 +270,14 @@ export class TextPassageService extends MhdbdbGraphService<
 
     let q = '';
     if (countResults) {
-      q = `
-                SELECT (count(*) as ?count) where {
+      q = ` (count(*) as ?count) where {
                     ${token0}
                     ${lines}
                     ${tokens.join('\r\n')}
                 }
             `;
     } else {
-      q = `
-            select distinct ${tokenSelects.join(' ')}
+      q = ` distinct ${tokenSelects.join(' ')}
             where {
                 ${token0}
                 ${lines}
@@ -312,11 +310,11 @@ export class TextPassageService extends MhdbdbGraphService<
     return instances;
   }
 
+
   private _sparqlTextPassage(startTokenId: string, endTokenId?: string): string {
     let q: string = '';
     if (endTokenId) {
-      q = `
-                select distinct ?text ?line ?lineN ?token ?n ?index ?content
+      q = ` distinct ?text ?line ?lineN ?token ?n ?index ?content
                 where {
                     {
                         select ?text ?token ?n
@@ -348,8 +346,7 @@ export class TextPassageService extends MhdbdbGraphService<
                 order by ?n
             `;
     } else {
-      q = `
-                select distinct ?text ?line ?lineN ?token ?n ?index ?content
+      q = ` distinct ?text ?line ?lineN ?token ?n ?index ?content
                 where {
                     <${startTokenId}>
                         mhdbdbxml:parent ?line ;

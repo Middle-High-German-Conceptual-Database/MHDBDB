@@ -91,8 +91,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
 
     let q: string = '';
     if (countResults) {
-      q = `
-                SELECT (count(*) as ?count) 
+      q = `  (count(*) as ?count) 
                 where {
                     {
                         ${instanceSelect}
@@ -101,8 +100,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                 
             `;
     } else {
-      q = `
-                SELECT DISTINCT ?id ?label ?rootId ?electronicId ?workId               
+      q = ` DISTINCT ?id ?label ?rootId ?electronicId ?workId               
                 WHERE {                 
                     {
                         SELECT DISTINCT ?id ?label ?rootId ?electronicId ?workId
@@ -141,8 +139,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
   private sparqlKwic(centerUri: string, radius: number): string {
     console.log(radius);
 
-    return `            
-            select distinct ?position ?seg ?n ?content
+    return ` distinct ?position ?seg ?n ?content
             where { 
                 { #self
                     Bind ('center' as ?position)
@@ -264,8 +261,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
     let bodyBind = bodyId === undefined ? '' : `BIND(<${bodyId}> AS ?body)`;
     let targetBind = targetId === undefined ? '' : `BIND(<${targetId}> AS ?target)`;
     const targetClassFilter = targetClass === undefined ? '' : `?target a ${targetClass} .`;
-    const query = `
-            SELECT DISTINCT ?annotation ?body ?target ?count WHERE {                
+    const query = `  DISTINCT ?annotation ?body ?target ?count WHERE {                
                 {
                     SELECT DISTINCT (count(*) as ?count) WHERE {
                         ${bodyBind}

@@ -8,13 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.io.OutputStream;
-
-import com.ontotext.graphdb.repository.http.GraphDBHTTPRepository;
-import com.ontotext.graphdb.repository.http.GraphDBHTTPRepositoryBuilder;
-import org.eclipse.rdf4j.query.*;
-import org.eclipse.rdf4j.query.resultio.sparqljson.SPARQLResultsJSONWriter;
-import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.json.JSONException;
 
 @RestController
@@ -27,7 +20,6 @@ public class WorkController extends ControllerBase {
     @RequestMapping(value = "/list", method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
     public @ResponseBody void search(HttpServletResponse response, HttpServletRequest request, @RequestBody(required = false) String body) 
     throws JSONException, IOException {
-        logger.info("WorkController.list start!");
 
         String query = new StringBuilder()
             .append(this.getSparqlPrefixes())
@@ -48,7 +40,6 @@ public class WorkController extends ControllerBase {
     @RequestMapping(value = "/seriesParents", method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
     public @ResponseBody void getSeriesParentList(HttpServletResponse response, HttpServletRequest request, @RequestBody(required = false) String body) 
     throws JSONException, IOException {
-        logger.info("WorkController.getSeriesParentList start!");
 
         String query = new StringBuilder()
             .append(this.getSparqlPrefixes())
@@ -56,7 +47,7 @@ public class WorkController extends ControllerBase {
             .append(System.lineSeparator() + "  ?id skos:topConceptOf <https://dhplus.sbg.ac.at/mhdbdb/instance/textreihentypologie> .")
             .append(System.lineSeparator() + "  ?id rdf:type skos:Concept .")
             .append(System.lineSeparator() + "  ?id skos:prefLabel ?label .")
-            .append(System.lineSeparator() + "  filter(langMatches( lang(?label), \"de\" ))")
+            .append(System.lineSeparator() + String.format("  filter(langMatches( lang(?label), \"%s\" ))", this.lang))
             .append(System.lineSeparator() + "}")
             .toString();
 
@@ -66,7 +57,6 @@ public class WorkController extends ControllerBase {
     @RequestMapping(value = "/series", method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
     public @ResponseBody void getSeriesList(HttpServletResponse response, HttpServletRequest request, @RequestBody(required = true) String parent) 
     throws JSONException, IOException {
-        logger.info("WorkController.getSeriesList start!");
 
         String query = new StringBuilder()
             .append(this.getSparqlPrefixes())
@@ -74,7 +64,7 @@ public class WorkController extends ControllerBase {
             .append(System.lineSeparator() + String.format("  ?id skos:broader <%s> .", parent))
             .append(System.lineSeparator() + "  ?id rdf:type skos:Concept .")
             .append(System.lineSeparator() + "  ?id skos:prefLabel ?label .")
-            .append(System.lineSeparator() + "  filter(langMatches( lang(?label), \"de\" ))")
+            .append(System.lineSeparator() + String.format("  filter(langMatches( lang(?label), \"%s\" ))", this.lang))
             .append(System.lineSeparator() + "}")
             .toString();
 
@@ -85,7 +75,6 @@ public class WorkController extends ControllerBase {
     @RequestMapping(value = "/metadata", method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
     public @ResponseBody void getWorkMetadata(HttpServletResponse response, HttpServletRequest request, @RequestBody(required = true) String workId) 
     throws JSONException, IOException {
-        logger.info("WorkController.getWorkMetadata start!");
 
         // TODO: Wait for a *nice* String Template functionality in Java
         String query = new StringBuilder()
@@ -117,35 +106,16 @@ public class WorkController extends ControllerBase {
             .append(System.lineSeparator() + "  ?bibProvisionActivity bf:date ?bibDate .")
             .append(System.lineSeparator() + "}")
             // filter
-            .append(System.lineSeparator() + "filter(langMatches( lang(?genreForm), \"de\" ))")
-            .append(System.lineSeparator() + "filter(langMatches( lang(?genreFormMainParent), \"de\" ))")
-            .append(System.lineSeparator() + "filter(langMatches( lang(?label), \"de\" ))")
-            .append(System.lineSeparator() + "filter(langMatches( lang(?expressionLabel), \"de\" ))")
-            .append(System.lineSeparator() + "filter(langMatches( lang(?instanceLabel), \"de\" ))")
-            .append(System.lineSeparator() + "filter(langMatches( lang(?authorLabel), \"de\" ))")
+            .append(System.lineSeparator() + String.format("  filter(langMatches( lang(?genreForm), \"%s\" ))", this.lang))
+            .append(System.lineSeparator() + String.format("  filter(langMatches( lang(?genreFormMainParent), \"%s\" ))", this.lang))
+            .append(System.lineSeparator() + String.format("  filter(langMatches( lang(?label), \"%s\" ))", this.lang))
+            .append(System.lineSeparator() + String.format("  filter(langMatches( lang(?expressionLabel), \"%s\" ))", this.lang))
+            .append(System.lineSeparator() + String.format("  filter(langMatches( lang(?instanceLabel), \"%s\" ))", this.lang))
+            .append(System.lineSeparator() + String.format("  filter(langMatches( lang(?authorLabel), \"%s\" ))", this.lang))
 
             .append(System.lineSeparator() + "}")
             .toString();
 
         runQuery(response, query);
-    }
-
-    protected void runQuery(HttpServletResponse response, String query) 
-    throws JSONException, IOException {
-        GraphDBHTTPRepository repository = new GraphDBHTTPRepositoryBuilder()
-            .withServerUrl(targetHost)
-            .withRepositoryId(targetRepository)
-            .build();
-        RepositoryConnection connection = repository.getConnection();
-
-        TupleQuery tupleQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, query);
-        try {
-            OutputStream result = response.getOutputStream();
-            tupleQuery.evaluate(new SPARQLResultsJSONWriter(result));
-            result.flush();
-        } catch (Exception ex) {
-            logger.error("Error in query", ex);
-            logger.error("query", query);
-        }
     }
 }

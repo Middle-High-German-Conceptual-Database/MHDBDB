@@ -1,11 +1,25 @@
 package at.ac.plus.mhdbdb.backend;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.TupleQuery;
+import org.eclipse.rdf4j.query.resultio.sparqljson.SPARQLResultsJSONWriter;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.json.JSONException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+
+import com.ontotext.graphdb.repository.http.GraphDBHTTPRepository;
+import com.ontotext.graphdb.repository.http.GraphDBHTTPRepositoryBuilder;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 public class ControllerBase {
 
@@ -16,6 +30,8 @@ public class ControllerBase {
     protected String targetRepository;
 
     protected String lang = "de";
+
+    private static final Logger logger = LoggerFactory.getLogger(ControllerBase.class);
 
     private Map<String, String> NAMESPACES = new HashMap<String, String>() {{
         put("bf", "http://id.loc.gov/ontologies/bibframe/");
@@ -71,9 +87,29 @@ public class ControllerBase {
         put("xsd", "http://www.w3.org/2001/XMLSchema#");
     }};
 
-    protected String getSparqlPrefixes() {
+  protected String getSparqlPrefixes() {
     List<String> prefixes = new ArrayList<String>();
     this.NAMESPACES.forEach((k, v) -> prefixes.add("prefix " + k + ": <" + v + ">"));
     return String.join("\n", prefixes);
+  }
+
+  protected void runQuery(HttpServletResponse response, String query) 
+  throws JSONException, IOException {
+      logger.info("ControllerBase.runQuery query:\n {}", query);
+      GraphDBHTTPRepository repository = new GraphDBHTTPRepositoryBuilder()
+          .withServerUrl(targetHost)
+          .withRepositoryId(targetRepository)
+          .build();
+      RepositoryConnection connection = repository.getConnection();
+
+      TupleQuery tupleQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, query);
+      try {
+          OutputStream result = response.getOutputStream();
+          tupleQuery.evaluate(new SPARQLResultsJSONWriter(result));
+          result.flush();
+      } catch (Exception ex) {
+          logger.error("Error in query", ex);
+          logger.error("query", query);
+      }
   }
 }

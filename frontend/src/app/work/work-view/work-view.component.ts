@@ -55,7 +55,7 @@ export class WorkViewComponent extends BaseIndexViewDirective<WorkQueryParameter
         console.log(this.metadata);
       })
       .catch(error => {
-        // console.warn(error)
+         console.error(error)
       })
   }
 

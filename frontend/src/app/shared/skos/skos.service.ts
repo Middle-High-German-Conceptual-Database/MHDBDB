@@ -157,8 +157,7 @@ export abstract class SkosConceptService<
       topConcepts = `${qp.filter.scheme} skos:hasTopConcept ?id.`;
     }
 
-    return `
-        SELECT DISTINCT ?id ?label ?altLabel ?broaderId ?narrowerId
+    return ` DISTINCT ?id ?label ?altLabel ?broaderId ?narrowerId
         WHERE {
             # Bindings
             ${this._sparqlGenerateBinding(qp.filter.id)}
@@ -225,8 +224,7 @@ export abstract class SkosConceptService<
       topConcepts = `${qp.filter.scheme} skos:hasTopConcept ?id.`;
     }
 
-    return `
-        SELECT DISTINCT ?id ?label ?altLabel ?broaderId ?narrowerId
+    return ` DISTINCT ?id ?label ?altLabel ?broaderId ?narrowerId
         WHERE {
             # DANIEL Bindings
             ${this._sparqlGenerateBinding(qp.filter.id)}

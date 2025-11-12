@@ -36,8 +36,7 @@ export class ConceptService extends SkosConceptService<ConceptQueryParameterI, C
   }
 
   getConceptsOfSense(senseUri: string): Promise<Concept[]> {
-    const query = `
-            select ?id ?label ?altLabel ?narrowerId ?broaderId
+    const query = ` ?id ?label ?altLabel ?narrowerId ?broaderId
             where {
                 <${senseUri}> dhpluso:isLexicalizedSenseOf ?id .
                 ?id a skos:Concept .

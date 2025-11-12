@@ -64,7 +64,7 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
   async getWorkMetadata(workId: string): Promise<[(WorkMetadataClass[]), number]> {
     const query = workId;
     return new Promise<[(WorkMetadataClass[]), number]>(resolve => {
-      this._sq.simpleQuery(query, `${this._defaultQp.option.endpointUrl}/metadata`).then(data => {
+      this._sq.query(query, `${this._defaultQp.option.endpointUrl}/metadata`).then(data => {
         let total: number = 0;
         if (data.results.bindings && data.results.bindings.length >= 1) {
           resolve([this._jsonToObjectMeta(data.results.bindings), data.results.bindings.length]);
@@ -78,7 +78,7 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
   async getWorkList(): Promise<[(WorkClass[]), number]> {
     const query = "";
     return new Promise<[(WorkClass[]), number]>(resolve => {
-      this._sq.simpleQuery(query, `${this._defaultQp.option.endpointUrl}/list`).then(data => {
+      this._sq.query(query, `${this._defaultQp.option.endpointUrl}/list`).then(data => {
         let total: number = 0;
         if (data.results.bindings && data.results.bindings.length >= 1) {
           resolve([this._jsonToObjectMeta(data.results.bindings), data.results.bindings.length]);
@@ -92,7 +92,7 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
   async getSeriesParentList(): Promise<[(SeriesClass[]), number]> {
     const query = "";
     return new Promise<[(SeriesClass[]), number]>(resolve => {
-      this._sq.simpleQuery(query, `${this._defaultQp.option.endpointUrl}/seriesParents`).then(data => {
+      this._sq.query(query, `${this._defaultQp.option.endpointUrl}/seriesParents`).then(data => {
         let total: number = 0;
         if (data.results.bindings && data.results.bindings.length >= 1) {
           resolve([this._jsonToObject(data.results.bindings), data.results.bindings.length]);
@@ -107,7 +107,7 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
     // TODO: This should be a JSON object or string
     const query = parent; 
     return new Promise<[(SeriesClass[]), number]>(resolve => {
-      this._sq.simpleQuery(query, `${this._defaultQp.option.endpointUrl}/series`).then(data => {
+      this._sq.query(query, `${this._defaultQp.option.endpointUrl}/series`).then(data => {
         let total: number = 0;
         if (data.results.bindings && data.results.bindings.length >= 1) {
           resolve([this._jsonToObject(data.results.bindings), data.results.bindings.length]);
@@ -302,8 +302,7 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
 
     let instanceSelect = '';
 
-    instanceSelect = `
-                SELECT DISTINCT (SAMPLE(?id) AS ?id) (SAMPLE(?labelA) as ?label) (?textA AS ?text) 
+    instanceSelect = ` DISTINCT (SAMPLE(?id) AS ?id) (SAMPLE(?labelA) as ?label) (?textA AS ?text) 
                 (SAMPLE(?instanceA) AS ?instance) (SAMPLE(?authorLabelA) AS ?authorLabel) (SAMPLE(?authorIdA) AS ?authorId)
                 WHERE {
                     ${labelQuery}
@@ -314,11 +313,10 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
 
     let q = '';
     if (countResults) {
-      q = `
-                SELECT (count(*) as ?count)
+      q = ` (count(*) as ?count)
                 where {
                     {
-                        ${instanceSelect}
+                        SELECT ${instanceSelect}
                     }
                 }
 

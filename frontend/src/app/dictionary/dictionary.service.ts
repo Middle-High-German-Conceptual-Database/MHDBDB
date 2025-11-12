@@ -77,8 +77,7 @@ export class DictionaryService extends MhdbdbIdLabelEntityService<
     if (offset) {
       offsetString = `offset: ${limit}`;
     }
-    const query = `
-            select ?id ?count ?label ?posId ?posLabel where {
+    const query = ` ?id ?count ?label ?posId ?posLabel where {
                 {
                     select (count(*) as ?count)
                     where {
@@ -128,8 +127,7 @@ export class DictionaryService extends MhdbdbIdLabelEntityService<
 
   getSenses(word: WordClass): Promise<SenseClass[]> {
     let processedSenses = new BehaviorSubject(0);
-    const sensesQuery = `
-            SELECT DISTINCT ?id (count(?mid) as ?index) WHERE {
+    const sensesQuery = ` DISTINCT ?id (count(?mid) as ?index) WHERE {
                 <${word.id}> dhpluso:sense/rdf:rest* ?mid .
                 ?mid rdf:rest* ?node .
                 ?node rdf:first ?id .
@@ -160,8 +158,7 @@ export class DictionaryService extends MhdbdbIdLabelEntityService<
   }
 
   getGraphicalVariance(word: WordClass): Promise<graphicalForm[]> {
-    const query = `
-            select ?form (count(?target) as ?count) where {
+    const query = ` ?form (count(?target) as ?count) where {
                 ?annotation oa:hasBody <${word.id}> .
                 ?annotation oa:hasTarget ?target .
                 ?target mhdbdbxml:firstChild/mhdbdbxml:content ?form .
@@ -204,8 +201,7 @@ export class DictionaryService extends MhdbdbIdLabelEntityService<
       narrowerTransitiveString = 'skos:narrowerTransitive?/';
     }
 
-    const query = `
-            select ?id ?label ?posId ?posLabel ?count
+    const query = ` ?id ?label ?posId ?posLabel ?count
             where {
                 {
                     select ?id ?label where {
@@ -319,14 +315,12 @@ export class DictionaryService extends MhdbdbIdLabelEntityService<
 
     let q = '';
     if (countResults) {
-      q = `
-                SELECT (count(*) as ?count) where {
+      q = ` (count(*) as ?count) where {
                     ${instanceQuery}
                 }
             `;
     } else {
-      q = `
-                SELECT DISTINCT ?id ?label ?posId ?posLabel ?senseId ?senseIndex ?conceptId ?conceptLabel ?subTermId ?subTermLabel ?compoundId ?compoundLabel ?form ?textId ?textLabel
+      q = ` DISTINCT ?id ?label ?posId ?posLabel ?senseId ?senseIndex ?conceptId ?conceptLabel ?subTermId ?subTermLabel ?compoundId ?compoundLabel ?form ?textId ?textLabel
                 WHERE {
                     {
                         SELECT DISTINCT ?id ?label

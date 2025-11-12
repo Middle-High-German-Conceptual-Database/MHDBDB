@@ -91,8 +91,7 @@ export class PlaceService extends MhdbdbIdLabelEntityService<PlaceQueryParameter
 
     let q = '';
     if (countResults) {
-      q = `
-                SELECT (count(*) as ?count) 
+      q = ` (count(*) as ?count) 
                 ${this._sparqlNamedGraph(qp.namedGraphs)}
                 where {
                     {
@@ -102,8 +101,7 @@ export class PlaceService extends MhdbdbIdLabelEntityService<PlaceQueryParameter
                 
             `;
     } else {
-      q = `
-                SELECT DISTINCT
+      q = ` DISTINCT
                     ?id
                     ?label
                 ${this._sparqlNamedGraph(qp.namedGraphs)}

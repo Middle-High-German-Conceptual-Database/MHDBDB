@@ -5,10 +5,10 @@ import { Directive, Input, OnChanges, OnInit } from '@angular/core';
 import { FormBuilder } from "@angular/forms";
 import { MatAccordion } from '@angular/material/expansion';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { NAMESPACES } from 'app/app.constants';
 import { Subject } from 'rxjs';
 import { FilterIdI, MhdbdbGraphService, OptionsI, QueryParameterI } from '../../mhdbdb-graph.service';
 import type { MhdbdbIdLabelEntity, IdLabelI } from '../baseindexcomponent.class';
+import { NAMESPACE_MHDBDBI } from 'app/app.constants';
 
 @Directive()
 export abstract class BaseIndexViewDirective<qT extends QueryParameterI<f, o>, f extends FilterIdI, o extends OptionsI, c extends MhdbdbIdLabelEntity> implements OnChanges, OnInit  {    
@@ -46,7 +46,7 @@ export abstract class BaseIndexViewDirective<qT extends QueryParameterI<f, o>, f
     protected defaultFilter: f;    
     protected defaultOptions: o; 
     
-    public instanceNamespace= NAMESPACES.get('mhdbdbi')
+    public instanceNamespace= NAMESPACE_MHDBDBI
     
     abstract Accordion: MatAccordion;
     
