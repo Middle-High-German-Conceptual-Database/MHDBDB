@@ -24,10 +24,10 @@ public class WorkController extends ControllerBase {
 
     private static final Logger logger = LoggerFactory.getLogger(WorkController.class);
 
-    @RequestMapping(value = "/search", method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
+    @RequestMapping(value = "/list", method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
     public @ResponseBody void search(HttpServletResponse response, HttpServletRequest request, @RequestBody(required = false) String body) 
     throws JSONException, IOException {
-        logger.info("WorkController.search start!");
+        logger.info("WorkController.list start!");
 
         String query = new StringBuilder()
             .append(this.getSparqlPrefixes())
@@ -129,7 +129,6 @@ public class WorkController extends ControllerBase {
 
         runQuery(response, query);
     }
-
 
     protected void runQuery(HttpServletResponse response, String query) 
     throws JSONException, IOException {

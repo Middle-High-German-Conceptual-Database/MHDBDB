@@ -76,6 +76,16 @@ export interface SkosConceptI extends IdLabelI {
 }
 
 // Classes
+/*
+// TODO: we should return an MhdbdbEntityList with Count and MhdbdbEntity[] instead 
+// of having two queries (countInstances and getntInstances). 
+// We may need that as a parameter in BaseIndexListDirective.first() 
+export class MhdbdbEntityList {
+
+    public entities: MhdbdbEntity[];
+    public count: number;
+}
+*/
 export class MhdbdbEntity {
 
 }

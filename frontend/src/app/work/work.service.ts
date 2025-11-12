@@ -78,7 +78,7 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
   async getWorkList(): Promise<[(WorkClass[]), number]> {
     const query = "";
     return new Promise<[(WorkClass[]), number]>(resolve => {
-      this._sq.simpleQuery(query, `${this._defaultQp.option.endpointUrl}/search`).then(data => {
+      this._sq.simpleQuery(query, `${this._defaultQp.option.endpointUrl}/list`).then(data => {
         let total: number = 0;
         if (data.results.bindings && data.results.bindings.length >= 1) {
           resolve([this._jsonToObjectMeta(data.results.bindings), data.results.bindings.length]);
@@ -266,6 +266,7 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
   }
 
   protected _sparqlQuery(qp: WorkQueryParameterI, countResults: boolean): string {
+    console.log("WorkService._sparqlQuery", {qp, countResults})
 
     let authorFilter = `{
       ?id dhpluso:contribution/dhpluso:agent ?authorIdA .
@@ -329,8 +330,14 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
     return q;
   }
 
+  // MhdbdbGraphService concrete implementation
+  // TODO: we can catch queries that are implemented in the API like this and have all others use MhdbdbGraphService
+  public countInstances(qp: WorkQueryParameterI): Promise<number> {
+    console.log("WorkServcie getInstances")
+    return super.countInstances(qp)
+  }
+
   public getInstances(qp: WorkQueryParameterI): Promise<WorkClass[]> {
-    // TODO: we can ctach queries that are implemented in the API like this and have all others use MhdbdbGraphService
     console.log("WorkServcie getInstances")
     return super.getInstances(qp)
   }

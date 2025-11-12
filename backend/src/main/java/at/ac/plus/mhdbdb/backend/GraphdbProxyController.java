@@ -19,20 +19,20 @@ import org.eclipse.rdf4j.repository.RepositoryConnection;
 
 @RestController
 @CrossOrigin(origins = { "${app.dev.frontend.local}", "${app.dev.frontend.remote}", "${app.dev.frontend.remote2}", "${app.dev.frontend.remote3}", "${app.dev.frontend.remote4}", "${app.dev.frontend.remote5}", "${app.dev.frontend.remote6}" })
-public class GraphdbProxyController {
+public class GraphdbProxyController extends ControllerBase {
 
     private static final Logger logger = LoggerFactory.getLogger(GraphdbProxyController.class);
 
-    @Value("${target.host}")
-    private String targetHost;
-
-    @Value("${target.repository}")
-    private String targetRepository;
-
     @RequestMapping(value = "/repositories/dhPLUS/**", method = { RequestMethod.GET, RequestMethod.POST }, produces = "application/json")
-    public @ResponseBody void proxy(HttpServletResponse response, HttpServletRequest request, @RequestBody(required = false) String body) {
+    public @ResponseBody void proxy(HttpServletResponse response, HttpServletRequest request, @RequestBody(required = true) String body) {
         // Log the request URI and method
         logger.info("GraphdbProxyController.proxy start");
+
+        String query = new StringBuilder()
+            .append(this.getSparqlPrefixes())
+            .append(System.lineSeparator() + "select ").append(body)
+            .toString();
+        logger.info("GraphdbProxyController.proxy query", query);
 
         GraphDBHTTPRepository repository = new GraphDBHTTPRepositoryBuilder()
             .withServerUrl(targetHost)
@@ -40,7 +40,7 @@ public class GraphdbProxyController {
             .build();
         RepositoryConnection connection = repository.getConnection();
 
-        TupleQuery tupleQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, body);
+        TupleQuery tupleQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, query);
         try {
             OutputStream result = response.getOutputStream();
             tupleQuery.evaluate(new SPARQLResultsJSONWriter(result));

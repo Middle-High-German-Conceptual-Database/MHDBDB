@@ -245,6 +245,8 @@ export class SparqlQuery {
    * @param {string} queryString
    * @return {*}  {Promise<SparqlQueryResultI>}
    * @memberof SparqlQuery
+   * 
+   * This uses simpleQuery but adds conbfigured prefixes. All of that should be done in the API
    */
   query(queryString: string, endpointUrl: string = SERVER_API_SPARQL_URL): Promise<SparqlQueryResultI> {
     let q = this._sparqlPrefixes + '\n' + queryString;
@@ -259,11 +261,7 @@ export class SparqlQuery {
    * @memberof SparqlQuery
    */
   simpleQuery(queryString: string, endpointUrl: string = SERVER_API_SPARQL_URL): Promise<SparqlQueryResultI> {
-    let headers = new Headers();
     console.warn("simpleQuery", queryString);
-    headers.append('Accept', 'application/json');
-    headers.append('Content-Type', 'application/sparql-query');
-    headers.append('Authorization', 'Basic ' + btoa('mhdbdb:2ffgMEdTo#HD'));
 
     let headersa = {
       'Accept': 'application/json',
