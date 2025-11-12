@@ -87,6 +87,7 @@ public class WorkController extends ControllerBase {
     throws JSONException, IOException {
         logger.info("WorkController.getWorkMetadata start!");
 
+        // TODO: Wait for a *nice* String Template functionality in Java
         String query = new StringBuilder()
             .append(this.getSparqlPrefixes())
             .append(System.lineSeparator() + "select distinct ?id ?label ?sameAs ?dateOfCreation ?authorId ?authorSameAs ?authorLabel ?authorRole ?instance ?instanceLabel ?expression ?expressionLabel ?genreForm ?genreFormMainParent ?bibTitle ?bibPlace ?bibAgent ?bibDate where {")
