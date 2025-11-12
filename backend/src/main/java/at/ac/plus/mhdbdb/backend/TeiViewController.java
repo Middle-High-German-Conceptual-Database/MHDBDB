@@ -151,6 +151,8 @@ public class TeiViewController {
             // logger.info(temporaryTeiFile);
 
             // save temporaryTeiFile to temporary file with uuid as name with .xml ending
+            // TODO: We could just take the tei content if that doesn't change
+            // and create only, if the temp files don't already exist.
             String idX = java.util.UUID.randomUUID().toString();
             String temporaryTeiFilePath = teiFolder + "/" + idX + ".tei.temp.xml";
             String teiConverter = teiFolder + "/tei2html.xsl";
@@ -161,55 +163,21 @@ public class TeiViewController {
             String command = "xsltproc " + teiConverter + " " + temporaryTeiFilePath + " > " + temporaryTeiFilePath + ".html";
             logger.info(command);
                 
-            /* Process process = Runtime.getRuntime().exec(command);
-            process.waitFor();
-            int exitValue = process.exitValue();
-            System.out.println("Exit value: " + exitValue);
-
-            logger.info(temporaryTeiFilePath);
-*/
 
             ProcessBuilder pb = new ProcessBuilder("xsltproc", teiConverter, temporaryTeiFilePath);
             pb.redirectOutput(new File(temporaryTeiFilePath + ".html"));
             Process process = pb.start();
             process.waitFor();
-
-            // Document doc = loadXmlDocument(temporaryTeiFilePath + ".html");
-
-            /* Node head = doc.getElementsByTagName("head").item(0);
-
-            if (head == null) {
-                throw new IllegalArgumentException("No head element found in the XHTML document");
-            }
-
-            Element link1 = doc.createElement("link");
-            link1.setAttribute("xmlns", "http://www.w3.org/1999/xhtml");
-            link1.setAttribute("id", "maincss");
-            link1.setAttribute("rel", "stylesheet");
-            link1.setAttribute("type", "text/css");
-            link1.setAttribute("href", "/css/teibp.css");
-            head.appendChild(link1);
-
-            Element link2 = doc.createElement("link");
-            link2.setAttribute("xmlns", "http://www.w3.org/1999/xhtml");
-            link2.setAttribute("id", "customcss");
-            link2.setAttribute("rel", "stylesheet");
-            link2.setAttribute("type", "text/css");
-            link2.setAttribute("href", "/css/custom.css");
-            head.appendChild(link2);
-
-            TransformerFactory tfa = TransformerFactory.newInstance();
-            Transformer transformera = tfa.newTransformer();
-            StringWriter writera = new StringWriter();
-            transformera.transform(new DOMSource(doc), new StreamResult(writera));
-
-            String modifiedXhtml = writera.getBuffer().toString(); */
-
             
             String htmlContent = new String(Files.readAllBytes(Paths.get(temporaryTeiFilePath + ".html")), StandardCharsets.UTF_8);
-            File file = new File(temporaryTeiFilePath + ".html");
-            file.delete();
-
+            try {
+                File fileXml = new File(temporaryTeiFilePath);
+                fileXml.delete();
+                File fileHtml = new File(temporaryTeiFilePath + ".html");
+                fileHtml.delete();
+            } catch (Exception e) {
+                logger.warn("Could not delete temp files {}. You'll need to clean up", temporaryTeiFilePath);
+            }
             return htmlContent;
         } catch (Exception e) {
             e.printStackTrace();
