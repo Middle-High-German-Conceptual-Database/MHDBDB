@@ -331,12 +331,30 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
   // MhdbdbGraphService concrete implementation
   // TODO: we can catch queries that are implemented in the API like this and have all others use MhdbdbGraphService
   public countInstances(qp: WorkQueryParameterI): Promise<number> {
-    console.log("WorkServcie getInstances")
+    console.log("WorkService getInstances")
     return super.countInstances(qp)
+    //return new Promise<number>((resolve) => {resolve(0);});
   }
 
   public getInstances(qp: WorkQueryParameterI): Promise<WorkClass[]> {
-    console.log("WorkServcie getInstances")
-    return super.getInstances(qp)
+    console.log("WorkService getInstances")
+    //return super.getInstances(qp)
+    // =========== START super.getInstances(qp) COPIED, but different endpoint
+    const query = this._sparqlQuery(qp, false);
+
+    return new Promise<WorkClass[]>((resolve, reject) => {
+      this._sq.query(query, `${this._defaultQp.option.endpointUrl}/query`).then(
+        data => {
+          if (data && data['results'] && data['results']['bindings']) {
+            resolve(this._jsonToObject(data['results']['bindings']));
+          }
+          reject('No results found');
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });    
+    // =========== STOP super.getInstances(qp) COPIED
   }
 }

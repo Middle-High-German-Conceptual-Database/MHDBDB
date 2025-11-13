@@ -7,7 +7,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
+import com.ontotext.graphdb.repository.http.GraphDBHTTPRepository;
+import com.ontotext.graphdb.repository.http.GraphDBHTTPRepositoryBuilder;
+
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.query.BindingSet;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.TupleQuery;
+import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.eclipse.rdf4j.query.resultio.sparqljson.SPARQLResultsJSONWriter;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.json.JSONException;
 
 @RestController
@@ -16,6 +33,45 @@ import org.json.JSONException;
 public class WorkController extends ControllerBase {
 
     private static final Logger logger = LoggerFactory.getLogger(WorkController.class);
+
+    @RequestMapping(value = "/query", method = {RequestMethod.POST}, produces = "application/json")
+    public @ResponseBody void query(HttpServletResponse response, HttpServletRequest request, @RequestBody(required = false) String body) 
+    throws JSONException, IOException {
+
+        String query = new StringBuilder()
+            .append(this.getSparqlPrefixes())
+            .append(System.lineSeparator() + " SELECT ").append(body)
+            .toString();
+        
+        //runQuery(response, query);
+        
+        List<Map<String, Value>> resultList = new ArrayList<Map<String, Value>>();
+        TupleQuery tupleQuery = loadQuery(query);
+
+        // THIS WORKS
+        try {
+            TupleQueryResult tuples = tupleQuery.evaluate();
+            if (tuples != null) {
+                List<String> bindingNames  = tuples.getBindingNames();
+                tuples.forEach(tuple -> 
+                {
+                    Map<String, Value> resultLine = new HashMap<String, Value>();
+                    for(String bindingName: bindingNames) {
+                        resultLine.put(bindingName, tuple.getValue(bindingName));
+                    }
+                    resultList.add(resultLine);
+                });
+            }
+        } catch (Exception ex) {
+            logger.error("Error in query", ex);
+            logger.error("query", query);
+        }
+
+        // just dump the whole thing back to the frontend
+        OutputStream result = response.getOutputStream();
+        tupleQuery.evaluate(new SPARQLResultsJSONWriter(result));
+        result.flush();        
+    }
 
     @RequestMapping(value = "/list", method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
     public @ResponseBody void search(HttpServletResponse response, HttpServletRequest request, @RequestBody(required = false) String body) 
@@ -117,5 +173,17 @@ public class WorkController extends ControllerBase {
             .toString();
 
         runQuery(response, query);
+    }
+
+    protected TupleQuery loadQuery(String query)
+    throws JSONException, IOException {
+        logger.info("WorkController.loadQuery query:\n {}", query);
+        GraphDBHTTPRepository repository = new GraphDBHTTPRepositoryBuilder()
+            .withServerUrl(targetHost)
+            .withRepositoryId(targetRepository)
+            .build();
+        RepositoryConnection connection = repository.getConnection();
+
+        return connection.prepareTupleQuery(QueryLanguage.SPARQL, query);
     }
 }
