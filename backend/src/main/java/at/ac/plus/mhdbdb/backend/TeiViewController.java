@@ -16,7 +16,9 @@ import java.io.File;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Paths;
+import java.nio.file.attribute.FileAttribute;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -46,6 +48,9 @@ public class TeiViewController {
 
     @Value("${app.dev.frontend.teiFolder}")
     private String teiFolder;
+
+    @Value("${app.dev.frontend.teiRenderedFolder}")
+    private String teiRenderedFolder;
 
     @Value("${app.dev.frontend.additionalXmlPath}")
     private String additionalXmlPath;
@@ -90,6 +95,15 @@ public class TeiViewController {
 
             String id = inputMap.get("id");
 
+            if (!Files.isDirectory(Paths.get(teiRenderedFolder)))
+            {
+                Files.createDirectory(Paths.get(teiRenderedFolder));
+            }
+            String htmlRenderedFilePath = teiRenderedFolder + "/" + id + ".tei.html";
+            if (new File(htmlRenderedFilePath).isFile()) 
+            {
+                return new String(Files.readAllBytes(Paths.get(htmlRenderedFilePath)), StandardCharsets.UTF_8);
+            }
             // Read and parse the main XML file
             String xmlFilePath = teiFolder + "/" + id + ".tei.xml";
 
@@ -158,25 +172,20 @@ public class TeiViewController {
             String teiConverter = teiFolder + "/tei2html.xsl";
             Files.write(Paths.get(temporaryTeiFilePath), temporaryTeiFile.getBytes());
 
-            // execute program tei2html with temporaryTeiFilePath as argument
-            // String command = "teitohtml " + temporaryTeiFilePath;
-            String command = "xsltproc " + teiConverter + " " + temporaryTeiFilePath + " > " + temporaryTeiFilePath + ".html";
-            logger.info(command);
-                
+            // render HTML file using xsltproc
+            logger.info("Render HTML file {}", htmlRenderedFilePath);
 
             ProcessBuilder pb = new ProcessBuilder("xsltproc", teiConverter, temporaryTeiFilePath);
-            pb.redirectOutput(new File(temporaryTeiFilePath + ".html"));
+            pb.redirectOutput(new File(htmlRenderedFilePath));
             Process process = pb.start();
             process.waitFor();
             
-            String htmlContent = new String(Files.readAllBytes(Paths.get(temporaryTeiFilePath + ".html")), StandardCharsets.UTF_8);
+            String htmlContent = new String(Files.readAllBytes(Paths.get(htmlRenderedFilePath)), StandardCharsets.UTF_8);
             try {
                 File fileXml = new File(temporaryTeiFilePath);
                 fileXml.delete();
-                File fileHtml = new File(temporaryTeiFilePath + ".html");
-                fileHtml.delete();
             } catch (Exception e) {
-                logger.warn("Could not delete temp files {}. You'll need to clean up", temporaryTeiFilePath);
+                logger.warn("Could not delete temp file {}. You'll need to clean up", temporaryTeiFilePath);
             }
             return htmlContent;
         } catch (Exception e) {
