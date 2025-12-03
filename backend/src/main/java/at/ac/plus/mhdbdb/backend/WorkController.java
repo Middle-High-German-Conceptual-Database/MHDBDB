@@ -44,34 +44,6 @@ public class WorkController extends ControllerBase {
             .toString();
         
         runQuery(response, query);
-        /*
-        List<Map<String, Value>> resultList = new ArrayList<Map<String, Value>>();
-        TupleQuery tupleQuery = loadQuery(query);
-
-        // THIS WORKS
-        try {
-            TupleQueryResult tuples = tupleQuery.evaluate();
-            if (tuples != null) {
-                List<String> bindingNames  = tuples.getBindingNames();
-                tuples.forEach(tuple -> 
-                {
-                    Map<String, Value> resultLine = new HashMap<String, Value>();
-                    for(String bindingName: bindingNames) {
-                        resultLine.put(bindingName, tuple.getValue(bindingName));
-                    }
-                    resultList.add(resultLine);
-                });
-            }
-        } catch (Exception ex) {
-            logger.error("Error in query", ex);
-            logger.error("query", query);
-        }
-
-        // just dump the whole thing back to the frontend
-        OutputStream result = response.getOutputStream();
-        tupleQuery.evaluate(new SPARQLResultsJSONWriter(result));
-        result.flush();        
-        */
     }
 
     @RequestMapping(value = "/list", method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
