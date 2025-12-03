@@ -43,8 +43,8 @@ public class WorkController extends ControllerBase {
             .append(System.lineSeparator() + " SELECT ").append(body)
             .toString();
         
-        //runQuery(response, query);
-        
+        runQuery(response, query);
+        /*
         List<Map<String, Value>> resultList = new ArrayList<Map<String, Value>>();
         TupleQuery tupleQuery = loadQuery(query);
 
@@ -71,6 +71,7 @@ public class WorkController extends ControllerBase {
         OutputStream result = response.getOutputStream();
         tupleQuery.evaluate(new SPARQLResultsJSONWriter(result));
         result.flush();        
+        */
     }
 
     @RequestMapping(value = "/list", method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")

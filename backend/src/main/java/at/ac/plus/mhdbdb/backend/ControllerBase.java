@@ -6,11 +6,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
-import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.query.TupleQuery;
-import org.eclipse.rdf4j.query.TupleQueryResult;
 import org.eclipse.rdf4j.query.resultio.sparqljson.SPARQLResultsJSONWriter;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.json.JSONException;
@@ -21,7 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import com.ontotext.graphdb.repository.http.GraphDBHTTPRepository;
 import com.ontotext.graphdb.repository.http.GraphDBHTTPRepositoryBuilder;
-import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -34,12 +33,38 @@ public class ControllerBase {
     protected String targetRepository;
 
     @Autowired 
-    HttpClient httpClient;
+    Consumer<HttpClientBuilder> httpClientBuilderConsumer;
 
     protected String lang = "de";
 
     private static final Logger logger = LoggerFactory.getLogger(ControllerBase.class);
 
+    protected String getSparqlPrefixes() {
+        List<String> prefixes = new ArrayList<String>();
+        this.NAMESPACES.forEach((k, v) -> prefixes.add("prefix " + k + ": <" + v + ">"));
+        return String.join("\n", prefixes);
+    }
+
+    protected void runQuery(HttpServletResponse response, String query) 
+    throws JSONException, IOException {
+        logger.info("ControllerBase.runQuery query:\n {}", query);
+        GraphDBHTTPRepository repository = new GraphDBHTTPRepositoryBuilder()
+            .withServerUrl(targetHost)
+            .withRepositoryId(targetRepository)
+            .withHttpClientSetup(httpClientBuilderConsumer)
+            .build();
+        RepositoryConnection connection = repository.getConnection();
+
+        TupleQuery tupleQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, query);
+        try {
+            OutputStream result = response.getOutputStream();
+            tupleQuery.evaluate(new SPARQLResultsJSONWriter(result));
+            result.flush();
+        } catch (Exception ex) {
+            logger.error("Error in query", ex);
+            logger.error("query", query);
+        }
+    }
     private Map<String, String> NAMESPACES = new HashMap<String, String>() {{
         put("bf", "http://id.loc.gov/ontologies/bibframe/");
         put("bflc", "http://id.loc.gov/ontologies/bflc/");
@@ -93,31 +118,4 @@ public class ControllerBase {
         put("xml", "http://www.w3.org/XML/1998/namespace");
         put("xsd", "http://www.w3.org/2001/XMLSchema#");
     }};
-
-  protected String getSparqlPrefixes() {
-    List<String> prefixes = new ArrayList<String>();
-    this.NAMESPACES.forEach((k, v) -> prefixes.add("prefix " + k + ": <" + v + ">"));
-    return String.join("\n", prefixes);
-  }
-
-  protected void runQuery(HttpServletResponse response, String query) 
-  throws JSONException, IOException {
-      logger.info("ControllerBase.runQuery query:\n {}", query);
-      GraphDBHTTPRepository repository = new GraphDBHTTPRepositoryBuilder()
-          .withServerUrl(targetHost)
-          .withRepositoryId(targetRepository)
-          .build();
-      repository.setHttpClient((org.apache.http.client.HttpClient)httpClient);  
-      RepositoryConnection connection = repository.getConnection();
-
-      TupleQuery tupleQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, query);
-      try {
-          OutputStream result = response.getOutputStream();
-          tupleQuery.evaluate(new SPARQLResultsJSONWriter(result));
-          result.flush();
-      } catch (Exception ex) {
-          logger.error("Error in query", ex);
-          logger.error("query", query);
-      }
-  }
 }

@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.1.2</version>
+		<version>3.1.4</version>
 	</parent>
 	<groupId>at.ac.plus.mhdbdb</groupId>
 	<artifactId>parent</artifactId>
@@ -14,8 +14,8 @@
 	<name>MHDBDB</name>
 	<description>Mittelhochdeutsche Begriffsdatenbank</description>
 	<properties>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>21</maven.compiler.source>
+		<maven.compiler.target>21</maven.compiler.target>
 	  </properties>
 	<modules>
 		<module>tools</module>
