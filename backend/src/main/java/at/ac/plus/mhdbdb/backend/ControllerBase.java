@@ -16,10 +16,12 @@ import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.ontotext.graphdb.repository.http.GraphDBHTTPRepository;
 import com.ontotext.graphdb.repository.http.GraphDBHTTPRepositoryBuilder;
+import org.apache.hc.client5.http.classic.HttpClient;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -30,6 +32,9 @@ public class ControllerBase {
 
     @Value("${target.repository}")
     protected String targetRepository;
+
+    @Autowired 
+    HttpClient httpClient;
 
     protected String lang = "de";
 
@@ -102,6 +107,7 @@ public class ControllerBase {
           .withServerUrl(targetHost)
           .withRepositoryId(targetRepository)
           .build();
+      repository.setHttpClient((org.apache.http.client.HttpClient)httpClient);  
       RepositoryConnection connection = repository.getConnection();
 
       TupleQuery tupleQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, query);
