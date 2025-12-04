@@ -167,11 +167,3 @@ graphdb-home-2
 
 tei
 tei1
-
-
-
-*keystore*
-*.p12
-backend/src/main/resources/application-plusvpn.properties
-backend/src/main/resources/application.properties
-

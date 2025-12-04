@@ -36,3 +36,9 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Secrets
+*keystore*
+*.p12
+application-plusvpn.properties
+application-mhdbdb.properties
