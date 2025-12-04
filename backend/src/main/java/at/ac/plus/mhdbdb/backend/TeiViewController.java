@@ -83,9 +83,9 @@ public class TeiViewController {
 
             return writer.getBuffer().toString();
         } catch (Exception e) {
-            e.printStackTrace();
             // Handle exceptions accordingly
-            return null; // Replace with appropriate error handling
+            logger.error("Error transforming TEI", e);
+            return null;
         }
     }
 
@@ -189,8 +189,7 @@ public class TeiViewController {
             }
             return htmlContent;
         } catch (Exception e) {
-            e.printStackTrace();
-            // Handle exceptions accordingly
+            logger.error("Error transforming TEI", e);
             return null; // Replace with appropriate error handling
         }
     }

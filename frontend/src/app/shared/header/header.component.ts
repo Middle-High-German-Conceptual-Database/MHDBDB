@@ -25,6 +25,7 @@ export class DhppHeaderComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Wird nur noch von auskommentierten Menüpunkten verwendet
   isHomePage() {
     return this.router.url === '/' || this.router.url === '/home';
   }
