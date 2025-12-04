@@ -172,3 +172,4 @@ tei1
 
 *keystore*
 *.p12
+backend/src/main/resources/application-plusvpn.properties
