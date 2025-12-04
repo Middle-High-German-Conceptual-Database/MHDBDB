@@ -24,6 +24,11 @@ import org.apache.http.impl.client.HttpClientBuilder;
 
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Base Class for Controllers.
+ * Contains methods necessary to run queries
+ * @author Clemens Hafner
+ */
 public class ControllerBase {
 
     @Value("${target.host}")
@@ -39,12 +44,23 @@ public class ControllerBase {
 
     private static final Logger logger = LoggerFactory.getLogger(ControllerBase.class);
 
+    /**
+     * Returns the predefinde <code>SPARQL</code> namespaces prefixes as string
+     * @return The namespace prefixes as <code>String</code>
+     */
     protected String getSparqlPrefixes() {
         List<String> prefixes = new ArrayList<String>();
         this.NAMESPACES.forEach((k, v) -> prefixes.add("prefix " + k + ": <" + v + ">"));
         return String.join("\n", prefixes);
     }
 
+    /**
+     * Run the query and flush the resutls directly to the requests response
+     * @param response the <code>HttpServletResponse</code> used to return the query results (to the browser / requester)
+     * @param query The complete query
+     * @throws JSONException
+     * @throws IOException
+     */
     protected void runQuery(HttpServletResponse response, String query) 
     throws JSONException, IOException {
         logger.info("ControllerBase.runQuery query:\n {}", query);
@@ -65,7 +81,10 @@ public class ControllerBase {
             logger.error("query", query);
         }
     }
-    private Map<String, String> NAMESPACES = new HashMap<String, String>() {{
+    /**
+     * These are the default namespaces that should be included with every query
+     */
+    private final Map<String, String> NAMESPACES = new HashMap<String, String>() {{
         put("bf", "http://id.loc.gov/ontologies/bibframe/");
         put("bflc", "http://id.loc.gov/ontologies/bflc/");
         put("cc", "http://creativecommons.org/ns#");
