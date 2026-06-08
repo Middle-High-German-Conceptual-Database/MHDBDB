@@ -43,6 +43,7 @@ public class WorkController extends ControllerBase {
             .append(System.lineSeparator() + " SELECT ").append(body)
             .toString();
         
+        logger.info("WorkController query");
         runQuery(response, query);
     }
 
@@ -63,6 +64,7 @@ public class WorkController extends ControllerBase {
             .append(System.lineSeparator() + "ORDER BY ASC(?label)")
             .toString();
 
+        logger.info("WorkController list '{}'", body);
         runQuery(response, query);
     }
 
@@ -80,6 +82,7 @@ public class WorkController extends ControllerBase {
             .append(System.lineSeparator() + "}")
             .toString();
 
+        logger.info("WorkController seriesParents '{}'", body);
         runQuery(response, query);
     }
 
@@ -97,6 +100,7 @@ public class WorkController extends ControllerBase {
             .append(System.lineSeparator() + "}")
             .toString();
 
+        logger.info("WorkController series '{}'", parent);
         runQuery(response, query);
     }
 
@@ -152,6 +156,7 @@ public class WorkController extends ControllerBase {
             .append(System.lineSeparator() + "}")
             .toString();
 
+        logger.info("WorkController metadata '{}'", workId);
         runQuery(response, query);
     }
 
