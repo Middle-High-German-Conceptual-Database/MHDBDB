@@ -31,6 +31,7 @@ services:
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-}
     volumes:
       - ../tei1:/tei
+      - ../backend-logs:/logs
   nginx:
     image: nginx:latest
     container_name: nginx
