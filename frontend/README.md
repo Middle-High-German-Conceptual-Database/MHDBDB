@@ -1,6 +1,6 @@
 # Frontend
 
-The Frontend is an Angular App written in TypeScript that (at the time of writing) uses [NodeJS](https://nodejs.org) v14.
+The Frontend is an Angular App written in TypeScript that (at the time of writing) uses [NodeJS](https://nodejs.org) v22.
 
 ## Preparations
 Using [nvm](https://github.com/nvm-sh/nvm) (on Windows: [nvm-windows](https://github.com/coreybutler/nvm-windows)):
@@ -11,7 +11,12 @@ nvm use 22
 npm install
 ```
 
-## Building
+## Building (for a /graph/ base href)
+```bash
+npm run webpack:build:graph
+```
+
+### Building (original)
 ```bash
 npm run webpack:build:main
 ```
