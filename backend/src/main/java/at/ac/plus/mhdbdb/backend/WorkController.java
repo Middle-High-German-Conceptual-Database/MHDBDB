@@ -130,10 +130,13 @@ public class WorkController extends ControllerBase {
             .append(System.lineSeparator() + "  ?expression rdfs:label ?expressionLabel .")
             .append(System.lineSeparator() + "}")
              */
-            .append(System.lineSeparator() + "OPTIONAL { ?id dhpluso:hasExpression/rdfs:label ?expressionLabel . }")
+            .append(System.lineSeparator() + "OPTIONAL { ?id dhpluso:hasExpression/rdfs:label ?expressionLabel . ")
+            .append(System.lineSeparator() + String.format("  filter(langMatches( lang(?expressionLabel), \"%s\" ))}", this.lang))
  
-            .append(System.lineSeparator() + "OPTIONAL { ?id dhpluso:genreForm/skos:prefLabel ?genreForm . }")
-            .append(System.lineSeparator() + "OPTIONAL { ?id dhpluso:genreFormMainparent/skos:prefLabel ?genreFormMainParent . }")
+            .append(System.lineSeparator() + "OPTIONAL { ?id dhpluso:genreForm/skos:prefLabel ?genreForm . ")
+            .append(System.lineSeparator() + String.format("  filter(langMatches( lang(?genreForm), \"%s\" ))}", this.lang))
+            .append(System.lineSeparator() + "OPTIONAL { ?id dhpluso:genreFormMainparent/skos:prefLabel ?genreFormMainParent . ")
+            .append(System.lineSeparator() + String.format("  filter(langMatches( lang(?genreFormMainParent), \"%s\" )) }", this.lang))
             // these should be fetched separately
             .append(System.lineSeparator() + "OPTIONAL {")
             .append(System.lineSeparator() + "  ?bibId bf:instanceOf ?id .")
@@ -146,10 +149,7 @@ public class WorkController extends ControllerBase {
             .append(System.lineSeparator() + "  }")
             .append(System.lineSeparator() + "}")
             // filter
-            .append(System.lineSeparator() + String.format("  filter(langMatches( lang(?genreForm), \"%s\" ))", this.lang))
-            .append(System.lineSeparator() + String.format("  filter(langMatches( lang(?genreFormMainParent), \"%s\" ))", this.lang))
             .append(System.lineSeparator() + String.format("  filter(langMatches( lang(?label), \"%s\" ))", this.lang))
-            .append(System.lineSeparator() + String.format("  filter(langMatches( lang(?expressionLabel), \"%s\" ))", this.lang))
             .append(System.lineSeparator() + String.format("  filter(langMatches( lang(?instanceLabel), \"%s\" ))", this.lang))
             .append(System.lineSeparator() + String.format("  filter(langMatches( lang(?authorLabel), \"%s\" ))", this.lang))
 
