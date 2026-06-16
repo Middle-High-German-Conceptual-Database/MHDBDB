@@ -269,28 +269,32 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
   protected _sparqlQuery(qp: WorkQueryParameterI, countResults: boolean): string {
     console.log("WorkService._sparqlQuery", {qp, countResults})
 
-    let authorFilter = `{
-      ?idA dhpluso:contribution/dhpluso:agent ?authorIdA .
-      ?authorIdA rdfs:label ?authorLabelA .
-    }`;
+    let authorFilter = `
+      {
+        ?idA dhpluso:contribution/dhpluso:agent ?authorIdA .
+        ?authorIdA rdfs:label ?authorLabelA .
+      }
+      `;
     if (qp.filter.isAuthorIdsActive && qp.filter.authorIds.length > 0) {
       const authorIds = qp.filter.authorIds.map(id => `<${id}>`).join(' ');
-      authorFilter = `{
+      authorFilter = `
+      {
         ?idA dhpluso:contribution/dhpluso:agent ?authorIdA .
         ?authorIdA rdfs:label ?authorLabelA .
         VALUES ?authorIdA { ${authorIds} } 
-    }`;
+      }
+      `;
     }
 
     let instanceSelector = `
       ?idA a dhpluso:Text ;
-        dhpluso:hasExpression ?textA .
-        ?textA a dhpluso:Text .
-        ?electronic dhpluso:instanceOf ?textA ;
-        a dhpluso:Electronic .
+      dhpluso:hasExpression ?textA .
+      ?textA a dhpluso:Text .
+      ?electronic dhpluso:instanceOf ?textA ;
+      a dhpluso:Electronic .
       ${authorFilter}
       {
-          ?textA dhpluso:hasInstance ?instanceA
+        ?textA dhpluso:hasInstance ?instanceA
       }
       ?idA rdfs:label ?labelA .
       
@@ -325,7 +329,7 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
     } else {
       q = instanceSelect;
     }
-    console.warn(q);
+    console.warn("WorkService._sparqlQuery", q)
     return q;
   }
 
