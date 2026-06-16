@@ -9,7 +9,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class TeiWidgetComponent implements OnInit {
   public title: string = 'TEI';
-  public url: string = '/loading'; // Default URL
+  public url: string = 'loading'; // Default URL
   public teiContent: string = '';
 
   constructor(
