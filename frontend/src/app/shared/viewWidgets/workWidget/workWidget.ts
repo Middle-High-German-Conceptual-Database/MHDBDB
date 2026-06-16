@@ -75,7 +75,7 @@ export class WorkWidgetComponent extends ViewWidgetsDirective<WorkQueryParameter
 
   public downloadTeiPdf(instance: any) {
     var id = new TextIdPipe().transform(instance);
-    return this.http.get('/downloadTeiPdf', {params: {'id': id}, responseType: 'blob'}).subscribe(data => {
+    return this.http.get('downloadTeiPdf', {params: {'id': id}, responseType: 'blob'}).subscribe(data => {
       var downloadURL = window.URL.createObjectURL(data);
       var link = document.createElement('a');
       link.href = downloadURL;
@@ -87,7 +87,7 @@ export class WorkWidgetComponent extends ViewWidgetsDirective<WorkQueryParameter
 
   public downloadTeiXml(instance: any) {
     var id = new TextIdPipe().transform(instance);
-    return this.http.get('/downloadTeiXml', {params: {'id': id}, responseType: 'blob'}).subscribe(data => {
+    return this.http.get('downloadTeiXml', {params: {'id': id}, responseType: 'blob'}).subscribe(data => {
       var downloadURL = window.URL.createObjectURL(data);
       var link = document.createElement('a');
       link.href = downloadURL;

@@ -10,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
 export class TeiWidgetComponent implements OnInit {
   public title: string = 'TEI';
   public url: string = '/loading'; // Default URL
-  public teiContent: string;
+  public teiContent: string = '';
 
   constructor(
     public router: Router,
@@ -43,7 +43,7 @@ export class TeiWidgetComponent implements OnInit {
       sourceDescContent: "YOUR_SOURCE_DESC_CONTENT_HERE"    // Modify this as per your requirements
     };
 
-    this.http.post('/showTeiAsHtml', body, { responseType: 'text' })
+    this.http.post('showTeiAsHtml', body, { responseType: 'text' })
       .subscribe(
         data => {
           this.teiContent = data; // Store the received content
