@@ -609,28 +609,24 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       positions = [];
 
       qq += ` { 
-      
        SELECT DISTINCT * WHERE {
-                    ?rootId mhdbdbxml:partOf ?textId .
-                    ?textId dhpluso:hasElectronicInstance ?workId .
-                    ?workId rdf:type dhpluso:Text .
+        ?rootId mhdbdbxml:partOf ?textId .
+        ?textId dhpluso:hasElectronicInstance ?workId .
+        ?workId rdf:type dhpluso:Text .
 
-                    {
-    					        ?textId dhpluso:hasElectronicInstance ?electronicId .
-                      ?electronicId rdf:type dhpluso:Text .
-                      ?electronicId rdfs:label ?label .
-                      BIND(?electronicId as ?id)
-                    }
-                    
-                    {
-                      ?workId dhpluso:contribution/dhpluso:agent ?authorId .
-                      ?authorId rdfs:label ?authorLabel .
-                    }
+        {
+          ?textId dhpluso:hasElectronicInstance ?electronicId .
+          ?electronicId rdf:type dhpluso:Text .
+          ?electronicId rdfs:label ?label .
+          BIND(?electronicId as ?id)
+        }
+        
+        {
+          ?workId dhpluso:contribution/dhpluso:agent ?authorId .
+          ?authorId rdfs:label ?authorLabel .
+        }
 
-                    {
-                      
-                  
-      
+        {
       `;
 
       wordSelects.push(`?concept${i}`);
@@ -650,21 +646,21 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
         }
 
         qq += `         
-                      ${concepts.join('\r\n')}
-                      ${conceptsAnd.join('\r\n')}
-                      `;
+          ${concepts.join('\r\n')}
+          ${conceptsAnd.join('\r\n')}
+        `;
 
         qq += `
-                      ${bindings.join('\r\n')}
-                      ${filters.join('\r\n')}
-                    }
+            ${bindings.join('\r\n')}
+            ${filters.join('\r\n')}
+          }
 
-                    filter(langmatches(lang(?label),'de')) 
-                    filter(langmatches(lang(?authorLabel),'de')) 
+          filter(langmatches(lang(?label),'de')) 
+          filter(langmatches(lang(?authorLabel),'de')) 
 
-                    }
-                    ORDER BY ASC(?label)
-                    ${this._sparqlLimitOffset(qp.limit, qp.offset)}`;
+          }
+          ORDER BY ASC(?label)
+          ${this._sparqlLimitOffset(qp.limit, qp.offset)}`;
         qq += ` } `;
       } else if (tokenFilter.activeTab && tokenFilter.activeTab == 2) {
 
@@ -678,28 +674,21 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
 
 
         qq += `         
-      
-                      ${onomastics.join('\r\n')}
-                      
-                      ${onomasticsAnd.join('\r\n')}
-                      
-                      
-                      `;
-
-
+          ${onomastics.join('\r\n')}
+          ${onomasticsAnd.join('\r\n')}
+        `;
 
         qq += `
-                      
-                      ${bindings.join('\r\n')}
-                      ${filters.join('\r\n')}
-                    }
+            ${bindings.join('\r\n')}
+            ${filters.join('\r\n')}
+          }
 
-                    filter(langmatches(lang(?label),'de')) 
-                    filter(langmatches(lang(?authorLabel),'de')) 
+          filter(langmatches(lang(?label),'de')) 
+          filter(langmatches(lang(?authorLabel),'de')) 
 
-                    }
-                    ORDER BY ASC(?label)
-                    ${this._sparqlLimitOffset(qp.limit, qp.offset)}`;
+          }
+          ORDER BY ASC(?label)
+          ${this._sparqlLimitOffset(qp.limit, qp.offset)}`;
         qq += ` } `;
       } else {
         let wordOrLemma = '';
@@ -747,31 +736,30 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
         }
 
         qq += `         
-                      ${words.join('\r\n')}
-                      ${concepts.join('\r\n')}
-                      ${onomastics.join('\r\n')}
-                      ${poss.join('\r\n')} 
-                      ${positions.join('\r\n')} 
-                      
-                      ${wordsAnd.join('\r\n')}
-                      ${conceptsAnd.join('\r\n')}
-                      ${onomasticsAnd.join('\r\n')}
-                      ${possAnd.join('\r\n')}
-                      ${positionsAnd.join('\r\n')}
-                      
-                      `;
+          ${words.join('\r\n')}
+          ${concepts.join('\r\n')}
+          ${onomastics.join('\r\n')}
+          ${poss.join('\r\n')} 
+          ${positions.join('\r\n')} 
+          
+          ${wordsAnd.join('\r\n')}
+          ${conceptsAnd.join('\r\n')}
+          ${onomasticsAnd.join('\r\n')}
+          ${possAnd.join('\r\n')}
+          ${positionsAnd.join('\r\n')}
+          
+        `;
         qq += `
-                      
-                      ${bindings.join('\r\n')}
-                      ${filters.join('\r\n')}
-                    }
+            ${bindings.join('\r\n')}
+            ${filters.join('\r\n')}
+          }
 
-                    filter(langmatches(lang(?label),'de')) 
-                    filter(langmatches(lang(?authorLabel),'de')) 
+          filter(langmatches(lang(?label),'de')) 
+          filter(langmatches(lang(?authorLabel),'de')) 
 
-                    }
-                    ORDER BY ASC(?label)
-                    ${this._sparqlLimitOffset(qp.limit, qp.offset)}`;
+          }
+          ORDER BY ASC(?label)
+          ${this._sparqlLimitOffset(qp.limit, qp.offset)}`;
         qq += ` } `;
       }
 

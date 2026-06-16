@@ -285,8 +285,8 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
     let instanceSelector = `
       ?idA a dhpluso:Text ;
         dhpluso:hasExpression ?textA .
-      ?textA a dhpluso:Text .
-      ?electronic dhpluso:instanceOf ?textA ;
+        ?textA a dhpluso:Text .
+        ?electronic dhpluso:instanceOf ?textA ;
         a dhpluso:Electronic .
       ${authorFilter}
       {

@@ -47,10 +47,11 @@ export class PersonService extends MhdbdbIdLabelEntityService<PersonQueryParamet
     // filters
     let filters = [];
 
-    let instanceSelector = `?id a dhpluso:Person .                                                                 
-                                ?id rdfs:label ?label .
-
-                                filter(langMatches( lang(?label), "${qp.lang}" ))`;
+    let instanceSelector = `
+        ?id a dhpluso:Person .                                                                 
+        ?id rdfs:label ?label .
+        filter(langMatches( lang(?label), "${qp.lang}" ))
+    `;
 
     // label query
     let labelQuery = '';
@@ -60,10 +61,10 @@ export class PersonService extends MhdbdbIdLabelEntityService<PersonQueryParamet
       } else {
         // Lucene query
         labelQuery = `
-                        ?search a luc-index:work ;
-                        luc:query "title:${this._labelFilterGenerator(qp.filter.label, qp.option.useLucene)}" ;
-                        luc:entities ?id .                            
-                        `;
+            ?search a luc-index:work ;
+            luc:query "title:${this._labelFilterGenerator(qp.filter.label, qp.option.useLucene)}" ;
+            luc:entities ?id .                            
+        `;
       }
       // Title Filter (regexp mode)
       if (!qp.filter.id && qp.option.useLucene === false && 'label' in qp.filter && qp.filter.label != '') {

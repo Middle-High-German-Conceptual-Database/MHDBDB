@@ -320,41 +320,42 @@ export class DictionaryService extends MhdbdbIdLabelEntityService<
                 }
             `;
     } else {
-      q = ` DISTINCT ?id ?label ?posId ?posLabel ?senseId ?senseIndex ?conceptId ?conceptLabel ?subTermId ?subTermLabel ?compoundId ?compoundLabel ?form ?textId ?textLabel
-                WHERE {
-                    {
-                        SELECT DISTINCT ?id ?label
-                        WHERE {
-                            ${instanceQuery}
-                        }
-                        ${this._sparqlOrder(qp.order, qp.desc)}
-                        ${this._sparqlLimitOffset(qp.limit, qp.offset)}
-                    }
+      q = ` 
+        DISTINCT ?id ?label ?posId ?posLabel ?senseId ?senseIndex ?conceptId ?conceptLabel ?subTermId ?subTermLabel ?compoundId ?compoundLabel ?form ?textId ?textLabel
+        WHERE {
+          {
+              SELECT DISTINCT ?id ?label
+              WHERE {
+                  ${instanceQuery}
+              }
+              ${this._sparqlOrder(qp.order, qp.desc)}
+              ${this._sparqlLimitOffset(qp.limit, qp.offset)}
+          }
 
-                    # ?POS
-                    OPTIONAL {
-                        ?id dhpluso:partOfSpeech ?posId .
-                        ?posId skos:prefLabel ?posLabel .
-                        filter(langMatches( lang(?posLabel), "${qp.lang}" ))
-                        FILTER NOT EXISTS {
-                            ?posId owl:deprecated ?dp .
-                        }
-                    }
+          # ?POS
+          OPTIONAL {
+              ?id dhpluso:partOfSpeech ?posId .
+              ?posId skos:prefLabel ?posLabel .
+              filter(langMatches( lang(?posLabel), "${qp.lang}" ))
+              FILTER NOT EXISTS {
+                  ?posId owl:deprecated ?dp .
+              }
+          }
 
-                    # ?subterm
-                    OPTIONAL {
-                        ?id dhpluso:subterm ?subTermId .
-                        ?subTermId dhpluso:canonicalForm/dhpluso:writtenRep ?subTermLabel .
-                    }
+          # ?subterm
+          OPTIONAL {
+              ?id dhpluso:subterm ?subTermId .
+              ?subTermId dhpluso:canonicalForm/dhpluso:writtenRep ?subTermLabel .
+          }
 
-                    OPTIONAL {
-        ?annotation oa:hasBody ?id .
-        ?annotation oa:hasTarget/mhdbdbxml:partOf/dhpluso:hasElectronicInstance/dhpluso:instanceOf/dhpluso:expressionOf ?textId .
-        ?textId rdfs:label ?textLabel .
-        filter(langMatches( lang(?textLabel), "de" ))
-    }
-                }
-            `;
+          OPTIONAL {
+            ?annotation oa:hasBody ?id .
+            ?annotation oa:hasTarget/mhdbdbxml:partOf/dhpluso:hasElectronicInstance/dhpluso:instanceOf/dhpluso:expressionOf ?textId .
+            ?textId rdfs:label ?textLabel .
+            filter(langMatches( lang(?textLabel), "de" ))
+          }
+        }
+      `;
     }
     console.warn(q);
     return q;

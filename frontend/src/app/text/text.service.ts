@@ -101,19 +101,19 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
             `;
     } else {
       q = ` DISTINCT ?id ?label ?rootId ?electronicId ?workId               
-                WHERE {                 
-                    {
-                        SELECT DISTINCT ?id ?label ?rootId ?electronicId ?workId
-                        WHERE {   
-                            ${instanceSelect}
-                            ?electronicId rdfs:label ?label .
-                            filter(langmatches(lang(?label),'${qp.lang}'))
-                        }
-                        ${this._sparqlOrder(qp.order, qp.desc)}
-                        ${this._sparqlLimitOffset(qp.limit, qp.offset)}
-                    }                    
-                }    
-                `;
+            WHERE {                 
+                {
+                    SELECT DISTINCT ?id ?label ?rootId ?electronicId ?workId
+                    WHERE {   
+                        ${instanceSelect}
+                        ?electronicId rdfs:label ?label .
+                        filter(langmatches(lang(?label),'${qp.lang}'))
+                    }
+                    ${this._sparqlOrder(qp.order, qp.desc)}
+                    ${this._sparqlLimitOffset(qp.limit, qp.offset)}
+                }                    
+            }    
+            `;
     }
     return q;
   }
