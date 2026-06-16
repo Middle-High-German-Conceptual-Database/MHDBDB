@@ -423,8 +423,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
         wordFilter += `
 
         ?typeId${i} dhpluso:writtenRep ?typeLabel${i} .
-        ?typeId${i} dhpluso:isTypeOf ?wordId${i} .
-        ?wordId${i} dhpluso:canonicalForm ?lemma${i} .
+        ?wordId${i} dhpluso:canonicalForm ?typeId${i} .
         ?wordId${i} dhpluso:canonicalForm/dhpluso:writtenRep ?wordLabel${i} .
 
         ?annotationId${i} oa:hasBody ?wordId${i} .
