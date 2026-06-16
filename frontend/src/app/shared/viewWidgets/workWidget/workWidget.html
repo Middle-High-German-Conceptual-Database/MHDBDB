@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" *ngIf="metadata">
 
     <div class="row">
         <div class="col">
@@ -22,8 +22,8 @@
             </div>
             <div class="col-9">
                 <ul>
-                    <li *ngFor="let sameAs of metadata.authorSameAs;">
-                        <a href="{{sameAs}}" target="_blank">{{ metadata.authorLabel }} ({{ sameAs | niceInstanceName }})</a>
+                    <li *ngFor="let authorSameAs of metadata.authorSameAs;">
+                        <a href="{{authorSameAs}}" target="_blank">{{ metadata.authorLabel }} ({{ authorSameAs | niceInstanceName }})</a>
                     </li>
                 </ul>
             </div>
@@ -53,8 +53,8 @@
                 Textreihe(n) (Gattung)
             </div>
             <div class="col-9">
-                <span *ngFor="let sameAs of metadata.genreForm; let isLast=last">
-                    <a href="{{sameAs}}" target="_blank">{{sameAs }}</a>{{isLast ? '' : ','}}
+                <span *ngFor="let item of metadata.genreForm; let isLast=last">
+                    <a href="{{item}}" target="_blank">{{item }}</a>{{isLast ? '' : ','}}
                 </span>
             </div>
         </div>
@@ -63,8 +63,8 @@
                 Übergeordnete Textreihe(n)
             </div>
             <div class="col-9">
-               <span *ngFor="let sameAs of metadata.genreFormMainParent; let isLast=last">
-                   <a href="{{sameAs}}" target="_blank">{{sameAs }}</a>{{isLast ? '' : ','}}
+               <span *ngFor="let item of metadata.genreFormMainParent; let isLast=last">
+                   <a href="{{item}}" target="_blank">{{item }}</a>{{isLast ? '' : ','}}
                 </span>
             </div>
         </div>

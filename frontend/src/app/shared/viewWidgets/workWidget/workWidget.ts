@@ -20,8 +20,8 @@ import { SERVER_API_URL } from 'app/app.constants';
 export class WorkWidgetComponent extends ViewWidgetsDirective<WorkQueryParameterI, WorkFilterI, WorkOptionsI, MhdbdbIdEntity, WorkService>
   implements OnInit {
 
-  total: number;
-  metadata: WorkMetadataClass;
+  total: number = 0;
+  metadata: WorkMetadataClass | undefined;
   public title: string = 'Werk';
   punctuationRegexp = new RegExp('^[^ws]$');
 
@@ -67,10 +67,10 @@ export class WorkWidgetComponent extends ViewWidgetsDirective<WorkQueryParameter
         console.log('WorkWidgetComponent loadMetadata', data);
         this.isLoaded = Promise.resolve(true);
         this.metadata = data[0][0];
-        console.log(this.metadata);
+        console.log('WorkWidgetComponent loadMetadata loaded', this.metadata);
       })
       .catch(error => {
-        console.error(error)
+        console.error('WorkWidgetComponent loadMetadata promise error', error)
       });
   }
 
