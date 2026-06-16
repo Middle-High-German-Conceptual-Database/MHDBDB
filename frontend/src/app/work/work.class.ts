@@ -33,24 +33,24 @@ export class WorkMetadataClass extends WorkClass implements AuthorsI, DateOfCrea
 
   public authors: Person[];
 
-  public sameAs: any[];
+  public sameAs?: any[];
 
   public instances: any[];
   public instanceLabels: string[];
 
-  public expressions: any[];
-  public expressionLabels: string[];
+  public expressions?: any[];
+  public expressionLabels?: string[];
 
   public dateOfCreation: DatePrecision;
 
   public authorLabel: string;
   public authorSameAs: any[];
 
-  public genreForm: string[];
-  public genreFormInstance: string[];
+  public genreForm?: string[];
+  public genreFormInstance?: string[];
 
-  public genreFormMainParent: string[];
-  public genreFormMainParentInstance: string[];
+  public genreFormMainParent?: string[];
+  public genreFormMainParentInstance?: string[];
 
   public bibTitle: string;
   public bibPlace: string;

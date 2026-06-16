@@ -7,24 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
-import com.ontotext.graphdb.repository.http.GraphDBHTTPRepository;
-import com.ontotext.graphdb.repository.http.GraphDBHTTPRepositoryBuilder;
-
 import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.query.BindingSet;
-import org.eclipse.rdf4j.query.QueryLanguage;
-import org.eclipse.rdf4j.query.TupleQuery;
-import org.eclipse.rdf4j.query.TupleQueryResult;
-import org.eclipse.rdf4j.query.resultio.sparqljson.SPARQLResultsJSONWriter;
-import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.json.JSONException;
 
 @RestController
@@ -115,7 +98,7 @@ public class WorkController extends ControllerBase {
             .append(System.lineSeparator() + "select distinct ?id ?label ?sameAs ?dateOfCreation ?authorId ?authorSameAs ?authorLabel ?authorRole ?instance ?instanceLabel ?expression ?expressionLabel ?genreForm ?genreFormMainParent ?bibTitle ?bibPlace ?bibAgent ?bibDate where {")
             .append(System.lineSeparator() + String.format("Bind(mhdbdbi:%s AS ?id) .", workId))
             .append(System.lineSeparator() + "?id rdfs:label ?label .")
-            .append(System.lineSeparator() + "?id owl:sameAs ?sameAs .")
+            .append(System.lineSeparator() + "OPTIONAL { ?id owl:sameAs ?sameAs . } ")
             .append(System.lineSeparator() + "?id dcterms:created ?dateOfCreation .")
             .append(System.lineSeparator() + "?id dhpluso:contribution/dhpluso:agent ?authorId .")
             .append(System.lineSeparator() + "?id dhpluso:contribution/dhpluso:role <http://id.loc.gov/vocabulary/relators/aut> .")

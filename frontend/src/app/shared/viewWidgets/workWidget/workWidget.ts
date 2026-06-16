@@ -48,7 +48,7 @@ export class WorkWidgetComponent extends ViewWidgetsDirective<WorkQueryParameter
   openHelp() {
     const dialogRef = this.help.open(WorkWidgetHelpComponent);
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+      console.log(`WorkWidgetComponent openHelp Dialog result: ${result}`);
     });
   }
 
@@ -64,12 +64,13 @@ export class WorkWidgetComponent extends ViewWidgetsDirective<WorkQueryParameter
     this.service
       .getWorkMetadata(id)
       .then(data => {
+        console.log('WorkWidgetComponent loadMetadata', data);
         this.isLoaded = Promise.resolve(true);
         this.metadata = data[0][0];
         console.log(this.metadata);
       })
       .catch(error => {
-        // console.warn(error)
+        console.error(error)
       });
   }
 
