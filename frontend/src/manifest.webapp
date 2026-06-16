@@ -3,7 +3,7 @@
   "short_name": "Dhppbase",
   "icons": [
       {
-          "src": "./content/images/logo-1.png",
+          "src": "content/images/logo-1.png",
           "sizes": "300x75",
           "type": "image/png"
       }
