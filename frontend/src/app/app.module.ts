@@ -38,7 +38,6 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MarkdownDisplayComponent } from 'app/shared/markdown-display.component';
 import { RefreshGuard } from './refresh-guard';
-import { DhppWelcomeDialog } from './app.welcome-dialog';
 
 import { SafeUrlPipe } from './safe-url.pipe';
 import { TeiWidgetComponent } from './shared/viewWidgets/teiWidget/teiWidget';
@@ -89,7 +88,6 @@ import {HttpErrorInterceptorService} from "app/blocks/interceptor/timeout.interc
     ScrollToTopComponent,
     DialogComponent,
     MarkdownDisplayComponent,
-    DhppWelcomeDialog,
     TeiWidgetComponent,
     SafeUrlPipe
   ],
