@@ -85,6 +85,9 @@ cd backend
 mvn clean install
 ```
 
+### Datenbank-Migrations
+Nach dem initialen Import der Daten sind die `sparql` (`.rq`) Dateien aus dem `migrations` Verzeichnis in chronologischer Reihenfolge einzusüielen. Diese enthalten nachträgliche Korrekturen.
+
 ---
 
 ## Betriebshinweise (GraphDB)
