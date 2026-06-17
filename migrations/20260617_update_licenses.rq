@@ -1,0 +1,30 @@
+#  20260617_licenses.rq
+
+# objective: Update Dublin Core Terms license data for works not subject to a CC license
+
+# Licenses were assumed as https://creativecommons.org/licenses/by/4.0/ during conversion
+# Certain Works are not licensed to be desplayed as PDF to the MHDBDB.
+# Therefore, they need to have their license data changed to reflect this state.
+# The following statement changes this for exactly the works concerned.
+
+# https://gitlab.complement.at/imareal/mhdbdb/mhdbdb/-/work_items/17
+
+PREFIX dct: <http://purl.org/dc/terms/>
+DELETE { ?bibId dct:license ?bibLicense }
+INSERT { ?bibId dct:license "NONE" } 
+WHERE
+{
+  ?bibId dct:license ?bibLicense .
+  FILTER (
+    ?bibId = <http://www.mhdbdb.sbg.ac.at/objects/FR3>  ||
+    ?bibId = <http://www.mhdbdb.sbg.ac.at/objects/HUB1> ||
+    ?bibId = <http://www.mhdbdb.sbg.ac.at/objects/HUB2> ||
+    ?bibId = <http://www.mhdbdb.sbg.ac.at/objects/MAI>  ||
+    ?bibId = <http://www.mhdbdb.sbg.ac.at/objects/MML>  ||
+    ?bibId = <http://www.mhdbdb.sbg.ac.at/objects/MRL>  ||
+    ?bibId = <http://www.mhdbdb.sbg.ac.at/objects/MRS>  ||
+    ?bibId = <http://www.mhdbdb.sbg.ac.at/objects/MSB1> ||
+    ?bibId = <http://www.mhdbdb.sbg.ac.at/objects/NEI>  ||
+    ?bibId = <http://www.mhdbdb.sbg.ac.at/objects/RLS>  
+  )
+}
