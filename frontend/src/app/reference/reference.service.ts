@@ -89,7 +89,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
   languageSubject = new BehaviorSubject<string>(''); // Initialize with empty string or any other initial value
 
   protected _sparqlQuery(qp: TextQueryParameterI, countResults: boolean): string {
-    throw new Error('Method not implemented.');
+    throw new Error('TextService _sparqlQuery: Method not implemented.');
   }
 
   _defaultQp: TextQueryParameterI = defaultTextQP;
@@ -379,9 +379,9 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
 
       if (pos.length > 0) {
         posFilter += `
-                ?wordId${i} dhpluso:partOfSpeech ?pos${i} .
-                FILTER ( ?pos${i} IN (${posUris.join()}) )
-                `;
+          ?wordId${i} dhpluso:partOfSpeech ?pos${i} .
+          FILTER ( ?pos${i} IN (${posUris.join()}) )
+          `;
       }
       return posFilter;
     }
@@ -438,9 +438,10 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                 `;
 
         if (exactForm == true) {
-          wordFilter += ` ?typeId${i} dhpluso:writtenRep "${word}" .
-                           ?tokenNodeId mhdbdbxml:parent ?rootId .
-                          ?tokenNodeId mhdbdbxml:content "${word}" .
+          wordFilter += ` 
+            ?typeId${i} dhpluso:writtenRep "${word}" .
+            ?tokenNodeId mhdbdbxml:parent ?rootId .
+            ?tokenNodeId mhdbdbxml:content "${word}" .
           `;
         } else {
           wordFilter += `filter(regex(str(?typeLabel${i}), "^${labelFilterGenerator(word, false)}$", "i")) .`;
@@ -454,17 +455,17 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
 
       if (word != '') {
         wordFilter += `
-                ?wordId${i} a dhpluso:Word .
-                ?wordId${i} dhpluso:canonicalForm/dhpluso:writtenRep ?wordLabel${i} .
-                ?wordId${i} dhpluso:canonicalForm ?lemma${i} .
+          ?wordId${i} a dhpluso:Word .
+          ?wordId${i} dhpluso:canonicalForm/dhpluso:writtenRep ?wordLabel${i} .
+          ?wordId${i} dhpluso:canonicalForm ?lemma${i} .
 
-                ?annotationId${i} oa:hasBody ?wordId${i} .
-                ?annotationId${i} oa:hasTarget ?rootId .
-                ?tokenNodeID mhdbdbxml:parent ?rootId .
-                
-                filter(regex(str(?wordLabel${i}), "^${word}$", "i")) .
-                
-                `;
+          ?annotationId${i} oa:hasBody ?wordId${i} .
+          ?annotationId${i} oa:hasTarget ?rootId .
+          ?tokenNodeID mhdbdbxml:parent ?rootId .
+          
+          filter(regex(str(?wordLabel${i}), "^${word}$", "i")) .
+          
+          `;
       }
       return wordFilter;
     }
@@ -883,76 +884,78 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
   ////////
   //KWIC//
   ////////
-
+  // TODO: "mhdbdbxml:firstChild/mhdbdbxml:content" from "?seg mhdbdbxml:firstChild/mhdbdbxml:content ?content" does not
+  // always exist. In the case of "center", we could take the search term? or what else?
   private sparqlKwic(centerUri: string, radius: number = 5): string {
-    return ` distinct ?position ?seg ?n ?content
-            where {
-                { #self
-                    Bind ('center' as ?position)
-                    Bind (<${centerUri}> as ?seg)
-                    ?seg mhdbdbxml:n ?n .
+    return ` 
+    distinct ?position ?seg ?n ?content
+    where {
+        { #self
+            Bind ('center' as ?position)
+            Bind (<${centerUri}> as ?seg)
+            ?seg mhdbdbxml:n ?n .
+            ?seg mhdbdbxml:firstChild/mhdbdbxml:content ?content .
+        }
+        UNION
+        {	#left
+            select ?position ?seg ?n ?content where {
+                Bind ('left' as ?position)
+                Bind (<${centerUri}> as ?centerId)
+                { #Prose Text
+                    ?centerId ^mhdbdbxml:nextSibling+/^mhdbdbxml:parent* ?seg .
+                    ?seg a tei:seg ;
+                        mhdbdbxml:n ?n .
                     ?seg mhdbdbxml:firstChild/mhdbdbxml:content ?content .
                 }
                 UNION
-                {	#left
-                    select ?position ?seg ?n ?content where {
-                        Bind ('left' as ?position)
-                        Bind (<${centerUri}> as ?centerId)
-                        { #Prose Text
-                            ?centerId ^mhdbdbxml:nextSibling+/^mhdbdbxml:parent* ?seg .
-                            ?seg a tei:seg ;
-                                mhdbdbxml:n ?n .
-                            ?seg mhdbdbxml:firstChild/mhdbdbxml:content ?content .
-                        }
-                        UNION
-                        { #Verse Text
-                            OPTIONAL {
-                                ?centerId mhdbdbxml:parent+ ?centerL .
-                                ?centerL a tei:l ;
-                                    ^mhdbdbxml:nextSibling ?l .
-                                ?l a tei:l ;
-                                ^mhdbdbxml:parent* ?seg .
-                                ?seg a tei:seg ;
-                                    mhdbdbxml:n ?n .
-                                ?seg mhdbdbxml:firstChild/mhdbdbxml:content ?content .
-                            }
-                        }
+                { #Verse Text
+                    OPTIONAL {
+                        ?centerId mhdbdbxml:parent+ ?centerL .
+                        ?centerL a tei:l ;
+                            ^mhdbdbxml:nextSibling ?l .
+                        ?l a tei:l ;
+                        ^mhdbdbxml:parent* ?seg .
+                        ?seg a tei:seg ;
+                            mhdbdbxml:n ?n .
+                        ?seg mhdbdbxml:firstChild/mhdbdbxml:content ?content .
                     }
-                    Order by desc(?n)
-                    limit ${radius}
+                }
+            }
+            Order by desc(?n)
+            limit ${radius}
+        }
+        UNION
+        {	#right
+            select ?position ?seg ?n ?content where {
+                Bind ('right' as ?position)
+                Bind (<${centerUri}> as ?centerId)
+                { #Prose Text
+                    ?centerId mhdbdbxml:nextSibling+/^mhdbdbxml:parent* ?seg .
+                    ?seg a tei:seg;
+                        mhdbdbxml:n ?n .
+                    ?seg mhdbdbxml:firstChild/mhdbdbxml:content ?content .
                 }
                 UNION
-                {	#right
-                    select ?position ?seg ?n ?content where {
-                        Bind ('right' as ?position)
-                        Bind (<${centerUri}> as ?centerId)
-                        { #Prose Text
-                            ?centerId mhdbdbxml:nextSibling+/^mhdbdbxml:parent* ?seg .
-                            ?seg a tei:seg;
-                                mhdbdbxml:n ?n .
-                            ?seg mhdbdbxml:firstChild/mhdbdbxml:content ?content .
-                        }
-                        UNION
-                        { #Verse Text
-                            OPTIONAL {
-                                ?centerId mhdbdbxml:parent+ ?centerL .
-                                ?centerL a tei:l ;
-                                    mhdbdbxml:nextSibling ?l .
-                                ?l a tei:l ;
-                                ^mhdbdbxml:parent* ?seg .
-                                ?seg a tei:seg ;
-                                    mhdbdbxml:n ?n .
-                                ?seg mhdbdbxml:firstChild/mhdbdbxml:content ?content .
-                            }
-                        }
+                { #Verse Text
+                    OPTIONAL {
+                        ?centerId mhdbdbxml:parent+ ?centerL .
+                        ?centerL a tei:l ;
+                            mhdbdbxml:nextSibling ?l .
+                        ?l a tei:l ;
+                        ^mhdbdbxml:parent* ?seg .
+                        ?seg a tei:seg ;
+                            mhdbdbxml:n ?n .
+                        ?seg mhdbdbxml:firstChild/mhdbdbxml:content ?content .
                     }
-                    Order by ?n
-                    limit ${radius}
                 }
             }
             Order by ?n
-            limit ${radius * 2 + 1}
-        `;
+            limit ${radius}
+        }
+    }
+    Order by ?n
+    limit ${radius * 2 + 1}
+    `;
   }
 
   private jsonToObjectKwic(bindings): Kwic {
@@ -969,7 +972,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
           right.push(new Token(row.seg.value, row.n.value, row.content.value));
         }
       } catch (error) {
-        console.error('jsonToObjectKwic: Error ', error);
+        console.error('TextService jsonToObjectKwic: Error ', error);
         console.error(row);
       }
     });
@@ -1007,25 +1010,27 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
     let bodyBind = bodyId === undefined ? '' : `BIND(<${bodyId}> AS ?body)`;
     let targetBind = targetId === undefined ? '' : `BIND(<${targetId}> AS ?target)`;
     const targetClassFilter = targetClass === undefined ? '' : `?target a ${targetClass} .`;
-    const query = ` DISTINCT ?annotation ?body ?target ?count WHERE {
-                {
-                    SELECT DISTINCT (count(*) as ?count) WHERE {
-                        ${bodyBind}
-                        ${targetBind}
-                        ?annotation oa:hasBody ${body} . # i.E.: mhdbdbi:VEX
-                        ?annotation oa:hasTarget ${target} . # i.E.: mhdbdbtext:KU#KU_11132_7
-                        ${targetClassFilter}
-                    }
-                }
-                ${bodyBind}
-                ${targetBind}
-                ?annotation oa:hasBody ${body} . # i.E.: mhdbdbi:VEX
-                ?annotation oa:hasTarget ${target} . # i.E.: mhdbdbtext:KU#KU_11132_7
-                ${targetClassFilter}
-            }
-            OFFSET ${offset}
-            LIMIT ${limit}
-        `;
+    const query = ` 
+      DISTINCT ?annotation ?body ?target ?count WHERE 
+      {
+        {
+          SELECT DISTINCT (count(*) as ?count) WHERE {
+            ${bodyBind}
+            ${targetBind}
+            ?annotation oa:hasBody ${body} . # i.E.: mhdbdbi:VEX
+            ?annotation oa:hasTarget ${target} . # i.E.: mhdbdbtext:KU#KU_11132_7
+            ${targetClassFilter}
+          }
+        }
+        ${bodyBind}
+        ${targetBind}
+        ?annotation oa:hasBody ${body} . # i.E.: mhdbdbi:VEX
+        ?annotation oa:hasTarget ${target} . # i.E.: mhdbdbtext:KU#KU_11132_7
+        ${targetClassFilter}
+      }
+      OFFSET ${offset}
+      LIMIT ${limit}
+    `;
     return query;
   }
 
@@ -1091,21 +1096,21 @@ function labelFilterGenerator(label: any, arg1: boolean) {
     o: '[oóôöò]',
     u: '[uùüúû]',
     y: '[yýŷÿ]',
-    s: '[sſ]'
+    s: '[sſ]', 
   };
 
   Object.entries(replacements).forEach(([orig, replacement]) => {
-    newlabelfilter = newlabelfilter.replace(orig, replacement);
+    newlabelfilter = newlabelfilter.replaceAll(orig, replacement);
   });
 
   newlabelfilter = newlabelfilter.replace(/\\~(\d+)/, '.{$1}');
 
   try {
     new RegExp(newlabelfilter);
-    console.warn('regex: ', newlabelfilter);
+    console.warn('TextService labelFilterGenerator: ', {regex: newlabelfilter});
     return newlabelfilter;
   } catch (error) {
-    console.error('Invalid regex: ', newlabelfilter);
+    console.error('TextService labelFilterGenerator Invalid regex: ', newlabelfilter);
     return label;
   }
 }

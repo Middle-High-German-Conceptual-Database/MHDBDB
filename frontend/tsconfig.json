@@ -15,7 +15,7 @@
     "noImplicitAny": false,
     "skipLibCheck": true,
     "outDir": "build/resources/main/static/app",
-    "lib": ["es5", "dom"],
+    "lib": ["ES2021", "dom"],
     "typeRoots": ["node_modules/@types"],
     "types": ["node"],
     "baseUrl": "./",
