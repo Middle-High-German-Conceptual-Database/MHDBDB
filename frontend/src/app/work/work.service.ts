@@ -204,6 +204,10 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
         element.bibTitle = row.bibTitle.value;
       }
 
+      if ('bibLicense' in row && element && !element.bibLicense) {
+        element.bibLicense = row.bibLicense.value;
+      }
+
       if ('bibPlace' in row && element && !element.bibPlace) {
         element.bibPlace = row.bibPlace.value;
       }

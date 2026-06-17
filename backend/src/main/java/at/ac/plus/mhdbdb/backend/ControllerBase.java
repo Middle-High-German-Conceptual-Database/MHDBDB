@@ -77,7 +77,6 @@ public class ControllerBase {
         put("crm", "http://www.cidoc-crm.org/cidoc-crm/");
         put("dc", "http://purl.org/dc/elements/1.1/");
         put("dct", "http://purl.org/dc/terms/");
-        put("dcterms", "http://purl.org/dc/terms/");
         put("decomp", "http://www.w3.org/ns/lemon/decomp#");
         put("dhplusi", "https://dh.plus.ac.at/instance/");
         put("dhpluso", "https://dh.plus.ac.at/ontology#");

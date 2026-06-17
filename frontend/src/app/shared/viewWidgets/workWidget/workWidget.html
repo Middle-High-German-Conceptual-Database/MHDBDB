@@ -83,13 +83,16 @@
             </div>
             <div class="col-3">
                     <a [routerLink]="['/tei', instance | textId]">
-                        <i class="fa-solid fa-scroll download"></i>
+                        <i class="fa-solid fa-scroll download" title="TEI-Rendering anzeigen"></i>
                     </a>
-                    <a (click)="downloadTeiPdf(instance)">
-                        <i class="fa-regular fa-file-pdf download"></i>
+                    <a (click)="downloadTeiPdf(instance)" *ngIf="!metadata.bibLicense || metadata.bibLicense !== 'NONE'">
+                        <i class="fa-regular fa-file-pdf download" title="TEI-PDF herunterladen"></i>
+                    </a>
+                    <a href="mailto:mhdbdb@plus.ac.at?subject=Anfrage%20zu%20{{ instance | textId }}" *ngIf="metadata.bibLicense && metadata.bibLicense == 'NONE'">
+                        <i class="fa-regular fa-envelope download" title="Diese Datei steht nicht öfentlich zur Verfügung. Bitte senden Sie uns eine Anfrage."></i>
                     </a>
                     <a (click)="downloadTeiXml(instance)">
-                        <i class="fa-regular fa-file-code download"></i>
+                        <i class="fa-regular fa-file-code download" title="TEI-XNL herunterladen"></i>
                     </a>
                     <!--
                         <a href="#">
