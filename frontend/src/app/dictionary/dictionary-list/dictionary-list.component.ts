@@ -54,6 +54,7 @@ export class DictionaryListComponent extends BaseIndexListDirective<DictionaryQu
     }
 
     search() {
+        console.log("DictionaryListComponent search", {qp: this.qp}); //hopefully, that works
         this.he.update(this.qp);
     }
 }

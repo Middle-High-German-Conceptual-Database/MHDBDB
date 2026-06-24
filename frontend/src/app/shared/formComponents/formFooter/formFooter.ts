@@ -48,7 +48,7 @@ export class FormFooterComponent<qT extends QueryParameterI<f, o>, f extends Fil
   }
 
   search() {
-    console.log("FormFooterComponent.search", {qp: this.qp}); //hopefully, that works
+    console.log("FormFooterComponent search", {qp: this.qp}); //hopefully, that works
     this.he.update(this.qp)
   }
 
