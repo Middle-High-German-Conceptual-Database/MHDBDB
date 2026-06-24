@@ -65,7 +65,7 @@ export class GraphicalVarianceWidgetComponent extends ViewWidgetsDirective<Dicti
             const isAsc = sort.direction === 'asc';
             switch (sort.active) {
                 case 'form': return compare(a.form, b.form, isAsc);
-                case 'occurrences': return (Number(a.occurrences) < Number(b.occurrences) ? -1 : 1) * (isAsc ? 1 : -1);                
+                case 'occurrences': return compare(Number(a.occurrences), Number(b.occurrences), isAsc);
                 default: return 0;
             }
         });
@@ -75,7 +75,7 @@ export class GraphicalVarianceWidgetComponent extends ViewWidgetsDirective<Dicti
 
 function compare(a: number | string, b: number | string, isAsc: boolean) {
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
-}""
+}
 
 @Component({
     selector: 'dhpp-widget-graphicalVariance-help',
