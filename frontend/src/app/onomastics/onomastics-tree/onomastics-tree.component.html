@@ -13,9 +13,12 @@
                     <mat-tree class="tab-pane tab-links tab-content" [dataSource]="dataSource"
                         [treeControl]="treeControl">
                         <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
-                            <li><button style="width: 25px; height: 25px; " disabled>
-                                </button>
-                                <a (click)="selectTreeNode(node)">{{node.item.label}}</a>
+                            <li>
+                                <a (click)="selectTreeNode(node)">
+                                    <button style="width: 25px; height: 25px; ">
+                                    </button>
+                                    {{node.item.label}}
+                                </a>
                             </li>
                         </mat-tree-node>
                         <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
