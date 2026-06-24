@@ -65,7 +65,7 @@ export class GraphicalVarianceWidgetComponent extends ViewWidgetsDirective<Dicti
             const isAsc = sort.direction === 'asc';
             switch (sort.active) {
                 case 'form': return compare(a.form, b.form, isAsc);
-                case 'occurrences': return compare(a.occurrences, b.occurrences, isAsc);                
+                case 'occurrences': return (Number(a.occurrences) < Number(b.occurrences) ? -1 : 1) * (isAsc ? 1 : -1);                
                 default: return 0;
             }
         });
