@@ -49,7 +49,7 @@ export class KwicWidgetComponent
   ngOnInit(): void {
     super.ngOnInit();
 
-    console.log(this.instance);
+    console.log("KwicWidgetComponent ngOnInit", this.instance);
 
     if (this.instance && this.instance.id) {
       if (this.instance) {
@@ -74,24 +74,20 @@ export class KwicWidgetComponent
           }
           this.isLoaded = Promise.resolve(true);
         });
-
-
       }
-
     }
-
   }
 
+  /*
   public extractNumber(input: string): string | null {
     const match = input.match(/_(\d+)_/);
     return match ? match[1] : null;
   }
+  */
 
   openHelp() {
     const dialogRef = this.help.open(KwicWidgetHelpComponent);
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });
+    dialogRef.afterClosed().subscribe(result => {});
   }
 
   joinTokens(tokens: Token[]) {
