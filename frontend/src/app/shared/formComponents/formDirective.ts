@@ -41,7 +41,7 @@ export abstract class FormDirective<qT extends QueryParameterI<f, o>, f extends 
                         }
                     }
                 },
-                error => { console.warn(error) }
+                error => { console.error("FormDirective subscribeForm", error) }
             )
     }
 

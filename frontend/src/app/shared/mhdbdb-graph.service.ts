@@ -232,8 +232,8 @@ export class SparqlQuery {
    * @memberof SparqlQuery
    */
   query(queryString: string, endpointUrl: string = SERVER_API_SPARQL_URL): Promise<SparqlQueryResultI> {
-    console.log("SparqlQuery.query", {endpointUrl: endpointUrl});
-    console.warn("SparqlQuery.query", {queryString: queryString});
+    console.log("SparqlQuery query", {endpointUrl: endpointUrl});
+    console.info("SparqlQuery query", {queryString: queryString});
 
     let headersa = {
       'Accept': 'application/json',
@@ -400,10 +400,9 @@ export abstract class MhdbdbGraphService<P extends QueryParameterI<F, O>, F exte
 
     try {
       new RegExp(newlabelfilter);
-      console.warn('regex: ', newlabelfilter);
       return newlabelfilter;
     } catch (error) {
-      console.error('Invalid regex: ', newlabelfilter);
+      console.error('MhdbdbGraphService _labelFilterRegEx Invalid regex: ', newlabelfilter);
       return labelFilter;
     }
   }

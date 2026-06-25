@@ -79,7 +79,7 @@ export class WorkBibWidgetComponent extends ViewWidgetsDirective<WorkQueryParame
 
             })
             .catch(error => {
-                // console.warn(error)
+                console.error("WorkBibWidgetComponent loadOccurrences", error)
             })
     }
 

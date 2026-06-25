@@ -368,7 +368,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                 }
             `
     }
-    console.info(q)
+    console.info("TextService _sparqlQuery", q);
     return q
   }*/
 

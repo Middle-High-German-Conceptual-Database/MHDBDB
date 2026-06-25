@@ -64,13 +64,13 @@ export abstract class BaseIndexListDirective<qT extends QueryParameterI<f, o>, f
                         })
                         .catch(error => {
                             this.isLoading = false;
-                            console.warn(error)
+                            console.error("BaseIndexListDirective first getInstances", error)
                         })
                 }
             )
             .catch(error => {
                 this.isLoading = false;
-                console.warn(error)
+                console.error("BaseIndexListDirective first countInstances", error)
             })
         }
     }
@@ -88,7 +88,7 @@ export abstract class BaseIndexListDirective<qT extends QueryParameterI<f, o>, f
                 })
                 .catch(error => {
                     this.isLoadingNext = false;
-                    console.warn(error)
+                    console.error("BaseIndexListDirective next", error)
                 })
         }
     }

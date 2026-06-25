@@ -333,7 +333,7 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
     } else {
       q = instanceSelect;
     }
-    console.warn("WorkService._sparqlQuery", q)
+    console.info("WorkService._sparqlQuery", q)
     return q;
   }
 
@@ -345,7 +345,7 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
     //return super.countInstances(qp)
     console.log("WorkService.countInstances", qp.filter) 
     const query = this._sparqlQuery(qp, true);
-    console.warn("WorkService.getInstances query", query)
+    console.info("WorkService getInstances query", query)
 
     return new Promise<number>((resolve, reject) => {
       this._sq.query(query, `${this._defaultQp.option.endpointUrl}/query`).then(
@@ -369,7 +369,7 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
     //return super.getInstances(qp)
     console.log("WorkService.getInstances", qp.filter)
     const query = this._sparqlQuery(qp, false);
-    console.warn("WorkService.getInstances query", query)
+    console.info("WorkService getInstances query", query)
 
     return new Promise<WorkClass[]>((resolve, reject) => {
       this._sq.query(query, `${this._defaultQp.option.endpointUrl}/query`).then(

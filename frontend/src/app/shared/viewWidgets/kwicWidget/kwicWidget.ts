@@ -119,7 +119,7 @@ export class KwicWidgetComponent
         }
       })
       .catch(error => {
-        // console.warn(error)
+        console.error("KwicWidgetComponent loadOccurrences", error)
       });
   }
 

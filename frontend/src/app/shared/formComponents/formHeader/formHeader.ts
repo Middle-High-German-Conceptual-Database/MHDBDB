@@ -57,7 +57,7 @@ export class FormHeaderComponent<qT extends QueryParameterI<f, o>, f extends Fil
                 value => {
 
                 },
-                error => { console.warn(error) }
+                error => { console.error("FormHeaderComponent subscribeForm", error) }
             )
     }
 
@@ -67,7 +67,7 @@ export class FormHeaderComponent<qT extends QueryParameterI<f, o>, f extends Fil
                 value => {
                     this.history = this.he.getLastQpFromHistory(this._historySize)
                 },
-                error => { console.warn(error) }
+                error => { console.error("FormHeaderComponent subscribeHistory", error) }
             )
     }
 

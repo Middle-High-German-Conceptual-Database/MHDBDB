@@ -75,7 +75,7 @@ export class TextElementComponent extends BaseIndexElementDirective<WorkClass, W
   }
 
   public loadOccurrences() {
-    console.log('loadOccurrences');
+    console.log('TextElementComponent loadOccurrences');
     this.textService
       .getAnnotations(0, 10, this.instance.rootId, undefined, 'tei:seg')
       .then(annotations => {
@@ -93,7 +93,7 @@ export class TextElementComponent extends BaseIndexElementDirective<WorkClass, W
         }
       })
       .catch(error => {
-        // console.warn(error)
+        console.error("TextElementComponent loadOccurrences", error)
       });
   }
 

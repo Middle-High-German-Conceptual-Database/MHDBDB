@@ -44,11 +44,11 @@ export class TextListComponent extends BaseIndexListDirective<TextPassageQueryPa
                     this.he.resetInstances()
                     this.he.initNewInstances(data, this.instances.length) //Fehler? wg Count?
                     this.instances = data
-                    console.warn(this.instances)
+                    console.log("TextListComponent first instances", this.instances)
                 })
                 .catch(error => {
                     this.isLoading = false;
-                    console.warn(error)
+                    console.error("TextListComponent first", error)
                 })
         }
     }
@@ -65,7 +65,7 @@ export class TextListComponent extends BaseIndexListDirective<TextPassageQueryPa
                 })
                 .catch(error => {
                     this.isLoadingNext = false;
-                    console.warn(error)
+                    console.error("TextListComponent next", error)
                 })
         }
     }

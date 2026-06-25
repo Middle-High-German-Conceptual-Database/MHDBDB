@@ -107,7 +107,7 @@ export class DictionaryService extends MhdbdbIdLabelEntityService<
                 }
             }
             order by ?label`;
-    console.warn(query);
+    console.info("DictionaryService getWordFormations", query);
     return new Promise<[WordClass[], number]>(resolve => {
       this._sq.query(query).then(data => {
         let total: number = 0;
@@ -357,7 +357,7 @@ export class DictionaryService extends MhdbdbIdLabelEntityService<
         }
       `;
     }
-    console.warn(q);
+    console.info("DictionaryService _sparqlQuery", q);
     return q;
   }
 

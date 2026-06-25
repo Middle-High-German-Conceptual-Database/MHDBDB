@@ -65,7 +65,7 @@ export class WorkInstancesWidgetComponent extends ViewWidgetsDirective<WorkQuery
         console.log(this.metadata);
       })
       .catch(error => {
-        // console.warn(error)
+        console.error("WorkInstancesWidgetComponent loadMetadata", error)
       })
   }
 
