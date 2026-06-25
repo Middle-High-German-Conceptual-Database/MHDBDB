@@ -368,7 +368,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
                 }
             `
     }
-    console.warn(q)
+    console.info(q)
     return q
   }*/
 
@@ -972,8 +972,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
           right.push(new Token(row.seg.value, row.n.value, row.content.value));
         }
       } catch (error) {
-        console.error('TextService jsonToObjectKwic: Error ', error);
-        console.error(row);
+        console.error('TextService jsonToObjectKwic: Error ', {error, row});
       }
     });
     if (center) {
@@ -1040,8 +1039,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       try {
         annotations.push(new AnnotationClass(row.annotation.value, row.body.value, row.target.value));
       } catch (error) {
-        console.error('jsonToObjectAnnotation: Error ', error);
-        console.error(row);
+        console.error('TextService jsonToObjectAnnotation: Error ', {error, row});
       }
     });
     return annotations;

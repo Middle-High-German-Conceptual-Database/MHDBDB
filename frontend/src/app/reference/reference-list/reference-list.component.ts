@@ -172,6 +172,8 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
   // Requests
   ////////////////////
 
+  /*
+  // CH 2026-06-25 removed because way too slow
   public addFilter() {
     this.store.dispatch(addTokenFilter({ tokenFilter: defaultTokenFilter }));
   }
@@ -187,6 +189,7 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
   public moveDown(indexToMove: number) {
     this.store.dispatch(moveTokenFilterDown({ filterIndex: indexToMove }));
   }
+  */
 
   /*
   onRelationChange(event: MatRadioChange, filterId: string) {

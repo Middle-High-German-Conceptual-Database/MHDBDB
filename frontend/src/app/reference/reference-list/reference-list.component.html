@@ -15,19 +15,20 @@ In der Belegsuche können eine oder mehrere Wortformen mit verschiedenen Eigensc
                             <dhpp-form-token [filter]="filter" [tokenFilter]="filter"
                                 [routeString]="routeString"></dhpp-form-token>
                         </div>
-                        <div class="row" style="padding-top: 35px; padding-bottom: 35px;">
-                            <div class="col-1" style="padding-left: 40px;">
-                                <button mat-mini-fab [disabled]="i < filters.length - 1" (click)="addFilter()"><i
-                                        class="fas fa-plus"></i></button>
+                        <!-- // CH 2026-06-25 removed because way too slow
+                            <div class="row" style="padding-top: 35px; padding-bottom: 35px;">
+                                <div class="col-1" style="padding-left: 40px;">
+                                    <button mat-mini-fab [disabled]="i < filters.length - 1" (click)="addFilter()"><i
+                                            class="fas fa-plus"></i></button>
+                                </div>
+                                <div class="col-10" style="padding-top: 10px;">
+                                </div>
+                                <div class="col-1" style="padding-left: 40px;">
+                                    <button mat-mini-fab [disabled]="i == 0" (click)="removeFilter(i)"><i
+                                            class="fas fa-minus"></i></button>
+                                </div>
                             </div>
-                            <div class="col-10" style="padding-top: 10px;">
-                                <!-- platzhalter -->
-                            </div>
-                            <div class="col-1" style="padding-left: 40px;">
-                                <button mat-mini-fab [disabled]="i == 0" (click)="removeFilter(i)"><i
-                                        class="fas fa-minus"></i></button>
-                            </div>
-                        </div>
+                        -->
                     </div>
                 </div>
             </li>
