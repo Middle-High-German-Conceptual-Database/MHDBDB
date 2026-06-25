@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { WorkMetadataClass } from 'app/work/work.class';
 @Component({
   selector: 'dhpp-widget-tei',
   templateUrl: './teiWidget.html',
@@ -11,6 +12,8 @@ export class TeiWidgetComponent implements OnInit {
   public title: string = 'TEI';
   public url: string = 'loading'; // Default URL
   public teiContent: string = '';
+  public searchTerm: string | undefined;
+  metadata: WorkMetadataClass | undefined;
 
   constructor(
     public router: Router,
@@ -27,6 +30,12 @@ export class TeiWidgetComponent implements OnInit {
         // Modify the url based on the id. This is just an example, modify as per your requirements.
         // this.url = `/showTeiAsHtml?id=${id}`;
         this.fetchTeiData(id);
+        this.getWorkMetadata(id); // TODO: needs implementation
+      }
+      const searchTerm = params.get('searchterm');
+      if (searchTerm) {
+        this.searchTerm = searchTerm;
+        console.log("TeiWidgetComponent received searchTerm", {searchTerm: this.searchTerm, params});
       }
     });
   }
@@ -59,10 +68,17 @@ export class TeiWidgetComponent implements OnInit {
 
         },
         error => {
-          console.error('Error fetching TEI data:', error);
+          console.error('TeiWidgetComponent fetchTeiData: Error fetching TEI data:', error);
         }
       );
   }
 
-
+  // TODO: fetch work title etc. from the backend
+  async getWorkMetadata(workId: string) {
+    // call a /metadatashort  endpoint in the backend that just delivers the necessary data.
+    // see WorkWidgetComponent and WorkService.getWorkMetadata for inspiration.
+    // and set the metadata here. 
+    // think about a metadata-loading-spinnner
+    this.metadata = new WorkMetadataClass(workId, "", [], [], []);
+  }  
 }
