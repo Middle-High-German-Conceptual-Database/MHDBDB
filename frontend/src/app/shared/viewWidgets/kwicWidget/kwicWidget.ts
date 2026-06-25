@@ -29,9 +29,8 @@ export class KwicWidgetComponent
 
   @Input() public contextUnit: string = 'lines';
 
-  total: number;
   kwics: Kwic[] = [];
-  public title: string = 'Keyword in context';
+  public title: string = 'Belegstellen';
   punctuationRegexp = new RegExp('^[^ws]$');
 
   constructor(
@@ -59,6 +58,7 @@ export class KwicWidgetComponent
             this.kwics.push(kwic);
           }
           this.isLoaded = Promise.resolve(true);
+          this.total = this.kwics.length;
         });
 
 
@@ -73,6 +73,7 @@ export class KwicWidgetComponent
             this.kwics.push(kwic);
           }
           this.isLoaded = Promise.resolve(true);
+          this.total = this.kwics.length;
         });
       }
     }
@@ -112,6 +113,7 @@ export class KwicWidgetComponent
               if (kwic) {
                 this.kwics.push(kwic);
               }
+              this.total = this.kwics.length;
             });
           });
         } else {

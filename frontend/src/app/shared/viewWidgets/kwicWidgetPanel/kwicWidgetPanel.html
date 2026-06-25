@@ -1,0 +1,7 @@
+ <expansion-panel-wrapper [asPanel]="asPanel" [title]="title" [openHelpSubject]="openHelpSubject">
+    <div style="width: 100%;">
+        <span *ngIf="total <= 0"><em>Wort nicht im Korpus</em></span>
+        <span *ngIf="total > 0"><strong>{{ total }}</strong> Belegstellen gefunden</span>
+        <dhpp-widget-kwic [instance]="instance"></dhpp-widget-kwic>
+    </div>
+</expansion-panel-wrapper>

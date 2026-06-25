@@ -35,6 +35,7 @@ import {
 } from 'app/shared/viewWidgets/workInstancesWidget/workInstancesWidget';
 import { WorkLodWidgetComponent, WorkLodWidgetHelpComponent } from 'app/shared/viewWidgets/workLodWidget/workLodWidget';
 import { WorkBibWidgetComponent, WorkBibWidgetHelpComponent } from 'app/shared/viewWidgets/workBibWidget/workBibWidget';
+import { KwicWidgetPanelComponent, KwicWidgetPanelHelpComponent } from './kwicWidgetPanel/kwicWidgetPanel';
 
 @NgModule({
   entryComponents: [
@@ -46,6 +47,8 @@ import { WorkBibWidgetComponent, WorkBibWidgetHelpComponent } from 'app/shared/v
     CooccurrenceWidgetHelpComponent,
     KwicWidgetComponent,
     KwicWidgetHelpComponent,
+    KwicWidgetPanelComponent,
+    KwicWidgetPanelHelpComponent,
     GraphicalVarianceWidgetComponent,
     GraphicalVarianceWidgetHelpComponent,
     WordsAndKwicWidgetComponent,
@@ -71,6 +74,8 @@ import { WorkBibWidgetComponent, WorkBibWidgetHelpComponent } from 'app/shared/v
     CooccurrenceWidgetHelpComponent,
     KwicWidgetComponent,
     KwicWidgetHelpComponent,
+    KwicWidgetPanelComponent,
+    KwicWidgetPanelHelpComponent,
     GraphicalVarianceWidgetComponent,
     GraphicalVarianceWidgetHelpComponent,
     WordsAndKwicWidgetComponent,
@@ -117,6 +122,7 @@ import { WorkBibWidgetComponent, WorkBibWidgetHelpComponent } from 'app/shared/v
     SensesWidgetComponent,
     CooccurrenceWidgetComponent,
     KwicWidgetComponent,
+    KwicWidgetPanelComponent,
     GraphicalVarianceWidgetComponent,
     WordsAndKwicWidgetComponent,
     TextPassageWidgetComponent,
