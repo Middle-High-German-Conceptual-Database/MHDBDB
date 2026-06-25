@@ -9,22 +9,24 @@
 
 # https://gitlab.complement.at/imareal/mhdbdb/mhdbdb/-/work_items/17
 
-PREFIX dct: <http://purl.org/dc/terms/>
-DELETE { ?bibId dct:license ?bibLicense }
-INSERT { ?bibId dct:license "NONE" } 
-WHERE
-{
-  ?bibId dct:license ?bibLicense .
-  FILTER (
-    ?bibId = <http://www.mhdbdb.sbg.ac.at/objects/FR3>  ||
-    ?bibId = <http://www.mhdbdb.sbg.ac.at/objects/HUB1> ||
-    ?bibId = <http://www.mhdbdb.sbg.ac.at/objects/HUB2> ||
-    ?bibId = <http://www.mhdbdb.sbg.ac.at/objects/MAI>  ||
-    ?bibId = <http://www.mhdbdb.sbg.ac.at/objects/MML>  ||
-    ?bibId = <http://www.mhdbdb.sbg.ac.at/objects/MRL>  ||
-    ?bibId = <http://www.mhdbdb.sbg.ac.at/objects/MRS>  ||
-    ?bibId = <http://www.mhdbdb.sbg.ac.at/objects/MSB1> ||
-    ?bibId = <http://www.mhdbdb.sbg.ac.at/objects/NEI>  ||
-    ?bibId = <http://www.mhdbdb.sbg.ac.at/objects/RLS>  
-  )
-}
+# THIS IS OBSOLETE
+
+# PREFIX dct: <http://purl.org/dc/terms/>
+# DELETE { ?bibId dct:license ?bibLicense }
+# INSERT { ?bibId dct:license "NONE" } 
+# WHERE
+# {
+#   ?bibId dct:license ?bibLicense .
+#   FILTER (
+#     ?bibId = <http://www.mhdbdb.sbg.ac.at/objects/FR3>  ||
+#     ?bibId = <http://www.mhdbdb.sbg.ac.at/objects/HUB1> ||
+#     ?bibId = <http://www.mhdbdb.sbg.ac.at/objects/HUB2> ||
+#     ?bibId = <http://www.mhdbdb.sbg.ac.at/objects/MAI>  ||
+#     ?bibId = <http://www.mhdbdb.sbg.ac.at/objects/MML>  ||
+#     ?bibId = <http://www.mhdbdb.sbg.ac.at/objects/MRL>  ||
+#     ?bibId = <http://www.mhdbdb.sbg.ac.at/objects/MRS>  ||
+#     ?bibId = <http://www.mhdbdb.sbg.ac.at/objects/MSB1> ||
+#     ?bibId = <http://www.mhdbdb.sbg.ac.at/objects/NEI>  ||
+#     ?bibId = <http://www.mhdbdb.sbg.ac.at/objects/RLS>  
+#   )
+# }

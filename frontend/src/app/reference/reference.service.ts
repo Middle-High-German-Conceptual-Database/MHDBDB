@@ -1107,7 +1107,6 @@ function labelFilterGenerator(label: any, arg1: boolean) {
 
   try {
     new RegExp(newlabelfilter);
-    console.warn('TextService labelFilterGenerator: ', {regex: newlabelfilter});
     return newlabelfilter;
   } catch (error) {
     console.error('TextService labelFilterGenerator Invalid regex: ', newlabelfilter);

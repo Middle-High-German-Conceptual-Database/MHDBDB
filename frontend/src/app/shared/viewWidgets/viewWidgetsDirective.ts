@@ -12,13 +12,12 @@ export abstract class ViewWidgetsDirective<qT extends QueryParameterI<f, o>, f e
     @Input() offset: number = 0
     total: number = 0
     abstract title: string
-    openHelpSubject: BehaviorSubject<boolean>= new BehaviorSubject<boolean>(false);
+    openHelpSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
     public isLoaded: Promise<boolean> = Promise.resolve(false);
     constructor(
         public service: s,
         public help: MatDialog,
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.openHelpSubject.asObservable().subscribe(

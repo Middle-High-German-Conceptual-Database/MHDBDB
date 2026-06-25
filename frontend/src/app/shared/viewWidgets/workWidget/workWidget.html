@@ -1,12 +1,11 @@
-<div class="container" *ngIf="metadata">
-
+<div *ngIf="isLoaded | async; else loading" style="width: 100%;">
     <div class="row">
         <div class="col">
             <h1>{{ metadata.label }}</h1>
         </div>
     </div>
 
-    <div class="container" ng-if="metadata">
+    <div class="container" *ngIf="metadata">
 
         <div class="row">
             <div class="col-3">
@@ -148,3 +147,6 @@
      </span>
      </div> -->
 </div>
+<ng-template #loading>
+    <mat-spinner></mat-spinner>
+</ng-template>

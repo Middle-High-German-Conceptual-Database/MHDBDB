@@ -4,6 +4,7 @@
         <div style="width: 100%;" *ngFor="let kwic of kwics;">
             <div class="row">
                 <!--
+                TODO: We can link to the rendered TEI-HTML and put the `kwic.center.content` in the search box
                 <div class="col-2">
                     <span *ngIf="kwic.left.length > 0 && kwic.right.length > 0">Zeile {{ extractNumber(kwic.left[0].strippedId)}} - {{ extractNumber(kwic.right[kwic.right.length - 1].strippedId)}}</span>
                 </div>
