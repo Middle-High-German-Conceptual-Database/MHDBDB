@@ -60,7 +60,7 @@ export class TextElementComponent extends BaseIndexElementDirective<WorkClass, W
   }
 
   loadSenses() {
-    console.log(this.instance);
+    console.error("TextElementComponent loadSenses does NOTHING", this.instance);
     if (this.instance) {
       /* this.referenceService.getKwic(this.instance.rootId).then(data => {
         console.log(data);

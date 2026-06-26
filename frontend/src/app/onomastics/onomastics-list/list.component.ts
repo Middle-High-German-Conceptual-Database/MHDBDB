@@ -311,64 +311,63 @@ export class ConceptListComponent implements OnInit {
 
     buildFilterQuery() {
 
-      console.log("list querty");
-        let query = ` DISTINCT ?subject ?writtenRep ?pos WHERE {`;
+      let query = ` DISTINCT ?subject ?writtenRep ?pos WHERE {`;
 
-        query += `?subject a mhdbdbodict:Word ;
-    mhdbdbodict:sense ?sense ;
-    mhdbdbodict:canonicalForm ?form .
-    OPTIONAL { ?subject mhdbdbodict:partOfSpeech ?pos . }
-    ?form mhdbdbodict:writtenRep ?writtenRep .`;
+      query += `?subject a mhdbdbodict:Word ;
+      mhdbdbodict:sense ?sense ;
+      mhdbdbodict:canonicalForm ?form .
+      OPTIONAL { ?subject mhdbdbodict:partOfSpeech ?pos . }
+      ?form mhdbdbodict:writtenRep ?writtenRep .`;
 
-        if (this.form.get('filterSwitchPartOfSpeech').value === true) {
+      if (this.form.get('filterSwitchPartOfSpeech').value === true) {
 
-            const value = this.form.get('posList').value;
+        const value = this.form.get('posList').value;
 
-            const selectedPos = Object.assign({}, value, {
-                pos: value.map((s, i) => {
-                    return {
-                        id: this.partOfSpeechList[i],
-                        selected: s
-                    }
-                })
-            });
+        const selectedPos = Object.assign({}, value, {
+          pos: value.map((s, i) => {
+            return {
+              id: this.partOfSpeechList[i],
+              selected: s
+            }
+          })
+        });
 
-            const posL = selectedPos.pos.filter(p => p.selected === true).map(p => "<" + p.id + ">").join(', ');
+        const posL = selectedPos.pos.filter(p => p.selected === true).map(p => "<" + p.id + ">").join(', ');
 
-            query += ` FILTER (?pos IN (${posL})) `;
+        query += ` FILTER (?pos IN (${posL})) `;
 
-        }
+      }
 
-        if (this.form.get('filterSwitchLemma').value === true) {
-            const writtenRep = this.form.get('filterLemma').value;
-            query += `FILTER(regex(str(?writtenRep), "${writtenRep}"))`;
-        }
+      if (this.form.get('filterSwitchLemma').value === true) {
+          const writtenRep = this.form.get('filterLemma').value;
+          query += `FILTER(regex(str(?writtenRep), "${writtenRep}"))`;
+      }
 
-        query += `}`;
+      query += `}`;
+      console.log("ConceptListComponent buildFilterQuery", query);
 
-        return query;
+      return query;
     }
 
     filter() {
-        this.sq.query(this.buildFilterQuery()).then(data => {
-            // eslint-disable-next-line @typescript-eslint/no-this-alias
-            const self = this;
+      this.sq.query(this.buildFilterQuery()).then(data => {
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
+        const self = this;
 
-            self.dictionary = this.getResult(data);
-
-        });
+        self.dictionary = this.getResult(data);
+      });
     }
 
     previousPage() {
-        this.locationService.back();
+      this.locationService.back();
     }
 
     emitEventToChild(data: any) {
-        this.eventsSubject.next(data);
+      this.eventsSubject.next(data);
     }
 
     selectTreeNode(node: any) {
-        this.concept = node.item;
+      this.concept = node.item;
     }
 
     getResultAsObject(data: any): Concept[] {

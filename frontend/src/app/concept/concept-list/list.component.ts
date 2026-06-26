@@ -359,15 +359,16 @@ export class ConceptListComponent implements OnInit {
     }
 
     previousPage() {
-        this.locationService.back();
+      this.locationService.back();
     }
 
     emitEventToChild(data: any) {
-        this.eventsSubject.next(data);
+      this.eventsSubject.next(data);
     }
 
     selectTreeNode(node: any) {
-        this.concept = node.item;
+      console.log("ConceptListComponent selectTreeNode", node)
+      this.concept = node.item;
     }
 
     getResultAsObject(data: any): Concept[] {

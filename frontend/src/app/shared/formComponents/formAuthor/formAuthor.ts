@@ -64,9 +64,7 @@ export class FormAuthorComponent<qT extends QueryParameterI<f, o>, f extends Fil
 
   openHelp() {
     const dialogRef = this.help.open(FormAuthorHelpComponent);
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });
+    dialogRef.afterClosed().subscribe(result => {});
   }
 
   ngOnInit() {

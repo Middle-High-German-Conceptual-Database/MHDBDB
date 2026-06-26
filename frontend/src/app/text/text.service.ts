@@ -137,8 +137,6 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
   ////////
 
   private sparqlKwic(centerUri: string, radius: number): string {
-    console.log(radius);
-
     return ` distinct ?position ?seg ?n ?content
             where { 
                 { #self
