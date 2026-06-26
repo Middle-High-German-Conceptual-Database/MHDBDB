@@ -15,6 +15,7 @@ import { MhdbdbIdEntity, IdLabelI } from '../../baseIndexComponent/baseindexcomp
 import { Kwic, Token } from '../../../text/text.class';
 import { TextService } from '../../../text/text.service';
 import { ViewWidgetsDirective } from '../viewWidgetsDirective';
+import { Utils } from 'app/shared/utils';
 
 @Component({
   selector: 'dhpp-widget-kwic',
@@ -60,10 +61,7 @@ export class KwicWidgetComponent
           this.isLoaded = Promise.resolve(true);
           this.total = this.kwics.length;
         });
-
-
       }
-
     } else {
       if (this.instance) {
         // this.loadOccurrences();
@@ -86,6 +84,10 @@ export class KwicWidgetComponent
   }
   */
 
+  public getSigleFromToken(token: string): string {
+    return Utils.getSigleFromToken(token);
+  }
+  
   openHelp() {
     const dialogRef = this.help.open(KwicWidgetHelpComponent);
     dialogRef.afterClosed().subscribe(result => {});

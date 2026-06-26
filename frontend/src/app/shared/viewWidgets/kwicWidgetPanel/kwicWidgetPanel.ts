@@ -49,6 +49,7 @@ export class KwicWidgetPanelComponent
   }
 
   openHelp() {
+    console.log("KwicWidgetPanelComponent openHelp", this.kwics);
     const dialogRef = this.help.open(KwicWidgetPanelHelpComponent);
     dialogRef.afterClosed().subscribe(result => {});
   }

@@ -16,4 +16,18 @@ export class Utils {
         const val2 = vals[vals.length - 2];
         return val2;
     }
+
+    /**
+     * 
+     * @param token get only the sigke from a Token (s. Kwic) for linking
+     * @returns 
+     */
+    public static getSigleFromToken(token: string): string {
+        const vals = token.split('_');
+        if (vals.length > 1) {
+            return vals[0];
+        } else {
+            return token;
+        }
+    }
 }
