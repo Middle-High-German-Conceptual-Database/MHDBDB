@@ -8,9 +8,36 @@
                     </button>
                 </div>
             </div>
-            <div class="row">
-                <div class="col">
-                    <h1>{{ metadata.id }} {{ metadata.label }}</h1>
+            <div class="container" *ngIf="metadata">
+                <div class="row">
+                    <div class="col">
+                        <h1>{{ metadata.label }}</h1>
+                    </div>
+                </div>
+
+                <div class="row" *ngIf="metadata && metadata.authorSameAs && metadata.authorSameAs.length > 0">
+                    <div class="col-3">
+                        Autor*in
+                    </div>
+                    <div class="col-9">
+                        <ul>
+                            <li *ngFor="let authorSameAs of metadata.authorSameAs;">
+                                <a href="{{authorSameAs}}" target="_blank">{{ metadata.authorLabel }} ({{ authorSameAs | niceInstanceName }})</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row" *ngIf="metadata && metadata.sameAs && metadata.sameAs.length > 0">
+                    <div class="col-3">
+                        Linked Open Data (LOD)
+                    </div>
+                    <div class="col-9">
+                        <ul>
+                            <li *ngFor="let sameAs of metadata.sameAs;">
+                                <a href="{{sameAs}}" target="_blank">{{sameAs | niceInstanceName }}</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             <!-- <pre [innerHTML]="teiContent"></pre> -->

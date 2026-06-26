@@ -62,10 +62,10 @@ export class WorkService extends MhdbdbIdLabelEntityService<WorkQueryParameterI,
     this.store.select(selectLanguage).subscribe(v => (this._defaultQp.lang = v));
   }
 
-  async getWorkMetadata(workId: string): Promise<[(WorkMetadataClass[]), number]> {
+  async getWorkMetadata(workId: string, endpoint: string = 'metadata'): Promise<[(WorkMetadataClass[]), number]> {
     const query = workId;
     return new Promise<[(WorkMetadataClass[]), number]>(resolve => {
-      this._sq.query(query, `${this._defaultQp.option.endpointUrl}/metadata`).then(data => {
+      this._sq.query(query, `${this._defaultQp.option.endpointUrl}/${endpoint}`).then(data => {
         let total: number = 0;
         if (data.results.bindings && data.results.bindings.length >= 1) {
           resolve([this._jsonToObjectMeta(data.results.bindings), data.results.bindings.length]);

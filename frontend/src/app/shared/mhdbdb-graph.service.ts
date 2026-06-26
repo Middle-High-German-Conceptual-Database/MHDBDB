@@ -149,7 +149,7 @@ export interface OptionsI {
   endpointUrl?: string;
 }
 
-interface SparqlQueryResultI {
+export interface SparqlQueryResultI {
   head: {
     link: string;
     vars: string[];
@@ -264,12 +264,10 @@ export class SparqlQuery {
     const body = JSON.stringify(qp)
     
     return Promise.race([
-       http.post<SparqlQueryResultI>(endpointUrl, qp).toPromise<SparqlQueryResultI>()
-    ])      
-      .catch(function (error) {
-        return Promise.reject(error); // Reject with the error
-      });
-
+      http.post<SparqlQueryResultI>(endpointUrl, qp).toPromise<SparqlQueryResultI>()
+    ]).catch(function (error) {
+      return Promise.reject(error); // Reject with the error
+    });
   }
 }
 

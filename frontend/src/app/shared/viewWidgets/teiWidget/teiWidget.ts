@@ -3,6 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { WorkMetadataClass } from 'app/work/work.class';
+import { SERVER_API_URL_WORKS } from 'app/app.constants';
+import { SparqlQueryResultI } from 'app/shared/mhdbdb-graph.service';
+import { WorkService } from 'app/work/work.service';
 @Component({
   selector: 'dhpp-widget-tei',
   templateUrl: './teiWidget.html',
@@ -19,7 +22,8 @@ export class TeiWidgetComponent implements OnInit {
     public router: Router,
     public route: ActivatedRoute,
     public locationService: Location,
-    public http: HttpClient
+    public http: HttpClient, 
+    public service: WorkService
   ) { }
 
   ngOnInit(): void {
@@ -30,7 +34,7 @@ export class TeiWidgetComponent implements OnInit {
         // Modify the url based on the id. This is just an example, modify as per your requirements.
         // this.url = `/showTeiAsHtml?id=${id}`;
         this.fetchTeiData(id);
-        this.getWorkMetadata(id); // TODO: needs implementation
+        this.getWorkMetadata(id); 
       }
       const searchTerm = params.get('searchterm');
       if (searchTerm) {
@@ -79,6 +83,27 @@ export class TeiWidgetComponent implements OnInit {
     // see WorkWidgetComponent and WorkService.getWorkMetadata for inspiration.
     // and set the metadata here. 
     // think about a metadata-loading-spinnner
-    this.metadata = new WorkMetadataClass(workId, "", [], [], []);
-  }  
+    //this.metadata = new WorkMetadataClass(workId, "", [], [], []);
+
+    this.service.getWorkMetadata(workId, 'metadatasimple').then(([metadataArray, count]) => {
+      if (metadataArray && metadataArray.length > 0) {
+        console.log('TeiWidgetComponent getWorkMetadata: found metadata for workId', {workId, metadata: metadataArray[0]});
+        this.metadata = metadataArray[0]; // Assuming you want the first metadata object
+      } else {
+        console.log('TeiWidgetComponent getWorkMetadata: No metadata found for workId:', workId);
+      }
+    }).catch(error => {
+      console.error('TeiWidgetComponent getWorkMetadata: Error fetching metadata:', error);
+    });
+
+    /*
+    this.http.post<SparqlQueryResultI>(SERVER_API_URL_WORKS + '/metadatasimple', workId).toPromise<SparqlQueryResultI>().then(data => {
+      if (data.results.bindings && data.results.bindings.length >= 1) {
+        this.metadata = this._jsonToObjectMeta(data.results.bindings)
+      }
+    }).catch(error => {
+      console.error('TeiWidgetComponent getWorkMetadata: Error fetching metadata:', error);
+    });
+    */
+  }
 }
