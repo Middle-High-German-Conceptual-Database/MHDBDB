@@ -75,7 +75,7 @@ export class TeiWidgetComponent implements OnInit {
 
   // TODO: fetch work title etc. from the backend
   async getWorkMetadata(workId: string) {
-    // call a /metadatashort  endpoint in the backend that just delivers the necessary data.
+    // call a /metadatasimple  endpoint in the backend that just delivers the necessary data.
     // see WorkWidgetComponent and WorkService.getWorkMetadata for inspiration.
     // and set the metadata here. 
     // think about a metadata-loading-spinnner

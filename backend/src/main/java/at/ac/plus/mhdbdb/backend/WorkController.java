@@ -144,6 +144,43 @@ public class WorkController extends ControllerBase {
         runQuery(response, query);
     }
 
+    /**
+     * 
+     * @param response
+     * @param request
+     * @param sigle this is the *sigle* (i.e. AXS), not the workId (which is a URI)
+     * @throws JSONException
+     * @throws IOException
+     */
+    @RequestMapping(value = "/metadatasimple", method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
+    public @ResponseBody void getWorkMetadataSimple(HttpServletResponse response, HttpServletRequest request, @RequestBody(required = true) String sigle) 
+    throws JSONException, IOException {
+
+        // TODO: Wait for a *nice* String Template functionality in Java
+        String query = new StringBuilder()
+            .append(this.getSparqlPrefixes())
+            .append(System.lineSeparator() + "select distinct ?id ?label ?sameAs ?dateOfCreation ?authorId ?authorSameAs ?authorLabel where {")
+            .append(System.lineSeparator() + String.format("Bind(mhdbdbi:%s AS ?instance) .", sigle))
+            .append(System.lineSeparator() + "?id rdfs:label ?label .")
+            .append(System.lineSeparator() + "OPTIONAL { ?id owl:sameAs ?sameAs . } ")
+            .append(System.lineSeparator() + "?id dct:created ?dateOfCreation .")
+            .append(System.lineSeparator() + "?id dhpluso:contribution/dhpluso:agent ?authorId .")
+            .append(System.lineSeparator() + "?id dhpluso:contribution/dhpluso:role <http://id.loc.gov/vocabulary/relators/aut> .")
+            .append(System.lineSeparator() + "?id dhpluso:contribution/dhpluso:agent/rdfs:label ?authorLabel .")
+            .append(System.lineSeparator() + "?id dhpluso:contribution/dhpluso:agent/owl:sameAs ?authorSameAs .")
+            .append(System.lineSeparator() + "?id dhpluso:hasExpression/dhpluso:hasInstance ?instance .")
+            .append(System.lineSeparator() + "?instance rdf:type dhpluso:Electronic .")
+            // filter
+            .append(System.lineSeparator() + String.format("  filter(langMatches( lang(?label), \"%s\" ))", this.lang))
+            .append(System.lineSeparator() + String.format("  filter(langMatches( lang(?authorLabel), \"%s\" ))", this.lang))
+
+            .append(System.lineSeparator() + "}")
+            .toString();
+
+        logger.info("WorkController metadatasimple '{}'", sigle);
+        runQuery(response, query);
+    }
+
     /*
     protected TupleQuery loadQuery(String query)
     throws JSONException, IOException {
