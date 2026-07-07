@@ -26,6 +26,7 @@ export class TextListComponent extends BaseIndexListDirective<TextPassageQueryPa
 
     ) {
         super(router, route, locationService, http, service, history)
+        console.log("TextListComponent constructor", route)
     }
 
     ////////////////////

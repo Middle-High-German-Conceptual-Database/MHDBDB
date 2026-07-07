@@ -373,6 +373,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
   }*/
 
   public sparqlQuery(qp: any, countResults: boolean): string {
+    console.log("ReferenceService sparqlQuery", { qp, countResults });
     function posFilter(i: number, pos: string[], relation: string): string {
       let posUris = pos.map(p => `<${p}>`);
       let posFilter = '';

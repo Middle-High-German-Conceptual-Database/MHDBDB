@@ -246,6 +246,7 @@ export class SparqlQuery {
       this.postWithProgress(endpointUrl, queryString, headersa)
     ])
       .catch(function (error) {
+        console.error('SparqlQuery query', {queryString, endpointUrl, error});
         return Promise.reject(error); // Reject with the error
       });
   }
@@ -671,7 +672,7 @@ export abstract class MhdbdbIdLabelEntityService<
         }
       } catch (error) {
         console.error('jsonToObject: Error reading BaseIndexComponentEntry entry.', error);
-        console.error(row);
+        console.error('jsonToObject: Error row', row);
       }
     });
     return results;
