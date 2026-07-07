@@ -55,7 +55,7 @@ export class FormTokenComponent implements OnInit, OnDestroy {
   @Input() routeString: string;
   @Input() tokenFilter;
   @Input() filter: any;
-  advancedSearch = false;
+  //advancedSearch = false;
   //isNamenActive = false;
   public he: ListHistoryEntry<TextPassageQueryParameterI, TextPassageFilterI, TextPassageOptionsI, TextPassage>;
   isLoading: boolean = false;
@@ -146,12 +146,14 @@ export class FormTokenComponent implements OnInit, OnDestroy {
     this.moveForm(-1, index);
   }
 
+  /*
   setAdvChecked(e: MatSlideToggleChange) {
     this.advancedSearch = e.checked;
 
     const updatedFilter = { ...this.tokenFilter, advancedSearch: e.checked };
     this.store.dispatch(updateFilterById({ filterId: this.filter.id, newFilter: updatedFilter }));
   }
+  */
 
   /*
   setNamenChecked(e: MatSlideToggleChange) {
@@ -209,8 +211,8 @@ export class FormTokenComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe(tokenFilter => {
-        this.advancedSearch = tokenFilter.advancedSearch;
         /*
+        this.advancedSearch = tokenFilter.advancedSearch;
         this.isNamenActive = tokenFilter.isNamenActive;
         this.tokenFilter.onomastics = tokenFilter.onomastics;
 

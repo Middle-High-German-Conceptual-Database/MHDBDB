@@ -375,6 +375,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
   public sparqlQuery(qp: any, countResults: boolean): string {
     console.log("ReferenceService sparqlQuery", { qp, countResults });
     function posFilter(i: number, pos: string[], relation: string): string {
+      console.log("ReferenceService sparqlQuery posFilter", {i, pos, relation});
       let posUris = pos.map(p => `<${p}>`);
       let posFilter = '';
 
@@ -388,6 +389,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
     }
 
     function conceptFilter(i: number, concepts: string[], relation: string): string {
+      console.log("ReferenceService sparqlQuery conceptFilter", {i, concepts, relation});
       let conceptUris = concepts.map(c => `<${c}>`);
       let conceptFilter = '';
 
@@ -405,6 +407,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
 
     // Namen
     function onomasticsFilter(i: number, concepts: string[], relation: string): string {
+      console.log("ReferenceService sparqlQuery onomasticsFilter", {i, concepts, relation});
       let conceptUris = concepts.map(c => `<${c}>`);
       let conceptFilter = '';
 
@@ -418,6 +421,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
     }
 
     function wordFilter(i: number, word: string, relation: string, exactForm: boolean): string {
+      console.log("ReferenceService sparqlQuery wordFilter", {i, word, relation});
       let wordFilter = '';
 
       if (word != '') {
@@ -452,6 +456,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
     }
 
     function lemmaFilter(i: number, word: string, relation: string): string {
+      console.log("ReferenceService sparqlQuery lemmaFilter", {i, word, relation});
       let wordFilter = '';
 
       if (word != '') {
@@ -472,6 +477,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
     }
 
     function positionFilter(i: number, position: string, relation: string): string {
+      console.log("ReferenceService sparqlQuery positionFilter", {i, position, relation});
       let positionFilter = '';
 
       if (position != '') {
@@ -499,6 +505,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
     let filters: string[] = [];
 
     if (qp.isWorksActive && qp.works) {
+      console.log("ReferenceService sparqlQuery works", {works: qp.works});
       let tempFilters = [];
       qp.works.forEach((work, i) => {
         bindings.push(`Bind (<${work}> as ?work${i})`);
@@ -535,6 +542,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       qq = ` ?annotationId0 { `;
     }
 
+    /*
     qp.filter.tokenFilters.forEach((tokenFilter, i: number) => {
 
       if (tokenFilter.activeTab && tokenFilter.activeTab == 1) {
@@ -601,6 +609,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       }
 
     });
+    */
 
     qp.filter.tokenFilters.forEach((tokenFilter, i: number) => {
       words = [];
@@ -638,6 +647,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       //wordSelects.push(`?rootId${i}`);
 
       if (tokenFilter.activeTab && tokenFilter.activeTab == 1) {
+        console.log("ReferenceService sparqlQuery activeTab 1", {tokenFilter});
         if (tokenFilter.concepts && tokenFilter.concepts.length > 0) {
           let concept = conceptFilter(0, tokenFilter.concepts, tokenFilter.relation);
 
@@ -664,6 +674,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
           ${this._sparqlLimitOffset(qp.limit, qp.offset)}`;
         qq += ` } `;
       } else if (tokenFilter.activeTab && tokenFilter.activeTab == 2) {
+        console.log("ReferenceService sparqlQuery activeTab 2", {tokenFilter});
 
         if (tokenFilter.advancedSearch && tokenFilter.onomastics && tokenFilter.onomastics.length > 0) {
           let onomastic = onomasticsFilter(0, tokenFilter.onomastics, tokenFilter.relation);
@@ -692,6 +703,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
           ${this._sparqlLimitOffset(qp.limit, qp.offset)}`;
         qq += ` } `;
       } else {
+        console.log("ReferenceService sparqlQuery activeTab unknown", {tokenFilter});
         let wordOrLemma = '';
 
         if (tokenFilter.searchLabelInLemma) {
@@ -787,7 +799,7 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
     } else {
       q = `${qq}`;
     }
-
+    console.log("ReferenceService sparqlQuery query", {q});
     return q;
   }
 

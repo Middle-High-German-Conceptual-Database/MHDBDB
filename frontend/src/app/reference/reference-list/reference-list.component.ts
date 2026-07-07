@@ -259,7 +259,7 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
       }).catch(error => {
         this.isRLoading = false;
         this.isLoading = false;
-        console.error('Error during search:', error);
+        console.error('ReferenceList Error during search:', error);
         // Handle the error in UI, e.g., show an error message
       });
     } else {
