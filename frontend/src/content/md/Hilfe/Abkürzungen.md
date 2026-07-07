@@ -21,5 +21,3 @@
 |INJ|Interjektion|ahî, owê|
 |CPA|Komparativpartikel|als, wie|
 |DIG|Zahl (Digit)|IX, XVII, III|
-
-http://mhdbdb.sbg.ac.at/help/grammar-tags.de.html 
