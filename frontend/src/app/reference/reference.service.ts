@@ -374,54 +374,9 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
 
   public sparqlQuery(qp: any, countResults: boolean): string {
     console.log("ReferenceService sparqlQuery", { qp, countResults });
-    function posFilter(i: number, pos: string[], relation: string): string {
-      console.log("ReferenceService sparqlQuery posFilter", {i, pos, relation});
-      let posUris = pos.map(p => `<${p}>`);
-      let posFilter = '';
 
-      if (pos.length > 0) {
-        posFilter += `
-          ?wordId${i} dhpluso:partOfSpeech ?pos${i} .
-          FILTER ( ?pos${i} IN (${posUris.join()}) )
-          `;
-      }
-      return posFilter;
-    }
-
-    function conceptFilter(i: number, concepts: string[], relation: string): string {
-      console.log("ReferenceService sparqlQuery conceptFilter", {i, concepts, relation});
-      let conceptUris = concepts.map(c => `<${c}>`);
-      let conceptFilter = '';
-
-      if (concepts.length > 0) {
-        conceptFilter += `
-        {
-           ?concept0 dhpluso:isSenseOf ?wordId0 .
-           ?concept0 dhpluso:isLexicalizedSenseOf ?sense0 .
-             FILTER ( ?sense${i} IN (${conceptUris.join()}) )
-         }   
-                `;
-      }
-      return conceptFilter;
-    }
-
-    // Namen
-    function onomasticsFilter(i: number, concepts: string[], relation: string): string {
-      console.log("ReferenceService sparqlQuery onomasticsFilter", {i, concepts, relation});
-      let conceptUris = concepts.map(c => `<${c}>`);
-      let conceptFilter = '';
-
-      if (concepts.length > 0) {
-        conceptFilter += `
-                ?onomastic${i} skos:narrowerTransitive?/^dhpluso:isLexicalizedSenseOf/dhpluso:isSenseOf ?wordId${i} .
-                FILTER ( ?onomastic${i} IN (${conceptUris.join()}) )
-                `;
-      }
-      return conceptFilter;
-    }
-
-    function wordFilter(i: number, word: string, relation: string, exactForm: boolean): string {
-      console.log("ReferenceService sparqlQuery wordFilter", {i, word, relation});
+    function wordFilter(i: number, word: string): string {
+      console.log("ReferenceService sparqlQuery wordFilter", {i, word});
       let wordFilter = '';
 
       if (word != '') {
@@ -433,373 +388,66 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
 
         ?annotationId${i} oa:hasBody ?wordId${i} .
         ?annotationId${i} oa:hasTarget ?rootId .
-        
-        OPTIONAL {
-          ?rootId mhdbdbxml:nextSibling ?nextTokenId .
-          ?nextTokenId rdf:type tei:seg . 
-          ?nextTokenId mhdbdbxml:lastChild/mhdbdbxml:content ?lastTokenContent .
-          ?nextTokenId mhdbdbxml:firstChild/mhdbdbxml:content ?firstTokenContent .
-        }
-                `;
 
-        if (exactForm == true) {
-          wordFilter += ` 
-            ?typeId${i} dhpluso:writtenRep "${word}" .
-            ?tokenNodeId mhdbdbxml:parent ?rootId .
-            ?tokenNodeId mhdbdbxml:content "${word}" .
-          `;
-        } else {
-          wordFilter += `filter(regex(str(?typeLabel${i}), "^${labelFilterGenerator(word, false)}$", "i")) .`;
-        }
+        filter(regex(str(?typeLabel${i}), "^${labelFilterGenerator(word, false)}$", "i")) .
+        `;
       }
       return wordFilter;
     }
-
-    function lemmaFilter(i: number, word: string, relation: string): string {
-      console.log("ReferenceService sparqlQuery lemmaFilter", {i, word, relation});
-      let wordFilter = '';
-
-      if (word != '') {
-        wordFilter += `
-          ?wordId${i} a dhpluso:Word .
-          ?wordId${i} dhpluso:canonicalForm/dhpluso:writtenRep ?wordLabel${i} .
-          ?wordId${i} dhpluso:canonicalForm ?lemma${i} .
-
-          ?annotationId${i} oa:hasBody ?wordId${i} .
-          ?annotationId${i} oa:hasTarget ?rootId .
-          ?tokenNodeID mhdbdbxml:parent ?rootId .
-          
-          filter(regex(str(?wordLabel${i}), "^${word}$", "i")) .
-          
-          `;
-      }
-      return wordFilter;
-    }
-
-    function positionFilter(i: number, position: string, relation: string): string {
-      console.log("ReferenceService sparqlQuery positionFilter", {i, position, relation});
-      let positionFilter = '';
-
-      if (position != '') {
-
-        if (position === 'Anfang') {
-          positionFilter += `
-              
-              FILTER(REGEX(?firstTokenContent, "[!.,?]"))
-
-              
-                `;
-        } else if (position === 'Ende') {
-          positionFilter += `
-              
-              FILTER(REGEX(?lastTokenContent, "[!.,?]"))
-
-                `;
-        }
-      }
-      return positionFilter;
-    }
-
-
-    let bindings: string[] = [];
-    let filters: string[] = [];
-
-    if (qp.isWorksActive && qp.works) {
-      console.log("ReferenceService sparqlQuery works", {works: qp.works});
-      let tempFilters = [];
-      qp.works.forEach((work, i) => {
-        bindings.push(`Bind (<${work}> as ?work${i})`);
-        tempFilters.push(`?workId = ?work${i}`);
-      });
-    }
-
-    if (qp.isIdActive && qp.id) {
-      bindings.push(`Bind (<${qp.id}> as ?id)`);
-    }
-    if (qp.isElectronicIdActive && qp.electronicId) {
-      bindings.push(`Bind (<${qp.electronicId}> as ?electronicId)`);
-    }
-
-    let wordSelects: string[] = [];
-
-    let words: string[] = [];
-    let concepts: string[] = [];
-    let onomastics: string[] = [];
-    let poss: string[] = [];
-    let positions: string[] = [];
-
-    let wordsAnd: string[] = [];
-    let conceptsAnd: string[] = [];
-    let onomasticsAnd: string[] = [];
-    let possAnd: string[] = [];
-    let positionsAnd: string[] = [];
 
     // query with joins
-    let qq: string = ` * {                
+    let innerQuery: string = ``;
+
+    // tokenFilter loop
+    let tokenFilter = qp.filter.tokenFilters[0];
+    let i: number = 0;
+
+    innerQuery += ` 
+      ?rootId mhdbdbxml:partOf ?textId .
+      ?textId dhpluso:hasElectronicInstance ?workId .
+      ?workId rdf:type dhpluso:Text .
+
+      {
+        ?textId dhpluso:hasElectronicInstance ?electronicId .
+        ?electronicId rdf:type dhpluso:Text .
+        ?electronicId rdfs:label ?label .
+        BIND(?electronicId as ?id)
+      }
+      
+      {
+        ?workId dhpluso:contribution/dhpluso:agent ?authorId .
+        ?authorId rdfs:label ?authorLabel .
+      }
+
     `;
-
-    if (countResults) {
-      qq = ` ?annotationId0 { `;
+    console.log("ReferenceService sparqlQuery word", {word: tokenFilter.label});
+    if(tokenFilter.label && tokenFilter.label !== '') {
+      let wordQuery: string = wordFilter(i, tokenFilter.label);
+      innerQuery += `{
+        ${wordQuery}
+      }`;
     }
-
-    /*
-    qp.filter.tokenFilters.forEach((tokenFilter, i: number) => {
-
-      if (tokenFilter.activeTab && tokenFilter.activeTab == 1) {
-        if (tokenFilter.concepts && tokenFilter.concepts.length > 0) {
-          let concept = conceptFilter(i, tokenFilter.concepts, tokenFilter.relation);
-
-          if (tokenFilter.relation === 'and') {
-            conceptsAnd.push(concept);
-          }
-        }
-      } else if (tokenFilter.activeTab && tokenFilter.activeTab == 2) {
-        if (tokenFilter.advancedSearch && tokenFilter.onomastics && tokenFilter.onomastics.length > 0) {
-          let onomastic = onomasticsFilter(i, tokenFilter.onomastics, tokenFilter.relation);
-
-          if (tokenFilter.relation === 'and') {
-            onomasticsAnd.push(onomastic);
-          }
-        }
-      } else {
-
-        let wordOrLemma = '';
-
-        if (tokenFilter.searchLabelInLemma) {
-          wordOrLemma = lemmaFilter(i, tokenFilter.label, tokenFilter.relation);
-        } else {
-          wordOrLemma = wordFilter(i, tokenFilter.label, tokenFilter.relation, tokenFilter.searchExactForm);
-        }
-
-        if (tokenFilter.relation === 'and') {
-          wordsAnd.push(wordOrLemma);
-        }
-
-        if (tokenFilter.concepts && tokenFilter.concepts.length > 0) {
-          let concept = conceptFilter(i, tokenFilter.concepts, tokenFilter.relation);
-
-          if (tokenFilter.relation === 'and') {
-            conceptsAnd.push(concept);
-          }
-        }
-
-        if (tokenFilter.pos && tokenFilter.pos.length > 0) {
-          let pos = posFilter(i, tokenFilter.pos, tokenFilter.relation);
-
-          if (tokenFilter.relation === 'and') {
-            possAnd.push(pos);
-          }
-        }
-
-        if (tokenFilter.advancedSearch && tokenFilter.onomastics && tokenFilter.onomastics.length > 0) {
-          let onomastic = onomasticsFilter(i, tokenFilter.onomastics, tokenFilter.relation);
-
-          if (tokenFilter.relation === 'and') {
-            onomasticsAnd.push(onomastic);
-          }
-        }
-
-        if (tokenFilter.isPositionActive && tokenFilter.anfang && tokenFilter.anfang != '') {
-          let pos = positionFilter(i, tokenFilter.anfang, tokenFilter.relation);
-
-          if (tokenFilter.relation === 'and') {
-            positionsAnd.push(pos);
-          }
-        }
-      }
-
-    });
-    */
-
-    qp.filter.tokenFilters.forEach((tokenFilter, i: number) => {
-      words = [];
-      concepts = [];
-      onomastics = [];
-      poss = [];
-      positions = [];
-
-      qq += ` { 
-       SELECT DISTINCT * WHERE {
-        ?rootId mhdbdbxml:partOf ?textId .
-        ?textId dhpluso:hasElectronicInstance ?workId .
-        ?workId rdf:type dhpluso:Text .
-
-        {
-          ?textId dhpluso:hasElectronicInstance ?electronicId .
-          ?electronicId rdf:type dhpluso:Text .
-          ?electronicId rdfs:label ?label .
-          BIND(?electronicId as ?id)
-        }
-        
-        {
-          ?workId dhpluso:contribution/dhpluso:agent ?authorId .
-          ?authorId rdfs:label ?authorLabel .
-        }
-
-        {
-      `;
-
-      wordSelects.push(`?concept${i}`);
-      wordSelects.push(`?pos${i}`);
-      wordSelects.push(`?wordId${i}`);
-      wordSelects.push(`?wordLabel${i}`);
-      wordSelects.push(`?annotationId${i}`);
-      //wordSelects.push(`?rootId${i}`);
-
-      if (tokenFilter.activeTab && tokenFilter.activeTab == 1) {
-        console.log("ReferenceService sparqlQuery activeTab 1", {tokenFilter});
-        if (tokenFilter.concepts && tokenFilter.concepts.length > 0) {
-          let concept = conceptFilter(0, tokenFilter.concepts, tokenFilter.relation);
-
-          if (tokenFilter.relation !== 'and') {
-            concepts.push(concept);
-          }
-        }
-
-        qq += `         
-          ${concepts.join('\r\n')}
-          ${conceptsAnd.join('\r\n')}
-        `;
-
-        qq += `
-            ${bindings.join('\r\n')}
-            ${filters.join('\r\n')}
-          }
-
-          filter(langmatches(lang(?label),'de')) 
-          filter(langmatches(lang(?authorLabel),'de')) 
-
-          }
-          ORDER BY ASC(?label)
-          ${this._sparqlLimitOffset(qp.limit, qp.offset)}`;
-        qq += ` } `;
-      } else if (tokenFilter.activeTab && tokenFilter.activeTab == 2) {
-        console.log("ReferenceService sparqlQuery activeTab 2", {tokenFilter});
-
-        if (tokenFilter.advancedSearch && tokenFilter.onomastics && tokenFilter.onomastics.length > 0) {
-          let onomastic = onomasticsFilter(0, tokenFilter.onomastics, tokenFilter.relation);
-
-          if (tokenFilter.relation !== 'and') {
-            onomastics.push(onomastic);
-          }
-        }
-
-
-        qq += `         
-          ${onomastics.join('\r\n')}
-          ${onomasticsAnd.join('\r\n')}
-        `;
-
-        qq += `
-            ${bindings.join('\r\n')}
-            ${filters.join('\r\n')}
-          }
-
-          filter(langmatches(lang(?label),'de')) 
-          filter(langmatches(lang(?authorLabel),'de')) 
-
-          }
-          ORDER BY ASC(?label)
-          ${this._sparqlLimitOffset(qp.limit, qp.offset)}`;
-        qq += ` } `;
-      } else {
-        console.log("ReferenceService sparqlQuery activeTab unknown", {tokenFilter});
-        let wordOrLemma = '';
-
-        if (tokenFilter.searchLabelInLemma) {
-          wordOrLemma = lemmaFilter(0, tokenFilter.label, tokenFilter.relation);
-        } else {
-          wordOrLemma = wordFilter(0, tokenFilter.label, tokenFilter.relation, tokenFilter.searchExactForm);
-        }
-
-        if (tokenFilter.relation !== 'and') {
-          words.push(wordOrLemma);
-        }
-
-        if (tokenFilter.concepts && tokenFilter.concepts.length > 0) {
-          let concept = conceptFilter(0, tokenFilter.concepts, tokenFilter.relation);
-
-          if (tokenFilter.relation !== 'and') {
-            concepts.push(concept);
-          }
-        }
-
-        if (tokenFilter.pos && tokenFilter.pos.length > 0) {
-          let pos = posFilter(0, tokenFilter.pos, tokenFilter.relation);
-
-          if (tokenFilter.relation !== 'and') {
-            poss.push(pos);
-          }
-        }
-
-        if (tokenFilter.advancedSearch && tokenFilter.onomastics && tokenFilter.onomastics.length > 0) {
-          let onomastic = onomasticsFilter(0, tokenFilter.onomastics, tokenFilter.relation);
-
-          if (tokenFilter.relation !== 'and') {
-            onomastics.push(onomastic);
-          }
-        }
-
-        if (tokenFilter.isPositionActive && tokenFilter.anfang && tokenFilter.anfang != '') {
-          let pos = positionFilter(i, tokenFilter.anfang, tokenFilter.relation);
-
-          if (tokenFilter.relation !== 'and') {
-            positions.push(pos);
-          }
-        }
-
-        qq += `         
-          ${words.join('\r\n')}
-          ${concepts.join('\r\n')}
-          ${onomastics.join('\r\n')}
-          ${poss.join('\r\n')} 
-          ${positions.join('\r\n')} 
-          
-          ${wordsAnd.join('\r\n')}
-          ${conceptsAnd.join('\r\n')}
-          ${onomasticsAnd.join('\r\n')}
-          ${possAnd.join('\r\n')}
-          ${positionsAnd.join('\r\n')}
-          
-        `;
-        qq += `
-            ${bindings.join('\r\n')}
-            ${filters.join('\r\n')}
-          }
-
-          filter(langmatches(lang(?label),'de')) 
-          filter(langmatches(lang(?authorLabel),'de')) 
-
-          }
-          ORDER BY ASC(?label)
-          ${this._sparqlLimitOffset(qp.limit, qp.offset)}`;
-        qq += ` } `;
-      }
-
-      if (qp.filter.tokenFilters.length > i+1) {
-        if (tokenFilter.relation == 'or') {
-          qq += ` UNION `;
-        }
-        if (tokenFilter.relation == 'and') {
-          qq += ` UNION `;
-        }
-      }
-    });
-
-    qq += ` } `;
+    innerQuery += `
+      filter(langmatches(lang(?label),'de')) 
+      filter(langmatches(lang(?authorLabel),'de')) 
+    `;
 
     let q = '';
     if (countResults) {
-      q = ` (count(*) as ?count)
-                {
-                    SELECT ${qq}
-                }
-
-            `;
+      q = ` (count(DISTINCT *) as ?count) WHERE 
+        {
+           ${innerQuery}
+        }
+    `;
     } else {
-      q = `${qq}`;
+      q = `DISTINCT * WHERE {
+        ${innerQuery}
+        }
+        ORDER BY ASC(?label) 
+        ${this._sparqlLimitOffset(qp.limit, qp.offset)}
+      `;
     }
-    console.log("ReferenceService sparqlQuery query", {q});
+    console.log("ReferenceService sparqlQuery query", q);
     return q;
   }
 
