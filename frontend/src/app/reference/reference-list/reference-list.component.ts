@@ -30,7 +30,7 @@ import {
   moveTokenFilterDown,
   reset,
   updateRelation,
-  updateFilterById
+  updateFilterById,
 } from 'app/store/filter.actions';
 import { selectFilter, selectTokenFilterById, selectTokenFilters } from 'app/store/filter.reducer';
 import { SparqlQuery } from 'app/shared/mhdbdb-graph.service';
@@ -117,13 +117,25 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
     this.generalFilter$ = this.store.pipe(select(selectFilterClassExtended));
     this.uiFilter$ = this.store.pipe(select(selectDownloadProgress));
 
+    this.store.pipe(select(state => state)).subscribe(state => {
+        console.log("TextListComponent subscribed with state", state);
+        if (state["generalFilter"].authors && state["generalFilter"].authors.length > 0) {
+            this.qp.filter.isAuthorIdsActive = true;
+            this.qp.filter.authorIds = state["generalFilter"].authors
+        } 
+        console.log("TextListComponent subscribed yields", this.qp);
+    });
+
+
     this.filters$.subscribe(f => {
+      console.log("TextListComponent filters subscription", {filter: f});
       this.filter = f;
       this.radius = f.context;
       this.contextUnit = f.contextUnit;
     });
 
     this.generalFilter$.subscribe(f => {
+      console.log("TextListComponent generalFilter subscription", {filter: f});
       this.generalFilter = f;
     });
 
@@ -131,8 +143,10 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
       this.downloadProgress = f;
     });
 
-    if (this.navigation?.extras.state && this.navigation.extras.state.searchTerm) {
+    // set the searchTerm, if we have been given one
+    if (this.navigation?.extras.state && this.navigation.extras.state.searchTerm && this.navigation.extras.state.searchTerm !== '') {
       this.searchTerm = this.navigation.extras.state.searchTerm;
+      console.log("TextListComponent constructor", {searchTerm: this.searchTerm});
 
       // find the first item in tokenFilters$ and update the label with the searchTerm
       this.tokenFilters$.pipe(take(1)).subscribe(filters => {
@@ -141,9 +155,7 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
           this.store.dispatch(updateFilterById({ filterId: filters[0].id, newFilter: updatedFilter }));
         }
       });
-
-      this.search(true);
-      // Perform actions based on the searchTerm
+      this.search(false);
     }
 
     this.isLoading = false;
@@ -215,6 +227,18 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
     this.limit = event.pageSize;
     this.offset = event.pageIndex * event.pageSize;
     this.search(true);
+  }
+
+  updateFilters() {
+    console.log("TextListComponent updateFilters");
+    // I just want to make sure that changes in the tokenFilter are picked up *before* calling search()
+    // Waiting three seconds is a *very* shitty way to achieve that
+    this.isRLoading = true;
+    setTimeout(() => {
+
+      this.search(false);
+      this.scrollToBottom();
+    }, 3000);
   }
 
   reset() {
@@ -294,8 +318,6 @@ export class TextListComponent extends BaseIndexListDirective<TextQueryParameter
     });
   }
   
-
-
   onScrollDown() {
     this.offset += this.limit;
     this.search(true);

@@ -5,7 +5,7 @@ In der Belegsuche können eine oder mehrere Wortformen mit verschiedenen Eigensc
 </p>
 
 <div class="container">
-    <form (keydown.enter)="$event.preventDefault(); search(false); scrollToBottom()">
+    <form (keydown.enter)="$event.preventDefault(); updateFilters()">
 
         <ul>
             <li *ngFor="let filter of tokenFilters$ | async; index as i">
@@ -33,12 +33,13 @@ In der Belegsuche können eine oder mehrere Wortformen mit verschiedenen Eigensc
                 </div>
             </li>
         </ul>
-
-        <div class="row" style="border: 2px solid #40a9ff; margin-top: 15px;">
-            <div class="col">
-                <dhpp-form-filter [resetEvent]="resetEventSubject.asObservable()"></dhpp-form-filter>
+        <!-- // CH 2026-07-08 removed because way too slow
+            <div class="row" style="border: 2px solid #40a9ff; margin-top: 15px;">
+                <div class="col">
+                    <dhpp-form-filter [resetEvent]="resetEventSubject.asObservable()"></dhpp-form-filter>
+                </div>
             </div>
-        </div>
+        -->
 
         <div class="row">
             <div class="col">

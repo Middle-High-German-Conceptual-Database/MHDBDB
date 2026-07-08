@@ -17,10 +17,11 @@ import { selectLanguage } from 'app/store/language.reducer';
 import { Store, select } from '@ngrx/store';
 import { BehaviorSubject } from 'rxjs';
 import { Utils } from 'app/shared/utils';
+import { WorkFilterI } from 'app/work/work.service';
 
 export interface TextQueryParameterI extends QueryParameterI<TextFilterI, TextOptionsI> {}
 
-export interface TextFilterI extends FilterIdLabelI, FilterWorksI, FilterPosI, FilterConceptsI {
+export interface TextFilterI extends WorkFilterI, FilterWorksI, FilterPosI, FilterConceptsI {
   context: ContextRangeT;
   isWorkIdActive: boolean;
   directlyFollowing: boolean;
@@ -394,6 +395,25 @@ export class TextService extends MhdbdbIdLabelEntityService<TextQueryParameterI,
       }
       return wordFilter;
     }
+
+    // This becomes extremely slow
+    /*
+    function authorFilter(qp: any): string {
+      let authorFilterVals = '';
+      if (qp.authors?.length > 0) {
+        const authorIds = qp.authors.map(id => `<${id}>`).join(' ');
+        authorFilterVals = `VALUES ?authorId { ${authorIds} } `;
+      }
+      let authorFilterQuery = `
+      {
+        ?workId dhpluso:contribution/dhpluso:agent ?authorId .
+        ?authorId rdfs:label ?authorLabel .
+        ${authorFilterVals}
+      }
+      `;
+      return authorFilterQuery
+    }
+    */
 
     // query with joins
     let innerQuery: string = ``;
